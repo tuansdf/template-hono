@@ -1,13 +1,12 @@
 import { ErrorHandler } from "hono";
-import { CustomException } from "./custom-exception.ts";
+import { HTTPException } from "hono/http-exception";
 
 export class ErrorHandlerMiddleware {
   static handle(): ErrorHandler {
     return (err: unknown, c) => {
       console.error({ err });
-      if (err instanceof CustomException) {
-        const status = err.status as any;
-        return c.json({ status: status, message: err.message }, status);
+      if (err instanceof HTTPException) {
+        return c.json({ status: err.status, message: err.message }, err.status);
       }
       return c.json({ status: 500, message: "Something Went Wrong" }, 500);
     };

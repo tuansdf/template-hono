@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { HealthService } from "~/domains/health/health.service.ts";
+import { HealthService } from "~/domains/health/health.service.js";
 
 export const healthRouter = new Hono();
 

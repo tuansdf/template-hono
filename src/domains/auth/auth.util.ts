@@ -7,19 +7,6 @@ import { JwtTokenClaims } from "~/lib/jwt/jwt.type.js";
 import { JwtUtils } from "~/lib/jwt/jwt.util.js";
 
 export class AuthUtils {
-  static validateBearerToken(bearerToken: string | undefined): string {
-    if (!bearerToken || !bearerToken.startsWith("Bearer ")) {
-      throw new CustomException("Unauthorized", 500);
-    }
-    return bearerToken;
-  }
-
-  static getTokenFromBearer(bearerToken: string): string | undefined {
-    const split = bearerToken.split(" ");
-    if (split.length < 1) return undefined;
-    return split[1];
-  }
-
   static createAuthTokenPayload(user: User): JwtAuthTokenPayload {
     return {
       id: user.id,

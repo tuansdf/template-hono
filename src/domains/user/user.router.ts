@@ -1,5 +1,5 @@
 import { AuthMiddleware } from "~/domains/auth/auth.middleware.js";
-import { UserService } from "~/domains/user/user.service.ts";
+import { UserService } from "~/domains/user/user.service.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
 import { RouterUtils } from "~/utils/router.util.js";
 

@@ -1,5 +1,5 @@
 import { decode, sign, verify } from "hono/jwt";
-import { ENV_JWT_SECRET } from "~/constants/env.constant.ts";
+import { ENV_JWT_SECRET } from "~/constants/env.constant.js";
 import { JwtTokenClaims, JwtTokenPayload } from "~/lib/jwt/jwt.type.js";
 
 export class JwtUtils {

@@ -1,7 +1,9 @@
 import { NotFoundHandler } from "hono";
 
 export class NotFoundMiddleware {
-  static handle: NotFoundHandler = (c) => {
-    return c.json({ status: 404, message: "Not Found" }, 400);
-  };
+  static handle(): NotFoundHandler {
+    return (c) => {
+      return c.json({ status: 404, message: "Not Found" }, 400);
+    };
+  }
 }
