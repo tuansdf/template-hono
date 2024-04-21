@@ -1,0 +1,7 @@
+{
+  "user": {
+    "error": {
+      "not_found": "Người dùng không tồn tại"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "user": {
+    "error": {
+      "not_found": "User not found",
+      "duplicated_username": "User with the provided username already exist",
+      "duplicated_email": "User with the provided email already exist"
+    }
+  },
+  "auth": {
+    "error": {
+      "unauthorized": "Unauthorized"
+    }
+  }
+}
