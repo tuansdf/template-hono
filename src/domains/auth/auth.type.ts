@@ -15,4 +15,5 @@ export type JwtAuthTokenPayload = {
   id?: number;
   username?: string | null;
   type?: "auth";
+  permissions?: string[];
 } & JwtTokenClaims;

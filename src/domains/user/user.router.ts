@@ -31,8 +31,7 @@ userRouter.get("/detail", AuthMiddleware.authenticate(), async (c) => {
   }
 });
 
-userRouter.get("/", AuthMiddleware.authenticate(), async (c) => {
-  console.log(c.get("authPayload"));
+userRouter.get("/", AuthMiddleware.authenticate(), AuthMiddleware.authorize(["SEARCH"]), async (c) => {
   const result = await UserService.findAll();
   return c.json(result, 200);
 });

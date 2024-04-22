@@ -27,4 +27,24 @@ export class AuthMiddleware {
       await next();
     };
   }
+
+  static authorize(perms: string[]): Handler {
+    return async (c, next) => {
+      if (perms.length === 0) await next();
+
+      const t = c.get("t");
+      const authPayload = c.get("authPayload");
+
+      if (!authPayload.permissions?.length) {
+        throw new CustomException(t("auth.error.unauthorized"), 403);
+      }
+
+      const hasPerm = perms.some((item) => authPayload.permissions?.includes(item));
+      if (!hasPerm) {
+        throw new CustomException(t("auth.error.unauthorized"), 403);
+      }
+
+      await next();
+    };
+  }
 }

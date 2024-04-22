@@ -1,6 +1,6 @@
 import { count, eq } from "drizzle-orm";
 import { db } from "~/database/db.js";
-import { UserTable } from "~/domains/user/user.entity.js";
+import { UserTable } from "~/entities/user.entity.js";
 import { User } from "~/domains/user/user.type.js";
 
 export class UserRepository {

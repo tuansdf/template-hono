@@ -13,6 +13,7 @@ export class AuthUtils {
       id: user.id,
       username: user.username,
       type: "auth",
+      permissions: user?.permissions?.map((item) => item.code || ""),
     };
   }
 

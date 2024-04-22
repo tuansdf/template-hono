@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "~/database/db.js";
-import { UserTable } from "~/domains/user/user.entity.js";
+import { UserTable } from "~/entities/user.entity.js";
 import { UserRepository } from "~/domains/user/user.repository.js";
 import { UserSearchRequestDTO } from "~/domains/user/user.type.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
