@@ -2,7 +2,8 @@ import { ENV_JWT_EXPIRED_MINUTES } from "~/constants/env.constant.js";
 import { JwtAuthTokenPayload } from "~/domains/auth/auth.type.js";
 import { User } from "~/domains/user/user.type.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
-import { datelib } from "~/lib/date/datelib.js";
+import { TFn } from "~/i18n/i18n.type.js";
+import { dated } from "~/lib/date/date.js";
 import { JwtTokenClaims } from "~/lib/jwt/jwt.type.js";
 import { JwtUtils } from "~/lib/jwt/jwt.util.js";
 
@@ -16,7 +17,7 @@ export class AuthUtils {
   }
 
   static createAuthTokenClaims(): JwtTokenClaims {
-    const current = datelib();
+    const current = dated();
     const currentUnix = current.unix();
     const expiredUnix = current.add(ENV_JWT_EXPIRED_MINUTES, "minute").unix();
     return {
@@ -32,15 +33,15 @@ export class AuthUtils {
     return JwtUtils.sign(payload, claims);
   }
 
-  static async verifyAuthToken(token: string): Promise<JwtAuthTokenPayload> {
+  static async verifyAuthToken(token: string, t: TFn): Promise<JwtAuthTokenPayload> {
     try {
       const payload = await JwtUtils.verify(token);
       if (payload.type !== "auth") {
-        throw new CustomException("Unauthorized", 401);
+        throw new CustomException(t("auth.error.unauthorized"), 401);
       }
       return payload as JwtAuthTokenPayload;
     } catch (e) {
-      throw new CustomException("Unauthorized", 401);
+      throw new CustomException(t("auth.error.unauthorized"), 401);
     }
   }
 }

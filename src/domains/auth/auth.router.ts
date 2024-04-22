@@ -9,6 +9,7 @@ authRouter.post("/login", async (c) => {
 
   const body = AuthValidator.validateLoginRequest(await c.req.json());
   const result = await AuthService.login(body, t);
+
   return c.json(result, 200);
 });
 

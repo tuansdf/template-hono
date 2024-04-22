@@ -1,7 +1,14 @@
 {
   "user": {
     "error": {
-      "not_found": "Người dùng không tồn tại"
+      "not_found": "Người dùng không tồn tại",
+      "duplicated_username": "Tên người dùng này đã được sử dụng",
+      "duplicated_email": "Địa chỉ email này đã được sử dụng"
+    }
+  },
+  "auth": {
+    "error": {
+      "unauthorized": "Bạn không có quyền truy cập"
     }
   }
 }

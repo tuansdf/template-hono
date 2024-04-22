@@ -41,6 +41,7 @@
     "i18next-http-middleware": "^3.5.0",
     "nanoid": "^5.0.7",
     "pg": "^8.11.5",
+    "winston": "^3.13.0",
     "zod": "^3.22.5"
   }
 }

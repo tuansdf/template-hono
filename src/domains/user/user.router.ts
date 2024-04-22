@@ -7,6 +7,7 @@ export const userRouter = RouterUtils.init();
 
 userRouter.get("/detail/:id", AuthMiddleware.authenticate(), async (c) => {
   const t = c.get("t");
+
   const id = Number(c.req.param("id"));
 
   const result = await UserService.findOneById(id, t);
@@ -15,6 +16,7 @@ userRouter.get("/detail/:id", AuthMiddleware.authenticate(), async (c) => {
 
 userRouter.get("/detail", AuthMiddleware.authenticate(), async (c) => {
   const t = c.get("t");
+
   const username = c.req.query("username");
   const email = c.req.query("email");
 

@@ -22,12 +22,12 @@ export class I18nUtils {
     return result;
   }
 
+  static getT(lang?: string) {
+    return i18n.getFixedT(this.getLang(lang));
+  }
+
   static getMessage(key: string, lang?: string) {
     const t = this.getT(lang);
     return t(key);
-  }
-
-  static getT(lang?: string) {
-    return i18n.getFixedT(this.getLang(lang));
   }
 }

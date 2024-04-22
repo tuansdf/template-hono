@@ -10,7 +10,7 @@ export class UserService {
   static async findOneById(userId: number, t: TFn) {
     const user = await UserRepository.findTopById(userId);
     if (!user) {
-      throw new CustomException(t("user.error.not.found"), 404);
+      throw new CustomException(t("user.error.not_found"), 404);
     }
     return user;
   }
@@ -41,9 +41,7 @@ export class UserService {
       .from(UserTable)
       .where(
         and(
-          requestDTO.username
-            ? eq(UserTable.username, requestDTO.username)
-            : undefined,
+          requestDTO.username ? eq(UserTable.username, requestDTO.username) : undefined,
           requestDTO.email ? eq(UserTable.email, requestDTO.email) : undefined,
         ),
       );

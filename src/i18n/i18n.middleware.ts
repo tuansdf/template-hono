@@ -14,7 +14,7 @@ export class I18nMiddleware {
           default: defaultLang,
         });
       }
-      c.set("lang", lang);
+      c.set("lang", I18nUtils.getLang(lang));
       c.set("t", I18nUtils.getT(lang));
       await next();
     };
