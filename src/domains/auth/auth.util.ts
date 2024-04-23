@@ -38,11 +38,11 @@ export class AuthUtils {
     try {
       const payload = await JwtUtils.verify(token);
       if (payload.type !== "auth") {
-        throw new CustomException(t("auth.error.unauthorized"), 401);
+        throw new CustomException(t("auth.error.unauthenticated"), 401);
       }
       return payload as JwtAuthTokenPayload;
     } catch (e) {
-      throw new CustomException(t("auth.error.unauthorized"), 401);
+      throw new CustomException(t("auth.error.unauthenticated"), 401);
     }
   }
 }

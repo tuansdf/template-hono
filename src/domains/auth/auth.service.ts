@@ -11,11 +11,11 @@ export class AuthService {
   static async login(requestDTO: LoginRequestDTO, t: TFn) {
     const user = await UserRepository.findTopByUsernameOrEmailWithPassword(requestDTO.username);
     if (!user) {
-      throw new CustomException(t("user.error.not_found"), 404);
+      throw new CustomException(t("auth.error.unauthenticated"), 401);
     }
     const isPasswordMatch = await HashUtils.verify(user.password || "", requestDTO.password);
     if (!isPasswordMatch) {
-      throw new CustomException(t("auth.error.unauthorized"), 401);
+      throw new CustomException(t("auth.error.unauthenticated"), 401);
     }
     const permissions = await PermissionRepository.findAllByUserId(user.id);
     const { password, ...userWithoutPassword } = user;

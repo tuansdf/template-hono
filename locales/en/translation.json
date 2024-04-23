@@ -8,7 +8,8 @@
     "error": {
       "duplicated_username": "This username is already taken",
       "duplicated_email": "This email address is already registered",
-      "unauthorized": "Unauthorized"
+      "unauthenticated": "Invalid credentials",
+      "unauthorized": "Insufficient permissions"
     }
   }
 }

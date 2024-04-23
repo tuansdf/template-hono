@@ -8,7 +8,8 @@
     "error": {
       "duplicated_username": "Tên người dùng này đã được sử dụng",
       "duplicated_email": "Địa chỉ email này đã được sử dụng",
-      "unauthorized": "Bạn không có quyền truy cập"
+      "unauthenticated": "Thông tin đăng nhập không chính xác",
+      "unauthorized": "Bạn không có quyền truy cập tài nguyên này"
     }
   }
 }
