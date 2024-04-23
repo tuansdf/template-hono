@@ -12,8 +12,8 @@ export type RegisterRequestDTO = {
 };
 
 export type JwtAuthTokenPayload = {
-  id?: number;
+  id?: number | null;
   username?: string | null;
   type?: "auth";
-  permissions?: string[];
+  permissions?: string[] | null;
 } & JwtTokenClaims;

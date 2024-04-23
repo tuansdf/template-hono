@@ -1,13 +1,13 @@
 {
   "user": {
     "error": {
-      "not_found": "Người dùng không tồn tại",
-      "duplicated_username": "Tên người dùng này đã được sử dụng",
-      "duplicated_email": "Địa chỉ email này đã được sử dụng"
+      "not_found": "Người dùng không tồn tại"
     }
   },
   "auth": {
     "error": {
+      "duplicated_username": "Tên người dùng này đã được sử dụng",
+      "duplicated_email": "Địa chỉ email này đã được sử dụng",
       "unauthorized": "Bạn không có quyền truy cập"
     }
   }

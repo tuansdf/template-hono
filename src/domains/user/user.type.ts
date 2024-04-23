@@ -7,8 +7,18 @@ export type UserSearchRequestDTO = {
   username: string;
 };
 
-export type User = typeof UserTable.$inferSelect & {
-  roles?: (typeof RoleTable.$inferSelect)[];
-  permissions?: (typeof PermissionTable.$inferSelect)[];
-};
+export type User = typeof UserTable.$inferSelect;
+
 export type UserSave = typeof UserTable.$inferInsert;
+
+export type Role = typeof RoleTable.$inferSelect;
+
+export type Permission = typeof PermissionTable.$inferSelect;
+
+export type UserDTO = {
+  id?: number | null;
+  email?: string | null;
+  username?: string | null;
+  roles?: Role[] | null;
+  permissions?: Permission[] | null;
+};

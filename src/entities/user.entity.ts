@@ -2,8 +2,8 @@ import { bigserial, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const UserTable = pgTable("_user", {
   id: bigserial("id", { mode: "number" }).primaryKey(),
-  email: text("email").unique(),
-  username: text("username").unique(),
+  email: text("email").notNull().unique(),
+  username: text("username").notNull().unique(),
   password: text("password"),
   createdBy: text("created_by"),
   updatedBy: text("updated_by"),

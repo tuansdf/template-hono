@@ -1,6 +1,6 @@
 import { ENV_JWT_EXPIRED_MINUTES } from "~/constants/env.constant.js";
 import { JwtAuthTokenPayload } from "~/domains/auth/auth.type.js";
-import { User } from "~/domains/user/user.type.js";
+import { UserDTO } from "~/domains/user/user.type.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
 import { TFn } from "~/i18n/i18n.type.js";
 import { dated } from "~/lib/date/date.js";
@@ -8,7 +8,7 @@ import { JwtTokenClaims } from "~/lib/jwt/jwt.type.js";
 import { JwtUtils } from "~/lib/jwt/jwt.util.js";
 
 export class AuthUtils {
-  static createAuthTokenPayload(user: User): JwtAuthTokenPayload {
+  static createAuthTokenPayload(user: UserDTO): JwtAuthTokenPayload {
     return {
       id: user.id,
       username: user.username,
@@ -28,7 +28,7 @@ export class AuthUtils {
     };
   }
 
-  static async createAuthToken(user: User): Promise<string> {
+  static async createAuthToken(user: UserDTO): Promise<string> {
     const payload = this.createAuthTokenPayload(user);
     const claims = this.createAuthTokenClaims();
     return JwtUtils.sign(payload, claims);

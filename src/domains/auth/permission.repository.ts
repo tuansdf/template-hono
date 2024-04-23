@@ -4,14 +4,20 @@ import { MapRolePermissionTable } from "~/entities/map-role-permission.entity.js
 import { MapUserRoleTable } from "~/entities/map-user-role.entity.js";
 import { PermissionTable } from "~/entities/permission.entity.js";
 
+const commonSelect = {
+  id: PermissionTable.id,
+  code: PermissionTable.code,
+  b: PermissionTable.b,
+};
+
 export class PermissionRepository {
   static async findAll() {
-    return db.select().from(PermissionTable);
+    return db.select(commonSelect).from(PermissionTable);
   }
 
   static async findAllByRoleId(roleId: number) {
     return db
-      .select()
+      .select(commonSelect)
       .from(PermissionTable)
       .innerJoin(MapRolePermissionTable, eq(MapRolePermissionTable.permissionId, PermissionTable.id))
       .where(eq(MapRolePermissionTable.roleId, roleId));
@@ -19,11 +25,7 @@ export class PermissionRepository {
 
   static async findAllByUserId(userId: number) {
     return db
-      .select({
-        id: PermissionTable.id,
-        code: PermissionTable.code,
-        b: PermissionTable.b,
-      })
+      .select(commonSelect)
       .from(PermissionTable)
       .innerJoin(MapRolePermissionTable, eq(MapRolePermissionTable.permissionId, PermissionTable.id))
       .innerJoin(MapUserRoleTable, eq(MapUserRoleTable.roleId, MapRolePermissionTable.roleId))

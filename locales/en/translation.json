@@ -1,13 +1,13 @@
 {
   "user": {
     "error": {
-      "not_found": "User not found",
-      "duplicated_username": "This username is already taken",
-      "duplicated_email": "This email address is already registered"
+      "not_found": "User not found"
     }
   },
   "auth": {
     "error": {
+      "duplicated_username": "This username is already taken",
+      "duplicated_email": "This email address is already registered",
       "unauthorized": "Unauthorized"
     }
   }

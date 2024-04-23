@@ -19,7 +19,6 @@
     "lib": ["ES2022"],
 
     "types": ["node"],
-    "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "paths": {
       "~/*": ["src/*"]
