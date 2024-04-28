@@ -1,4 +1,4 @@
-import { hash, verify } from "@node-rs/argon2";
+import { hash, verify } from "argon2";
 
 export class HashUtils {
   static async hash(toBeHashed: string): Promise<string> {

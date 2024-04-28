@@ -9,7 +9,7 @@ await i18n.use(Backend).init({
   ns: ["translation"],
   defaultNS: "translation",
   backend: {
-    loadPath: "./locales/{{lng}}/{{ns}}.json",
+    loadPath: "./resources/locales/{{lng}}/{{ns}}.json",
   },
 });
 
