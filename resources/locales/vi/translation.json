@@ -1,4 +1,9 @@
 {
+  "common": {
+    "error": {
+      "not_found": "Tài nguyên yêu cầu không tồn tại"
+    }
+  },
   "user": {
     "error": {
       "not_found": "Người dùng không tồn tại"

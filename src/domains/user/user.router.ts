@@ -1,4 +1,5 @@
 import { AuthMiddleware } from "~/domains/auth/auth.middleware.js";
+import { ROLE_PERM_SYSTEM_ADMIN } from "~/domains/permission/permission.constant.js";
 import { UserService } from "~/domains/user/user.service.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
 import { RouterUtils } from "~/utils/router.util.js";
@@ -31,7 +32,7 @@ userRouter.get("/detail", AuthMiddleware.authenticate(), async (c) => {
   }
 });
 
-userRouter.get("/", AuthMiddleware.authenticate(), async (c) => {
+userRouter.get("/", AuthMiddleware.authenticate(), AuthMiddleware.authorize([ROLE_PERM_SYSTEM_ADMIN]), async (c) => {
   const result = await UserService.findAll();
   return c.json(result, 200);
 });

@@ -1,6 +1,6 @@
 import { LoginRequestDTO, RegisterRequestDTO } from "~/domains/auth/auth.type.js";
 import { AuthUtils } from "~/domains/auth/auth.util.js";
-import { PermissionRepository } from "~/domains/auth/permission.repository.js";
+import { PermissionRepository } from "~/domains/permission/permission.repository.js";
 import { UserRepository } from "~/domains/user/user.repository.js";
 import { UserDTO } from "~/domains/user/user.type.js";
 import { CustomException } from "~/exceptions/custom-exception.js";

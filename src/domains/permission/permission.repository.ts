@@ -7,7 +7,8 @@ import { PermissionTable } from "~/entities/permission.entity.js";
 const commonSelect = {
   id: PermissionTable.id,
   code: PermissionTable.code,
-  b: PermissionTable.b,
+  name: PermissionTable.code,
+  description: PermissionTable.description,
 };
 
 export class PermissionRepository {

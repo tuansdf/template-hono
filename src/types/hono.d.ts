@@ -5,6 +5,6 @@ declare module "hono" {
   interface ContextVariableMap {
     t: TFn;
     lang: ValidLang;
-    authPayload: JwtAuthTokenPayload;
+    authPayload?: JwtAuthTokenPayload;
   }
 }

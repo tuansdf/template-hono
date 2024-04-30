@@ -1,4 +1,3 @@
-import { serve } from "@hono/node-server";
 import dotenv from "dotenv";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
@@ -31,7 +30,12 @@ app.onError(ErrorHandlerMiddleware.handle());
 const port = ENV_APP_PORT || 5000;
 console.log(`Server is running on port ${port}`);
 
-serve({
+// serve({
+//   fetch: app.fetch,
+//   port,
+// });
+
+export default {
   fetch: app.fetch,
   port,
-});
+};

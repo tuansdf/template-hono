@@ -1,5 +1,6 @@
 import { ENV_JWT_EXPIRED_MINUTES } from "~/constants/env.constant.js";
 import { JwtAuthTokenPayload } from "~/domains/auth/auth.type.js";
+import { PermissionUtils } from "~/domains/permission/permission.util.js";
 import { UserDTO } from "~/domains/user/user.type.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
 import { TFn } from "~/i18n/i18n.type.js";
@@ -10,10 +11,10 @@ import { JwtUtils } from "~/lib/jwt/jwt.util.js";
 export class AuthUtils {
   static createAuthTokenPayload(user: UserDTO): JwtAuthTokenPayload {
     return {
-      id: user.id,
+      userId: user.id,
       username: user.username,
       type: "auth",
-      permissions: user?.permissions?.map((item) => item.code || ""),
+      perms: PermissionUtils.codesToBinaries(user.permissions?.map((item) => item.code) || []),
     };
   }
 

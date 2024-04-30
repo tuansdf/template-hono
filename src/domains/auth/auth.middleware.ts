@@ -1,5 +1,6 @@
 import { Handler } from "hono";
 import { AuthUtils } from "~/domains/auth/auth.util.js";
+import { PermissionUtils } from "~/domains/permission/permission.util.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
 
 export class AuthMiddleware {
@@ -35,13 +36,20 @@ export class AuthMiddleware {
       const t = c.get("t");
       const authPayload = c.get("authPayload");
 
-      if (!authPayload.permissions?.length) {
-        throw new CustomException(t("auth.error.unauthorized"), 403);
+      if (!authPayload) {
+        throw new CustomException(t("common.error.not_found"), 404);
       }
 
-      const hasPerm = perms.some((item) => authPayload.permissions?.includes(item));
+      if (!authPayload.perms?.length) {
+        throw new CustomException(t("common.error.not_found"), 404);
+      }
+      const userPerms = authPayload.perms;
+
+      const hasPerm = perms.some((item) => {
+        return PermissionUtils.hasPerm(item, userPerms);
+      });
       if (!hasPerm) {
-        throw new CustomException(t("auth.error.unauthorized"), 403);
+        throw new CustomException(t("common.error.not_found"), 404);
       }
 
       await next();

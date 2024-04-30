@@ -1,4 +1,9 @@
 {
+  "common": {
+    "error": {
+      "not_found": "The requested item was not found"
+    }
+  },
   "user": {
     "error": {
       "not_found": "User not found"

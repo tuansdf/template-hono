@@ -6,7 +6,8 @@ import { RoleTable } from "~/entities/role.entity.js";
 const commonSelect = {
   id: RoleTable.id,
   code: RoleTable.code,
-  b: RoleTable.b,
+  name: RoleTable.name,
+  description: RoleTable.description,
 };
 
 export class RoleRepository {
