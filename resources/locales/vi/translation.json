@@ -1,6 +1,7 @@
 {
   "common": {
     "error": {
+      "other": "Có lỗi xảy ra",
       "not_found": "Tài nguyên yêu cầu không tồn tại"
     }
   },
@@ -15,6 +16,12 @@
       "duplicated_email": "Địa chỉ email này đã được sử dụng",
       "unauthenticated": "Thông tin đăng nhập không chính xác",
       "unauthorized": "Bạn không có quyền truy cập tài nguyên này"
+    }
+  },
+  "permission": {
+    "error": {
+      "not_found": "Quyền không tồn tại",
+      "duplicated_code": "Mã quyền này đã tồn tại"
     }
   }
 }

@@ -1,5 +1,6 @@
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { db } from "~/database/db.js";
+import { RoleSave, RoleUpdate } from "~/domains/role/role.type.js";
 import { MapUserRoleTable } from "~/entities/map-user-role.entity.js";
 import { RoleTable } from "~/entities/role.entity.js";
 
@@ -21,5 +22,42 @@ export class RoleRepository {
       .from(RoleTable)
       .innerJoin(MapUserRoleTable, eq(MapUserRoleTable.roleId, RoleTable.id))
       .where(eq(MapUserRoleTable.userId, userId));
+  }
+
+  static async findTopById(id: number) {
+    const result = await db.select(commonSelect).from(RoleTable).where(eq(RoleTable.id, id)).limit(1);
+    return result?.[0];
+  }
+
+  static async countByCode(code: string) {
+    const result = await db.select({ value: count() }).from(RoleTable).where(eq(RoleTable.code, code));
+    return result?.[0]?.value || 0;
+  }
+
+  static async countById(id: number) {
+    const result = await db.select({ value: count() }).from(RoleTable).where(eq(RoleTable.id, id));
+    return result?.[0]?.value || 0;
+  }
+
+  static async existById(id: number) {
+    const result = await this.countById(id);
+    return result > 0;
+  }
+
+  static async existByCode(code: string) {
+    const result = await this.countByCode(code);
+    return result > 0;
+  }
+
+  static async save(role: RoleSave) {
+    const saved = await db.insert(RoleTable).values(role).returning(commonSelect);
+    return saved[0]!;
+  }
+
+  static async updateById(request: RoleUpdate) {
+    await db
+      .update(RoleTable)
+      .set({ name: request.name, description: request.description })
+      .where(eq(RoleTable.id, request.id));
   }
 }

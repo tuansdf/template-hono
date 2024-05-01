@@ -5,6 +5,11 @@ export const UserTable = pgTable("_user", {
   email: text("email").notNull().unique(),
   username: text("username").notNull().unique(),
   password: text("password"),
+  status: text("status"),
+  tokenNbf: timestamp("token_nbf", {
+    withTimezone: true,
+    mode: "string",
+  }).defaultNow(),
   createdBy: text("created_by"),
   updatedBy: text("updated_by"),
   createdAt: timestamp("created_at", {

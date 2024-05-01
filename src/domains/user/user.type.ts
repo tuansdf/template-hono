@@ -1,19 +1,10 @@
-import { PermissionTable } from "~/entities/permission.entity.js";
-import { RoleTable } from "~/entities/role.entity.js";
+import { Permission } from "~/domains/permission/permission.type.js";
+import { Role } from "~/domains/role/role.type.js";
 import { UserTable } from "~/entities/user.entity.js";
-
-export type UserSearchRequestDTO = {
-  email: string;
-  username: string;
-};
 
 export type User = typeof UserTable.$inferSelect;
 
 export type UserSave = typeof UserTable.$inferInsert;
-
-export type Role = typeof RoleTable.$inferSelect;
-
-export type Permission = typeof PermissionTable.$inferSelect;
 
 export type UserDTO = {
   id?: number | null;
@@ -21,4 +12,10 @@ export type UserDTO = {
   username?: string | null;
   roles?: Role[] | null;
   permissions?: Permission[] | null;
+};
+
+export type UserSearchRequestDTO = {
+  pageNumber?: number;
+  pageSize?: number;
+  q?: string;
 };

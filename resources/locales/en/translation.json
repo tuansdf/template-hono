@@ -1,6 +1,7 @@
 {
   "common": {
     "error": {
+      "other": "Something went wrong",
       "not_found": "The requested item was not found"
     }
   },
@@ -15,6 +16,12 @@
       "duplicated_email": "This email address is already registered",
       "unauthenticated": "Invalid credentials",
       "unauthorized": "Insufficient permissions"
+    }
+  },
+  "permission": {
+    "error": {
+      "not_found": "Permission not found",
+      "duplicated_code": "There is already a permission with this code"
     }
   }
 }
