@@ -7,37 +7,28 @@ import { RouterUtils } from "~/utils/router.util.js";
 
 export const roleRouter = RouterUtils.init();
 
-roleRouter.get("/detail/:id", authenticate(), authorize([ROLE_PERM_SYSTEM_ADMIN]), async (c) => {
+roleRouter.use(authenticate());
+roleRouter.use(authorize([ROLE_PERM_SYSTEM_ADMIN]));
+
+roleRouter.get("/detail/:id", async (c) => {
   const id = Number(c.req.param("id"));
   const result = await RoleService.findOneById(id);
   return c.json(result, 200);
 });
 
-roleRouter.get("/", authenticate(), authorize([ROLE_PERM_SYSTEM_ADMIN]), async (c) => {
+roleRouter.get("/", async (c) => {
   const result = await RoleService.findAll();
   return c.json(result, 200);
 });
 
-roleRouter.post(
-  "/",
-  authenticate(),
-  authorize([ROLE_PERM_SYSTEM_ADMIN]),
-  zValidator("json", createRoleBodySchema),
-  async (c) => {
-    const body = c.req.valid("json");
-    await RoleService.create(body);
-    return c.json(null, 200);
-  },
-);
+roleRouter.post("/", zValidator("json", createRoleBodySchema), async (c) => {
+  const body = c.req.valid("json");
+  await RoleService.create(body);
+  return c.json(null, 200);
+});
 
-roleRouter.patch(
-  "/",
-  authenticate(),
-  authorize([ROLE_PERM_SYSTEM_ADMIN]),
-  zValidator("json", updateRoleBodySchema),
-  async (c) => {
-    const body = c.req.valid("json");
-    await RoleService.update(body);
-    return c.json(null, 200);
-  },
-);
+roleRouter.patch("/", zValidator("json", updateRoleBodySchema), async (c) => {
+  const body = c.req.valid("json");
+  await RoleService.update(body);
+  return c.json(null, 200);
+});
