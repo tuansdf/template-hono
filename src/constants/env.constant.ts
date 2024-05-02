@@ -12,4 +12,5 @@ export const ENV_DB_DATABASE_NAME = requireString.parse(process.env.TH_DB_DATABA
 export const ENV_APP_PORT = requireNumber.parse(process.env.TH_APP_PORT);
 
 export const ENV_JWT_SECRET = requireString.parse(process.env.TH_JWT_SECRET);
-export const ENV_JWT_EXPIRED_MINUTES = requireNumber.parse(process.env.TH_JWT_EXPIRED_MINUTES);
+export const ENV_JWT_ACCESS_LIFETIME = requireNumber.parse(process.env.TH_JWT_ACCESS_LIFETIME);
+export const ENV_JWT_REFRESH_LIFETIME = requireNumber.parse(process.env.TH_JWT_REFRESH_LIFETIME);

@@ -1,18 +1,36 @@
 {
   "form": {
     "error": {
-      "username": {
-        "required": "Username is required",
-        "min_length_4": "Username must have at least 4 characters"
-      },
       "email": {
         "required": "Email is required",
-        "invalid_format": "Invalid email format"
+        "invalid": "Email is invalid"
+      },
+      "username": {
+        "required": "Username is required",
+        "invalid": "Username is invalid",
+        "min_length_4": "Username must have at least 4 characters",
+        "max_length_255": "Username cannot exceed 255 characters"
       },
       "password": {
         "required": "Password is required",
-        "min_length_8": "Password must have at least 4 characters",
+        "invalid": "Password is invalid",
+        "min_length_8": "Password must have at least 8 characters",
         "max_length_64": "Password cannot exceed 64 characters"
+      },
+      "code": {
+        "required": "Code is required",
+        "invalid": "Code is invalid",
+        "max_length_255": "Code cannot exceed 255 characters"
+      },
+      "name": {
+        "required": "Name is required",
+        "invalid": "Name is invalid",
+        "max_length_255": "Name cannot exceed 255 characters"
+      },
+      "description": {
+        "required": "Description is required",
+        "invalid": "Description is invalid",
+        "max_length_255": "Description cannot exceed 255 characters"
       }
     }
   },

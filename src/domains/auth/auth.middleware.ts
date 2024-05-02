@@ -20,7 +20,7 @@ export const authenticate = (): MiddlewareHandler => {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
 
-    const payload = await AuthUtils.verifyAuthToken(bearerToken);
+    const payload = await AuthUtils.verifyToken(bearerToken);
     c.set("authPayload", payload);
 
     await next();

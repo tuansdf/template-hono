@@ -1,5 +1,5 @@
-import { ENV_JWT_EXPIRED_MINUTES } from "~/constants/env.constant.js";
-import { JwtAuthTokenPayload } from "~/domains/auth/auth.type.js";
+import { ENV_JWT_ACCESS_LIFETIME, ENV_JWT_REFRESH_LIFETIME } from "~/constants/env.constant.js";
+import { AuthTokenType, JwtAuthTokenPayload } from "~/domains/auth/auth.type.js";
 import { PermissionUtils } from "~/domains/permission/permission.util.js";
 import { UserDTO } from "~/domains/user/user.type.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
@@ -8,19 +8,21 @@ import { JwtTokenClaims } from "~/lib/jwt/jwt.type.js";
 import { JwtUtils } from "~/lib/jwt/jwt.util.js";
 
 export class AuthUtils {
-  static createAuthTokenPayload(user: UserDTO): JwtAuthTokenPayload {
+  static createTokenPayload(user: UserDTO, type: AuthTokenType = "access"): JwtAuthTokenPayload {
     return {
       userId: user.id,
       username: user.username,
-      type: "auth",
+      type,
       perms: PermissionUtils.codesToBinaries(user.permissions?.map((item) => item.code) || []),
     };
   }
 
-  static createAuthTokenClaims(): JwtTokenClaims {
+  static createTokenClaims(type: AuthTokenType = "access"): JwtTokenClaims {
     const current = dated();
     const currentUnix = current.unix();
-    const expiredUnix = current.add(ENV_JWT_EXPIRED_MINUTES, "minute").unix();
+    const expiredUnix = current
+      .add(type === "access" ? ENV_JWT_ACCESS_LIFETIME : ENV_JWT_REFRESH_LIFETIME, "minute")
+      .unix();
     return {
       exp: expiredUnix,
       iat: currentUnix,
@@ -28,16 +30,16 @@ export class AuthUtils {
     };
   }
 
-  static async createAuthToken(user: UserDTO): Promise<string> {
-    const payload = this.createAuthTokenPayload(user);
-    const claims = this.createAuthTokenClaims();
+  static async createToken(user: UserDTO, type: AuthTokenType = "access"): Promise<string> {
+    const payload = this.createTokenPayload(user, type);
+    const claims = this.createTokenClaims(type);
     return JwtUtils.sign(payload, claims);
   }
 
-  static async verifyAuthToken(token: string): Promise<JwtAuthTokenPayload> {
+  static async verifyToken(token: string, type: AuthTokenType = "access"): Promise<JwtAuthTokenPayload> {
     try {
-      const payload = await JwtUtils.verify(token);
-      if (payload.type !== "auth") {
+      const payload: JwtAuthTokenPayload = await JwtUtils.verify(token);
+      if (payload.type !== type) {
         throw new CustomException("auth.error.unauthenticated", 401);
       }
       return payload as JwtAuthTokenPayload;

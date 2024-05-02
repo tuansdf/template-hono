@@ -19,7 +19,7 @@ export class AuthService {
     const permissions = await PermissionRepository.findAllByUserId(user.id);
     const { password, ...userWithoutPassword } = user;
     const result: UserDTO = { ...userWithoutPassword, permissions };
-    const token = await AuthUtils.createAuthToken(result);
+    const token = await AuthUtils.createToken(result);
     return { ...result, token };
   }
 
@@ -36,7 +36,7 @@ export class AuthService {
     const saved = await UserRepository.save(requestDTO);
     const permissions = await PermissionRepository.findAllByUserId(saved.id);
     const result: UserDTO = { ...saved, permissions };
-    const token = await AuthUtils.createAuthToken(result);
+    const token = await AuthUtils.createToken(result);
     return { ...result, token };
   }
 }
