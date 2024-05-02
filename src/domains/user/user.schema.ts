@@ -6,7 +6,7 @@ export const getDetailUserQuerySchema = z.object({
 });
 
 export const searchUserQuerySchema: z.ZodType<UserSearchRequestDTO> = z.object({
-  q: z.string().min(1),
-  pageNumber: z.coerce.number().default(1),
-  pageSize: z.coerce.number().default(15),
+  q: z.string().nullish(),
+  pageNumber: z.coerce.number().nullish().default(1),
+  pageSize: z.coerce.number().nullish().default(15),
 });

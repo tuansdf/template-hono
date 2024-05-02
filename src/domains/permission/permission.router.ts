@@ -1,8 +1,8 @@
-import { zValidator } from "@hono/zod-validator";
 import { authenticate, authorize } from "~/domains/auth/auth.middleware.js";
 import { ROLE_PERM_SYSTEM_ADMIN } from "~/domains/permission/permission.constant.js";
 import { createPermissionBodySchema, updatePermissionBodySchema } from "~/domains/permission/permission.schema.js";
 import { PermissionService } from "~/domains/permission/permission.service.js";
+import { validator } from "~/middlewares/validator.middleware.js";
 import { RouterUtils } from "~/utils/router.util.js";
 
 export const permissionRouter = RouterUtils.init();
@@ -21,13 +21,13 @@ permissionRouter.get("/", async (c) => {
   return c.json(result, 200);
 });
 
-permissionRouter.post("/", zValidator("json", createPermissionBodySchema), async (c) => {
+permissionRouter.post("/", validator("json", createPermissionBodySchema), async (c) => {
   const body = c.req.valid("json");
   await PermissionService.create(body);
   return c.json(null, 200);
 });
 
-permissionRouter.patch("/", zValidator("json", updatePermissionBodySchema), async (c) => {
+permissionRouter.patch("/", validator("json", updatePermissionBodySchema), async (c) => {
   const body = c.req.valid("json");
   await PermissionService.update(body);
   return c.json(null, 200);

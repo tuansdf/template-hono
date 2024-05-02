@@ -1,9 +1,9 @@
-import { Handler } from "hono";
+import { MiddlewareHandler } from "hono";
 import { AuthUtils } from "~/domains/auth/auth.util.js";
 import { PermissionUtils } from "~/domains/permission/permission.util.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
 
-export const authenticate = (): Handler => {
+export const authenticate = (): MiddlewareHandler => {
   return async (c, next) => {
     const authHeader = c.req.header("Authorization");
     if (!authHeader) {
@@ -27,7 +27,7 @@ export const authenticate = (): Handler => {
   };
 };
 
-export const authorize = (perms: string[]): Handler => {
+export const authorize = (perms: string[]): MiddlewareHandler => {
   return async (c, next) => {
     if (perms.length === 0) await next();
 

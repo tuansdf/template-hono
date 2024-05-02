@@ -15,7 +15,7 @@ export type UserDTO = {
 };
 
 export type UserSearchRequestDTO = {
-  pageNumber?: number;
-  pageSize?: number;
-  q?: string;
+  pageNumber?: number | null;
+  pageSize?: number | null;
+  q?: string | null;
 };

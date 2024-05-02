@@ -1,7 +1,7 @@
-import { zValidator } from "@hono/zod-validator";
 import { authenticate } from "~/domains/auth/auth.middleware.js";
 import { getDetailUserQuerySchema, searchUserQuerySchema } from "~/domains/user/user.schema.js";
 import { UserService } from "~/domains/user/user.service.js";
+import { validator } from "~/middlewares/validator.middleware.js";
 import { RouterUtils } from "~/utils/router.util.js";
 
 export const userRouter = RouterUtils.init();
@@ -12,13 +12,13 @@ userRouter.get("/detail/:id", authenticate(), async (c) => {
   return c.json(result, 200);
 });
 
-userRouter.get("/detail/by-username", authenticate(), zValidator("query", getDetailUserQuerySchema), async (c) => {
+userRouter.get("/detail/by-username", authenticate(), validator("query", getDetailUserQuerySchema), async (c) => {
   const query = c.req.valid("query");
   const result = await UserService.findOneByUsername(query.q);
   return c.json(result, 200);
 });
 
-userRouter.get("/detail/by-email", authenticate(), zValidator("query", getDetailUserQuerySchema), async (c) => {
+userRouter.get("/detail/by-email", authenticate(), validator("query", getDetailUserQuerySchema), async (c) => {
   const query = c.req.valid("query");
   const result = await UserService.findOneByEmail(query.q);
   return c.json(result, 200);
@@ -29,7 +29,7 @@ userRouter.get("/", authenticate(), async (c) => {
   return c.json(result, 200);
 });
 
-userRouter.get("/search", authenticate(), zValidator("query", searchUserQuerySchema), async (c) => {
+userRouter.get("/search", authenticate(), validator("query", searchUserQuerySchema), async (c) => {
   const requestDTO = c.req.valid("query");
   const result = await UserService.search(requestDTO);
   return c.json(result, 200);
