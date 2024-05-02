@@ -1,11 +1,11 @@
 export type JwtTokenPayload = Record<string, unknown> & JwtTokenClaims;
 
 export type JwtTokenClaims = {
-  iss?: string | number;
-  sub?: string | number;
-  aud?: string | number;
-  exp?: number;
-  nbf?: number;
-  iat?: number;
-  jti?: string | number;
+  iss?: string | number | null;
+  sub?: string | number | null;
+  aud?: string | number | null;
+  exp?: number | null;
+  nbf?: number | null;
+  iat?: number | null;
+  jti?: string | number | null;
 };

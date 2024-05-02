@@ -1,4 +1,21 @@
 {
+  "form": {
+    "error": {
+      "username": {
+        "required": "Vui lòng nhập tên đăng nhập",
+        "min_length_4": "Tên đăng nhập phải có tối thiểu 4 ký tự"
+      },
+      "email": {
+        "required": "Vui lòng nhập địa chỉ email",
+        "invalid_format": "Địa chỉ email có sai định dạng"
+      },
+      "password": {
+        "required": "Vui lòng nhập mật khẩu",
+        "min_length_8": "Mật khẩu phải có tối thiểu 8 ký tự",
+        "max_length_64": "Mật khẩu chỉ chứa tối đa 64 ký tự"
+      }
+    }
+  },
   "common": {
     "error": {
       "other": "Có lỗi xảy ra",

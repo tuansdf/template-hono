@@ -3,7 +3,7 @@
     "error": {
       "username": {
         "required": "Username is required",
-        "min_length_4": "Username must be at least 4 characters"
+        "min_length_4": "Username must have at least 4 characters"
       },
       "email": {
         "required": "Email is required",
@@ -11,7 +11,7 @@
       },
       "password": {
         "required": "Password is required",
-        "min_length_8": "Username must be at least 4 characters",
+        "min_length_8": "Password must have at least 4 characters",
         "max_length_64": "Password cannot exceed 64 characters"
       }
     }
