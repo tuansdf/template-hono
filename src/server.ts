@@ -20,7 +20,7 @@ const app = new Hono();
 app.use(logger());
 app.use(cors());
 app.use(secureHeaders());
-app.use(I18nMiddleware.handle());
+app.use(I18nMiddleware.detectLanguage());
 
 app.route("/", routes);
 

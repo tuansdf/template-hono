@@ -3,7 +3,6 @@ import { JwtAuthTokenPayload } from "~/domains/auth/auth.type.js";
 import { PermissionUtils } from "~/domains/permission/permission.util.js";
 import { UserDTO } from "~/domains/user/user.type.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
-import { TFn } from "~/i18n/i18n.type.js";
 import { dated } from "~/lib/date/date.js";
 import { JwtTokenClaims } from "~/lib/jwt/jwt.type.js";
 import { JwtUtils } from "~/lib/jwt/jwt.util.js";
@@ -35,15 +34,15 @@ export class AuthUtils {
     return JwtUtils.sign(payload, claims);
   }
 
-  static async verifyAuthToken(token: string, t: TFn): Promise<JwtAuthTokenPayload> {
+  static async verifyAuthToken(token: string): Promise<JwtAuthTokenPayload> {
     try {
       const payload = await JwtUtils.verify(token);
       if (payload.type !== "auth") {
-        throw new CustomException(t("auth.error.unauthenticated"), 401);
+        throw new CustomException("auth.error.unauthenticated", 401);
       }
       return payload as JwtAuthTokenPayload;
     } catch (e) {
-      throw new CustomException(t("auth.error.unauthenticated"), 401);
+      throw new CustomException("auth.error.unauthenticated", 401);
     }
   }
 }

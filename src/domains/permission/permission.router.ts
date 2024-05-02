@@ -11,9 +11,8 @@ import { RouterUtils } from "~/utils/router.util.js";
 export const permissionRouter = RouterUtils.init();
 
 permissionRouter.get("/detail/:id", authenticate(), authorize([ROLE_PERM_SYSTEM_ADMIN]), async (c) => {
-  const t = c.get("t");
   const id = Number(c.req.param("id"));
-  const result = await PermissionService.findOneById(id, t);
+  const result = await PermissionService.findOneById(id);
   return c.json(result, 200);
 });
 
@@ -28,9 +27,8 @@ permissionRouter.post(
   authorize([ROLE_PERM_SYSTEM_ADMIN]),
   zValidator("json", createPermissionBodySchema),
   async (c) => {
-    const t = c.get("t");
     const body = c.req.valid("json");
-    await PermissionService.create(body, t);
+    await PermissionService.create(body);
     return c.json(null, 200);
   },
 );
@@ -41,9 +39,8 @@ permissionRouter.patch(
   authorize([ROLE_PERM_SYSTEM_ADMIN]),
   zValidator("json", updatePermissionBodySchema),
   async (c) => {
-    const t = c.get("t");
     const body = c.req.valid("json");
-    await PermissionService.update(body, t);
+    await PermissionService.update(body);
     return c.json(null, 200);
   },
 );

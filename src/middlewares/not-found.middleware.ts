@@ -3,7 +3,8 @@ import { NotFoundHandler } from "hono";
 export class NotFoundMiddleware {
   static handle(): NotFoundHandler {
     return (c) => {
-      return c.json({ status: 404, message: "Not Found" }, 400);
+      const t = c.get("t");
+      return c.json({ status: 404, message: t("common.error.not_found") }, 400);
     };
   }
 }

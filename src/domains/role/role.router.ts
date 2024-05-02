@@ -8,9 +8,8 @@ import { RouterUtils } from "~/utils/router.util.js";
 export const roleRouter = RouterUtils.init();
 
 roleRouter.get("/detail/:id", authenticate(), authorize([ROLE_PERM_SYSTEM_ADMIN]), async (c) => {
-  const t = c.get("t");
   const id = Number(c.req.param("id"));
-  const result = await RoleService.findOneById(id, t);
+  const result = await RoleService.findOneById(id);
   return c.json(result, 200);
 });
 
@@ -25,9 +24,8 @@ roleRouter.post(
   authorize([ROLE_PERM_SYSTEM_ADMIN]),
   zValidator("json", createRoleBodySchema),
   async (c) => {
-    const t = c.get("t");
     const body = c.req.valid("json");
-    await RoleService.create(body, t);
+    await RoleService.create(body);
     return c.json(null, 200);
   },
 );
@@ -38,9 +36,8 @@ roleRouter.patch(
   authorize([ROLE_PERM_SYSTEM_ADMIN]),
   zValidator("json", updateRoleBodySchema),
   async (c) => {
-    const t = c.get("t");
     const body = c.req.valid("json");
-    await RoleService.update(body, t);
+    await RoleService.update(body);
     return c.json(null, 200);
   },
 );

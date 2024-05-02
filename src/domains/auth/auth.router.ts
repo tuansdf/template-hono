@@ -6,15 +6,13 @@ import { RouterUtils } from "~/utils/router.util.js";
 export const authRouter = RouterUtils.init();
 
 authRouter.post("/login", zValidator("json", loginRequestSchema), async (c) => {
-  const t = c.get("t");
   const body = c.req.valid("json");
-  const result = await AuthService.login(body, t);
+  const result = await AuthService.login(body);
   return c.json(result, 200);
 });
 
 authRouter.post("/register", zValidator("json", registerRequestSchema), async (c) => {
-  const t = c.get("t");
   const body = c.req.valid("json");
-  const result = await AuthService.register(body, t);
+  const result = await AuthService.register(body);
   return c.json(result, 200);
 });

@@ -7,23 +7,20 @@ import { RouterUtils } from "~/utils/router.util.js";
 export const userRouter = RouterUtils.init();
 
 userRouter.get("/detail/:id", authenticate(), async (c) => {
-  const t = c.get("t");
   const id = Number(c.req.param("id"));
-  const result = await UserService.findOneById(id, t);
+  const result = await UserService.findOneById(id);
   return c.json(result, 200);
 });
 
 userRouter.get("/detail/by-username", authenticate(), zValidator("query", getDetailUserQuerySchema), async (c) => {
-  const t = c.get("t");
   const query = c.req.valid("query");
-  const result = await UserService.findOneByUsername(query.q, t);
+  const result = await UserService.findOneByUsername(query.q);
   return c.json(result, 200);
 });
 
 userRouter.get("/detail/by-email", authenticate(), zValidator("query", getDetailUserQuerySchema), async (c) => {
-  const t = c.get("t");
   const query = c.req.valid("query");
-  const result = await UserService.findOneByEmail(query.q, t);
+  const result = await UserService.findOneByEmail(query.q);
   return c.json(result, 200);
 });
 

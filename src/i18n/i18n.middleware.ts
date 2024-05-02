@@ -4,7 +4,7 @@ import { defaultLang, validLangs } from "~/i18n/i18n.constant.js";
 import { I18nUtils } from "~/i18n/i18n.util.js";
 
 export class I18nMiddleware {
-  static handle(): Handler {
+  static detectLanguage(): Handler {
     return async (c, next) => {
       let lang = c.req.query("lng");
       if (!lang) {
