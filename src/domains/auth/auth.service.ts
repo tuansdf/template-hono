@@ -18,8 +18,9 @@ export class AuthService {
     }
     const permissions = await PermissionRepository.findAllByUserId(user.id);
     const { password, ...userWithoutPassword } = user;
-    const result: UserDTO = { ...userWithoutPassword, permissions };
-    const token = await AuthUtils.createToken(result);
+    const tokenPayload: UserDTO = { ...userWithoutPassword, permissions };
+    const token = await AuthUtils.createToken(tokenPayload);
+    const { permissions: _, ...result } = tokenPayload;
     return { ...result, token };
   }
 
