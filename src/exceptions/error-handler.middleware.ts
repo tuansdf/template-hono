@@ -5,7 +5,7 @@ import { ZodError } from "zod";
 export const errorHandler = (): ErrorHandler => {
   return (err, c) => {
     const t = c.get("t");
-    // console.error(err);
+    console.error(err);
     if (err instanceof HTTPException) {
       return c.json({ status: err.status, message: t(err.message || "common.error.other") }, err.status);
     }
