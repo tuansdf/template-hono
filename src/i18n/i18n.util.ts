@@ -15,7 +15,7 @@ await i18n.use(Backend).init({
 
 export class I18nUtils {
   static getLang(lang?: string): ValidLang {
-    let result: ValidLang = "en";
+    let result: ValidLang = defaultLang;
     if (validLangs.includes(lang as ValidLang)) {
       result = lang as ValidLang;
     }

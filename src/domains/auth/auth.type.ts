@@ -12,11 +12,11 @@ export type RegisterRequestDTO = {
   password: string;
 };
 
-export type AuthTokenType = "access" | "refresh";
+export type JwtAuthTokenType = "access" | "refresh";
 
 export type JwtAuthTokenPayload = {
   userId?: number | Nullish;
   username?: string | Nullish;
-  type?: AuthTokenType;
+  type?: JwtAuthTokenType;
   perms?: number[] | Nullish;
 } & JwtTokenClaims;
