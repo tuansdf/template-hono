@@ -14,7 +14,7 @@ export class AuthUtils {
       userId: user.id,
       username: user.username,
       type,
-      perms: PermissionUtils.codesToBinaries(user.permissions?.map((item) => item.code) || []),
+      perms: PermissionUtils.codesToIndexes(user.permissions?.map((item) => item.code) || []),
     };
   }
 

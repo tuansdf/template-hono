@@ -1,5 +1,5 @@
 import { authenticate, authorize } from "~/domains/auth/auth.middleware.js";
-import { ROLE_PERM_SYSTEM_ADMIN } from "~/domains/permission/permission.constant.js";
+import { PERM_SUPER_ADMIN } from "~/domains/permission/permission.constant.js";
 import { createRoleBodySchema, updateRoleBodySchema } from "~/domains/role/role.schema.js";
 import { RoleService } from "~/domains/role/role.service.js";
 import { validator } from "~/middlewares/validator.middleware.js";
@@ -8,7 +8,7 @@ import { RouterUtils } from "~/utils/router.util.js";
 export const roleRouter = RouterUtils.init();
 
 roleRouter.use(authenticate());
-roleRouter.use(authorize([ROLE_PERM_SYSTEM_ADMIN]));
+roleRouter.use(authorize([PERM_SUPER_ADMIN]));
 
 roleRouter.get("/detail/:id", async (c) => {
   const id = Number(c.req.param("id"));

@@ -1,19 +1,18 @@
-import { PERMISSION_TO_BINARY } from "~/domains/permission/permission.constant.js";
+import { PERM_INDEX } from "~/domains/permission/permission.constant.js";
 
 export class PermissionUtils {
-  static codesToBinaries = (perms: string[]): number[] => {
+  static codesToIndexes = (perms: string[]): number[] => {
     const result: number[] = [];
-    for (let i = 0; i < perms.length; i++) {
-      const binary = PERMISSION_TO_BINARY[perms[i]!];
-      if (!binary) continue;
-      result[binary[0]] = (result[binary[0]] || 0) | binary[1];
-    }
-    return Array.from(result).map((item) => item || 0);
+    perms.forEach((item) => {
+      const index = PERM_INDEX[item];
+      if (index) result.push(index);
+    });
+    return result;
   };
 
-  static hasPerm = (perm: string, perms: number[]) => {
-    const binary = PERMISSION_TO_BINARY[perm];
-    if (!binary) return false;
-    return ((perms[binary[0]] || 0) & binary[1]) === binary[1]!;
+  static hasPerm = (currentPerm: string, requiredPerms: number[]) => {
+    const index = PERM_INDEX[currentPerm];
+    if (!index) return false;
+    return requiredPerms.some((item) => index === item);
   };
 }
