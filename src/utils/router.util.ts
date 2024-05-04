@@ -7,6 +7,6 @@ export class RouterUtils {
   };
 
   static response = (c: Context, { data = null, message = null, status }: CommonResponse) => {
-    return c.json({ data, message, status }, status);
+    return c.json({ status, message, data }, status);
   };
 }

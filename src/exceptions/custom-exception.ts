@@ -7,10 +7,8 @@ export class CustomException extends HTTPException {
     const m = message || "Bad Request";
     super(s, { message: m });
 
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, this.constructor);
-    } else {
-      this.stack = new HTTPException(s, { message: m }).stack;
-    }
+    this.name = this.constructor.name;
+
+    Error.captureStackTrace(this, this.constructor);
   }
 }
