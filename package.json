@@ -1,11 +1,12 @@
 {
-  "name": "express-ts-template",
+  "name": "hono-template",
   "version": "1.0.0",
   "description": "",
   "scripts": {
     "build": "rimraf dist && rollup -c && cpy \"resources/**/*\" dist/resources --parents",
     "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts"
+    "dev": "nodemon src/server.ts",
+    "generate-schema": "drizzle-kit generate:pg"
   },
   "keywords": [],
   "author": "",

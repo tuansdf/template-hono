@@ -132,3 +132,6 @@ dist
 .dist/
 .idea/
 .vscode/
+
+.env.*
+!.env.example

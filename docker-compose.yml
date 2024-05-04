@@ -7,7 +7,7 @@ services:
     ports:
       - "5847:5000"
     env_file:
-      - .env
+      - .env.docker
     volumes:
       - .:/usr/src/app
     user: "bun"
