@@ -54,10 +54,10 @@ export class RoleRepository {
     return saved[0]!;
   }
 
-  static async updateById(request: RoleUpdate) {
+  static async update(request: RoleUpdate) {
     await db
       .update(RoleTable)
       .set({ name: request.name, description: request.description })
-      .where(eq(RoleTable.id, request.id));
+      .where(eq(RoleTable.id, Number(request.id)));
   }
 }

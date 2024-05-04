@@ -29,6 +29,11 @@ export class UserRepository {
     return users?.[0];
   }
 
+  static async findTopByIdPrivate(id: number) {
+    const users = await db.select(userPasswordSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
+    return users?.[0];
+  }
+
   static async findTopByUsernameOrEmailWithPassword(username: string) {
     const users = await db
       .select(userPasswordSelect)

@@ -13,6 +13,8 @@ export type UserDTO = {
   username?: string | Nullish;
   roles?: Role[] | Nullish;
   permissions?: Permission[] | Nullish;
+  accessToken?: string | Nullish;
+  refreshToken?: string | Nullish;
 };
 
 export type UserSearchRequestDTO = {

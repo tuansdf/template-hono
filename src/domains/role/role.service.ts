@@ -31,6 +31,6 @@ export class RoleService {
     if (!isIdValid) {
       throw new CustomException("permission.error.not_found", 404);
     }
-    return RoleRepository.updateById(requestDTO);
+    return RoleRepository.update(requestDTO);
   };
 }

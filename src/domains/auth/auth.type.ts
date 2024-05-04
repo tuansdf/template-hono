@@ -13,8 +13,7 @@ export type RegisterRequestDTO = {
 };
 
 export type AuthJwtTokenPayload = {
-  userId?: number | Nullish;
-  username?: string | Nullish;
-  type?: JwtTokenType | Nullish;
-  perms?: number[] | Nullish;
+  sid?: number | Nullish; // user id
+  for?: JwtTokenType | Nullish; // token purpose
+  pms?: number[] | Nullish; // permissions
 } & JwtTokenClaims;

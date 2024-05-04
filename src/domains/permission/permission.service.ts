@@ -31,6 +31,6 @@ export class PermissionService {
     if (!isIdValid) {
       throw new CustomException("permission.error.not_found", 404);
     }
-    return PermissionRepository.updateById(requestDTO);
+    return PermissionRepository.update(requestDTO);
   };
 }

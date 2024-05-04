@@ -63,10 +63,10 @@ export class PermissionRepository {
     await db.insert(PermissionTable).values(permission);
   }
 
-  static async updateById(request: PermissionUpdate) {
+  static async update(request: PermissionUpdate) {
     await db
       .update(PermissionTable)
       .set({ name: request.name, description: request.description })
-      .where(eq(PermissionTable.id, request.id));
+      .where(eq(PermissionTable.id, Number(request.id)));
   }
 }
