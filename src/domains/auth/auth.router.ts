@@ -10,23 +10,23 @@ export const authRouter = RouterUtils.init();
 authRouter.post("/login", validator("json", loginRequestSchema), async (c) => {
   const body = c.req.valid("json");
   const result = await AuthService.login(body);
-  return RouterUtils.response(c, { status: 200, data: result });
+  return RouterUtils.response(c, 200, { data: result });
 });
 
 authRouter.post("/register", validator("json", registerRequestSchema), async (c) => {
   const body = c.req.valid("json");
   const result = await AuthService.register(body);
-  return RouterUtils.response(c, { status: 200, data: result });
+  return RouterUtils.response(c, 200, { data: result });
 });
 
 authRouter.post("/token/refresh", authenticate(JWT_TYPE.REFRESH), async (c) => {
   const authPayload = c.get("authPayload");
   const result = await AuthService.refreshToken(Number(authPayload?.sid), Number(authPayload?.iat));
-  return RouterUtils.response(c, { status: 200, data: result });
+  return RouterUtils.response(c, 200, { data: result });
 });
 
 authRouter.post("/token/invalidate", authenticate(JWT_TYPE.ACCESS), async (c) => {
   const authPayload = c.get("authPayload");
   await AuthService.invalidateToken(Number(authPayload?.sid));
-  return RouterUtils.response(c, { status: 200 });
+  return RouterUtils.response(c, 200);
 });
