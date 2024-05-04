@@ -1,4 +1,4 @@
-import { JwtTokenClaims } from "~/lib/jwt/jwt.type.js";
+import { JwtTokenClaims, JwtTokenType } from "~/lib/jwt/jwt.type.js";
 import { Nullish } from "~/types/common.type.js";
 
 export type LoginRequestDTO = {
@@ -12,11 +12,9 @@ export type RegisterRequestDTO = {
   password: string;
 };
 
-export type JwtAuthTokenType = "access" | "refresh";
-
-export type JwtAuthTokenPayload = {
+export type AuthJwtTokenPayload = {
   userId?: number | Nullish;
   username?: string | Nullish;
-  type?: JwtAuthTokenType;
+  type?: JwtTokenType | Nullish;
   perms?: number[] | Nullish;
 } & JwtTokenClaims;
