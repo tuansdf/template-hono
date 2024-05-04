@@ -13,22 +13,22 @@ roleRouter.use(authorize([ROLE_PERM_SYSTEM_ADMIN]));
 roleRouter.get("/detail/:id", async (c) => {
   const id = Number(c.req.param("id"));
   const result = await RoleService.findOneById(id);
-  return c.json(result, 200);
+  return RouterUtils.response(c, { status: 200, data: result });
 });
 
 roleRouter.get("/", async (c) => {
   const result = await RoleService.findAll();
-  return c.json(result, 200);
+  return RouterUtils.response(c, { status: 200, data: result });
 });
 
 roleRouter.post("/", validator("json", createRoleBodySchema), async (c) => {
   const body = c.req.valid("json");
   await RoleService.create(body);
-  return c.json(null, 200);
+  return RouterUtils.response(c, { status: 200 });
 });
 
 roleRouter.patch("/", validator("json", updateRoleBodySchema), async (c) => {
   const body = c.req.valid("json");
   await RoleService.update(body);
-  return c.json(null, 200);
+  return RouterUtils.response(c, { status: 200 });
 });
