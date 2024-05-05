@@ -10,4 +10,3 @@ services:
       - .env.docker
     volumes:
       - .:/usr/src/app
-    user: "bun"
