@@ -8,5 +8,3 @@ services:
       - "5847:5000"
     env_file:
       - .env.docker
-    volumes:
-      - .:/usr/src/app

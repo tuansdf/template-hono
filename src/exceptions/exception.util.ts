@@ -1,12 +1,13 @@
 import { ErrorHandler } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { ZodError } from "zod";
+import { logger } from "~/lib/logger/logger.js";
 import { RouterUtils } from "~/utils/router.util.js";
 
 export class ExceptionUtils {
   static response: ErrorHandler = (err, c) => {
     const t = c.get("t");
-    console.error(err);
+    logger.error(err);
     if (err instanceof HTTPException) {
       return RouterUtils.response(c, err.status || 500, { message: t(err.message || "common.error.other") });
     }
