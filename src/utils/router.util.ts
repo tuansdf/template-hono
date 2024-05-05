@@ -10,7 +10,7 @@ export class RouterUtils {
   static response = (
     c: Context,
     status: StatusCode,
-    body?: { data?: unknown | Nullish; message?: string | Nullish },
+    body?: { data?: Record<string, unknown> | Record<string, unknown>[] | Nullish; message?: string | Nullish },
   ) => {
     const { data = null, message = null } = body || {};
     return c.json({ status, message, data }, status);
