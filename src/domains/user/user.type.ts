@@ -10,6 +10,7 @@ export type UserSave = typeof UserTable.$inferInsert;
 export type UserDTO = {
   id?: number | Nullish;
   email?: string | Nullish;
+  name?: string | Nullish;
   username?: string | Nullish;
   roles?: Role[] | Nullish;
   permissions?: Permission[] | Nullish;

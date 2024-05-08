@@ -1,5 +1,10 @@
 import { z } from "zod";
-import { LoginRequestDTO, RegisterRequestDTO } from "~/domains/auth/auth.type.js";
+import {
+  ForgotPasswordRequestDTO,
+  LoginRequestDTO,
+  RegisterRequestDTO,
+  ResetPasswordRequestDTO,
+} from "~/domains/auth/auth.type.js";
 
 const emailSchema = z
   .string({
@@ -32,5 +37,13 @@ export const loginRequestSchema: z.ZodType<LoginRequestDTO> = z.object({
 export const registerRequestSchema: z.ZodType<RegisterRequestDTO> = z.object({
   email: emailSchema,
   username: usernameSchema,
+  password: passwordSchema,
+});
+
+export const forgotPasswordRequestSchema: z.ZodType<ForgotPasswordRequestDTO> = z.object({
+  username: usernameSchema,
+});
+
+export const resetPasswordRequestSchema: z.ZodType<ResetPasswordRequestDTO> = z.object({
   password: passwordSchema,
 });

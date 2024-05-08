@@ -1,7 +1,12 @@
+import { JWT_TYPE } from "~/domains/auth/auth.constant.js";
 import { authenticate } from "~/domains/auth/auth.middleware.js";
-import { loginRequestSchema, registerRequestSchema } from "~/domains/auth/auth.schema.js";
+import {
+  forgotPasswordRequestSchema,
+  loginRequestSchema,
+  registerRequestSchema,
+  resetPasswordRequestSchema,
+} from "~/domains/auth/auth.schema.js";
 import { AuthService } from "~/domains/auth/auth.service.js";
-import { JWT_TYPE } from "~/lib/jwt/jwt.constant.js";
 import { validator } from "~/middlewares/validator.middleware.js";
 import { RouterUtils } from "~/utils/router.util.js";
 
@@ -30,3 +35,23 @@ authRouter.post("/token/invalidate", authenticate(JWT_TYPE.ACCESS), async (c) =>
   await AuthService.invalidateToken(Number(authPayload?.sid));
   return RouterUtils.response(c, 200);
 });
+
+authRouter.post("/password/forgot", validator("json", forgotPasswordRequestSchema), async (c) => {
+  const t = c.get("t");
+  const body = c.req.valid("json");
+  await AuthService.forgotPassword(body);
+  return RouterUtils.response(c, 200, { message: t("auth.message.forgot_password_email_sent") });
+});
+
+authRouter.post(
+  "/password/reset",
+  authenticate(JWT_TYPE.RESET_PASSWORD),
+  validator("json", resetPasswordRequestSchema),
+  async (c) => {
+    const authPayload = c.get("authPayload");
+    const username = String(authPayload?.sub);
+    const body = c.req.valid("json");
+    await AuthService.resetPassword(body, username);
+    return RouterUtils.response(c, 200);
+  },
+);

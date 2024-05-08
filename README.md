@@ -1,0 +1,4 @@
+# TODO
+
+- transaction
+- de/serialize

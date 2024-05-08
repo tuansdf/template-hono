@@ -5,6 +5,7 @@ export const UserTable = pgTable("_user", {
   email: text("email").notNull().unique(),
   username: text("username").notNull().unique(),
   password: text("password"),
+  name: text("name"),
   status: text("status"),
   tokenNbf: timestamp("token_nbf", {
     withTimezone: true,

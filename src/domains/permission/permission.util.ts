@@ -1,4 +1,5 @@
 import { PERM_INDEX } from "~/domains/permission/permission.constant.js";
+import { Permission } from "~/domains/permission/permission.type.js";
 
 export class PermissionUtils {
   static codesToIndexes = (perms: string[]): number[] => {
@@ -10,9 +11,18 @@ export class PermissionUtils {
     return result;
   };
 
-  static hasPerm = (currentPerm: string, requiredPerms: number[]) => {
+  static dtosToIndexes = (perms: Permission[]) => {
+    const result: number[] = [];
+    perms.forEach((item) => {
+      const index = PERM_INDEX[item.code];
+      if (index) result.push(index);
+    });
+    return result;
+  };
+
+  static hasPerm = (currentPerm: string, requiredPerms: (string | number)[]) => {
     const index = PERM_INDEX[currentPerm];
     if (!index) return false;
-    return requiredPerms.some((item) => index === item);
+    return requiredPerms.some((item) => index == item);
   };
 }

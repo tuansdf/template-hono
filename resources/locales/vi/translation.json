@@ -51,6 +51,9 @@
       "duplicated_email": "Địa chỉ email này đã được sử dụng",
       "unauthenticated": "Thông tin đăng nhập không chính xác",
       "unauthorized": "Bạn không có quyền truy cập tài nguyên này"
+    },
+    "message": {
+      "forgot_password_email_sent": "Email"
     }
   },
   "permission": {

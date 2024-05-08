@@ -1,35 +1,48 @@
-import { ENV_JWT_ACCESS_LIFETIME, ENV_JWT_REFRESH_LIFETIME } from "~/constants/env.constant.js";
-import { AuthJwtTokenPayload } from "~/domains/auth/auth.type.js";
+import { JWT_TYPE, JWT_TYPE_LIFETIME } from "~/domains/auth/auth.constant.js";
+import { AuthJwtTokenPayload, CreateTokenRequest, JwtTokenType } from "~/domains/auth/auth.type.js";
 import { PermissionUtils } from "~/domains/permission/permission.util.js";
-import { UserDTO } from "~/domains/user/user.type.js";
 import { CustomException } from "~/exceptions/custom-exception.js";
 import { dated } from "~/lib/date/date.js";
-import { JWT_TYPE } from "~/lib/jwt/jwt.constant.js";
-import { JwtTokenType } from "~/lib/jwt/jwt.type.js";
 import { JwtUtils } from "~/lib/jwt/jwt.util.js";
 
 export class AuthUtils {
-  static createTokenPayload(user: UserDTO, type: JwtTokenType = JWT_TYPE.ACCESS): AuthJwtTokenPayload {
+  static createTokenPayload(request: CreateTokenRequest): AuthJwtTokenPayload {
     const current = dated();
     const currentUnix = current.unix();
-    const expiredUnix = current
-      .add(type === JWT_TYPE.REFRESH ? ENV_JWT_REFRESH_LIFETIME : ENV_JWT_ACCESS_LIFETIME, "minute")
-      .unix();
+    const expiredUnix = current.add(JWT_TYPE_LIFETIME[request.type], "minute").unix();
 
-    return {
-      sub: user.username,
-      exp: expiredUnix,
-      iat: currentUnix,
-      nbf: currentUnix,
-
-      sid: user.id,
-      for: type,
-      pms: PermissionUtils.codesToIndexes(user.permissions?.map((item) => item.code) || []),
-    };
+    switch (request.type) {
+      case JWT_TYPE.REFRESH:
+        return {
+          sid: request.user.id,
+          for: request.type,
+          iat: currentUnix,
+          nbf: currentUnix,
+          exp: expiredUnix,
+        };
+      case JWT_TYPE.RESET_PASSWORD:
+        return {
+          sub: request.username,
+          for: request.type,
+          iat: currentUnix,
+          nbf: currentUnix,
+          exp: expiredUnix,
+        };
+      default:
+        return {
+          sid: request.user.id,
+          for: request.type,
+          pms: PermissionUtils.dtosToIndexes(request.user.permissions || []),
+          sub: request.user.username,
+          iat: currentUnix,
+          nbf: currentUnix,
+          exp: expiredUnix,
+        };
+    }
   }
 
-  static async createToken(user: UserDTO, type: JwtTokenType = JWT_TYPE.ACCESS): Promise<string> {
-    const payload = this.createTokenPayload(user, type);
+  static async createToken(request: CreateTokenRequest): Promise<string> {
+    const payload = this.createTokenPayload(request);
     return JwtUtils.sign(payload);
   }
 

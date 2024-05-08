@@ -51,6 +51,9 @@
       "duplicated_email": "This email address is already registered",
       "unauthenticated": "Invalid credentials",
       "unauthorized": "Insufficient permissions"
+    },
+    "message": {
+      "forgot_password_email_sent": "A reset password email was sent to your email address. Please check your inbox"
     }
   },
   "permission": {

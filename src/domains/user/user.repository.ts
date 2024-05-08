@@ -5,6 +5,7 @@ import { UserTable } from "~/entities/user.entity.js";
 
 export const userPasswordSelect = {
   id: UserTable.id,
+  name: UserTable.name,
   email: UserTable.email,
   username: UserTable.username,
   password: UserTable.password,
@@ -14,6 +15,7 @@ export const userPasswordSelect = {
 
 export const userCommonSelect = {
   id: UserTable.id,
+  name: UserTable.name,
   email: UserTable.email,
   username: UserTable.username,
   status: UserTable.status,
@@ -25,57 +27,79 @@ export class UserRepository {
   }
 
   static async findTopById(id: number) {
-    const users = await db.select(userCommonSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
-    return users?.[0];
+    const result = await db.select(userCommonSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
+    return result?.[0];
   }
 
   static async findTopByIdPrivate(id: number) {
-    const users = await db.select(userPasswordSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
-    return users?.[0];
+    const result = await db.select(userPasswordSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
+    return result?.[0];
   }
 
   static async findTopByUsernameOrEmailWithPassword(username: string) {
-    const users = await db
+    const result = await db
       .select(userPasswordSelect)
       .from(UserTable)
       .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
       .limit(1);
-    return users?.[0];
+    return result?.[0];
+  }
+
+  static async findTopByUsernameOrEmail(username: string) {
+    const result = await db
+      .select(userCommonSelect)
+      .from(UserTable)
+      .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
+      .limit(1);
+    return result?.[0];
   }
 
   static async findTopByUsername(username: string) {
-    const users = await db.select(userCommonSelect).from(UserTable).where(eq(UserTable.username, username)).limit(1);
-    return users?.[0];
+    const result = await db.select(userCommonSelect).from(UserTable).where(eq(UserTable.username, username)).limit(1);
+    return result?.[0];
   }
 
   static async findTopByEmail(email: string) {
-    const users = await db.select(userCommonSelect).from(UserTable).where(eq(UserTable.email, email)).limit(1);
-    return users?.[0];
+    const result = await db.select(userCommonSelect).from(UserTable).where(eq(UserTable.email, email)).limit(1);
+    return result?.[0];
   }
 
   static async countByUsername(username: string) {
-    const userCount = await db.select({ value: count() }).from(UserTable).where(eq(UserTable.username, username));
-    return userCount?.[0]?.value || 0;
+    const result = await db.select({ value: count() }).from(UserTable).where(eq(UserTable.username, username));
+    return result?.[0]?.value || 0;
+  }
+
+  static async countByUsernameOrEmail(username: string) {
+    const result = await db
+      .select({ value: count() })
+      .from(UserTable)
+      .where(or(eq(UserTable.username, username), eq(UserTable.email, username)));
+    return result?.[0]?.value || 0;
+  }
+
+  static async existByUsernameOrEmail(username: string) {
+    const result = await this.countByUsernameOrEmail(username);
+    return result > 0;
   }
 
   static async existByUsername(username: string) {
-    const userCount = await this.countByUsername(username);
-    return userCount > 0;
+    const result = await this.countByUsername(username);
+    return result > 0;
   }
 
   static async countByEmail(email: string) {
-    const userCount = await db.select({ value: count() }).from(UserTable).where(eq(UserTable.email, email));
-    return userCount?.[0]?.value || 0;
+    const result = await db.select({ value: count() }).from(UserTable).where(eq(UserTable.email, email));
+    return result?.[0]?.value || 0;
   }
 
   static async existByEmail(email: string) {
-    const userCount = await this.countByEmail(email);
-    return userCount > 0;
+    const result = await this.countByEmail(email);
+    return result > 0;
   }
 
   static async save(user: UserSave) {
-    const saved = await db.insert(UserTable).values(user).returning(userCommonSelect);
-    return saved[0]!;
+    const result = await db.insert(UserTable).values(user).returning(userCommonSelect);
+    return result[0]!;
   }
 
   static async saveAll(users: UserSave[]) {

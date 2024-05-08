@@ -16,3 +16,4 @@ export const ENV_APP_PORT = requireNumber.parse(ENV_OBJ.TH_APP_PORT);
 export const ENV_JWT_SECRET = requireString.parse(ENV_OBJ.TH_JWT_SECRET);
 export const ENV_JWT_ACCESS_LIFETIME = requireNumber.parse(ENV_OBJ.TH_JWT_ACCESS_LIFETIME);
 export const ENV_JWT_REFRESH_LIFETIME = requireNumber.parse(ENV_OBJ.TH_JWT_REFRESH_LIFETIME);
+export const ENV_JWT_RESET_PASSWORD_LIFETIME = requireNumber.parse(ENV_OBJ.TH_JWT_RESET_PASSWORD_LIFETIME);
