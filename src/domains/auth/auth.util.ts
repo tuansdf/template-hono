@@ -29,11 +29,12 @@ export class AuthUtils {
           exp: expiredUnix,
         };
       default:
+        const user = request.user || {};
         return {
-          sid: request.user.id,
+          sid: user.id,
           for: request.type,
-          pms: PermissionUtils.dtosToIndexes(request.user.permissions || []),
-          sub: request.user.username,
+          pms: PermissionUtils.dtosToIndexes(user.permissions || []),
+          sub: user.username,
           iat: currentUnix,
           nbf: currentUnix,
           exp: expiredUnix,
