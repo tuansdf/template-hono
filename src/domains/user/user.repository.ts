@@ -26,6 +26,10 @@ export class UserRepository {
     return db.select(userCommonSelect).from(UserTable);
   }
 
+  static async findAllByStatus(status: string) {
+    return db.select(userCommonSelect).from(UserTable).where(eq(UserTable.status, status));
+  }
+
   static async findTopById(id: number) {
     const result = await db.select(userCommonSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
     return result?.[0];

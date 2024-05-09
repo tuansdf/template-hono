@@ -32,14 +32,10 @@ export type JwtTokenType = (typeof JWT_TYPE)[keyof typeof JWT_TYPE];
 
 export type CreateTokenRequest =
   | {
-      type: typeof JWT_TYPE.ACCESS;
+      type: typeof JWT_TYPE.ACCESS | typeof JWT_TYPE.REFRESH;
       user: UserDTO;
     }
   | {
-      type: typeof JWT_TYPE.REFRESH;
-      user: UserDTO;
-    }
-  | {
-      type: typeof JWT_TYPE.RESET_PASSWORD;
+      type: typeof JWT_TYPE.RESET_PASSWORD | typeof JWT_TYPE.ACTIVATE_ACCOUNT;
       username: string;
     };

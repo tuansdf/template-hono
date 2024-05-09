@@ -36,19 +36,19 @@ export const authorize = (perms: string[]): MiddlewareHandler => {
     const authPayload = c.get("authPayload");
 
     if (!authPayload) {
-      throw new CustomException("common.error.not_found", 404);
+      throw new CustomException("generic.error.not_found", 404);
     }
 
     const permissions = authPayload.pms;
     if (!permissions?.length) {
-      throw new CustomException("common.error.not_found", 404);
+      throw new CustomException("generic.error.not_found", 404);
     }
 
     const hasPerm = perms.some((item) => {
       return PermissionUtils.hasPerm(item, permissions);
     });
     if (!hasPerm) {
-      throw new CustomException("common.error.not_found", 404);
+      throw new CustomException("generic.error.not_found", 404);
     }
 
     await next();

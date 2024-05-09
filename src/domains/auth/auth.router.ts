@@ -19,9 +19,10 @@ authRouter.post("/login", validator("json", loginRequestSchema), async (c) => {
 });
 
 authRouter.post("/register", validator("json", registerRequestSchema), async (c) => {
+  const t = c.get("t");
   const body = c.req.valid("json");
-  const result = await AuthService.register(body);
-  return RouterUtils.response(c, 200, { data: result });
+  await AuthService.register(body);
+  return RouterUtils.response(c, 200, { message: t("auth.message.activate_account_email_sent") });
 });
 
 authRouter.post("/token/refresh", authenticate(JWT_TYPE.REFRESH), async (c) => {
@@ -41,6 +42,13 @@ authRouter.post("/password/forgot", validator("json", forgotPasswordRequestSchem
   const body = c.req.valid("json");
   await AuthService.forgotPassword(body);
   return RouterUtils.response(c, 200, { message: t("auth.message.forgot_password_email_sent") });
+});
+
+authRouter.post("/account/activate", authenticate(JWT_TYPE.ACTIVATE_ACCOUNT), async (c) => {
+  const authPayload = c.get("authPayload");
+  const username = String(authPayload?.sub);
+  await AuthService.activateAccount(username);
+  return RouterUtils.response(c, 200);
 });
 
 authRouter.post(

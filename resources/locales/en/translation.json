@@ -15,13 +15,13 @@
   },
   "form": {
     "error": {
-      "required": "{{1}} is required",
+      "missing": "{{1}} is required",
       "invalid": "{{1}} is invalid",
       "under_min_length": "{{1}} must have at least {{2}} characters",
       "over_max_length": "{{1}} cannot exceed {{2}} characters"
     }
   },
-  "common": {
+  "generic": {
     "error": {
       "other": "Something went wrong",
       "not_found": "The requested item was not found"
@@ -35,15 +35,19 @@
     }
   },
   "user": {
-    "error": {}
+    "error": {
+      "not_activated": "User is not activated"
+    }
   },
   "auth": {
     "error": {
       "unauthenticated": "Invalid credentials",
-      "unauthorized": "Insufficient permissions"
+      "unauthorized": "Insufficient permissions",
+      "already_activated": "User already activated"
     },
     "message": {
-      "forgot_password_email_sent": "A reset password email was sent to your email address"
+      "activate_account_email_sent": "A link to activate your account has been emailed to the address provided",
+      "forgot_password_email_sent": "If that email address is in our database, we will send you an email to reset your password"
     }
   },
   "permission": {

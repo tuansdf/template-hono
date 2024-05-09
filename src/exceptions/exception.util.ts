@@ -9,23 +9,23 @@ import { RouterUtils } from "~/utils/router.util.js";
 export class ExceptionUtils {
   static response: ErrorHandler = (err, c) => {
     const t = c.get("t");
+    const errorPrefix = t("field.error_c") + ": ";
     logger.error(err);
     if (err instanceof CustomException) {
-      return RouterUtils.response(c, err.status || 500, {
-        message: t("field.error_c") + ": " + I18nUtils.getMessageAndParams(t, err.message || "common.error.other"),
+      return RouterUtils.response(c, err.status || 400, {
+        message: errorPrefix + I18nUtils.getMessageAndParams(t, err.message || "generic.error.other"),
       });
     }
     if (err instanceof HTTPException) {
       return RouterUtils.response(c, err.status || 500, {
-        message: t("field.error_c") + ": " + err.message || t("common.error.other"),
+        message: errorPrefix + I18nUtils.getMessageAndParams(t, err.message || "generic.error.other"),
       });
     }
     if (err instanceof ZodError) {
       return RouterUtils.response(c, 400, {
-        message:
-          t("field.error_c") + ": " + I18nUtils.getMessageAndParams(t, err.errors[0]?.message || "common.error.other"),
+        message: errorPrefix + I18nUtils.getMessageAndParams(t, err.errors[0]?.message || "generic.error.other"),
       });
     }
-    return RouterUtils.response(c, 500, { message: t("common.error.other") });
+    return RouterUtils.response(c, 500, { message: errorPrefix + t("generic.error.other") });
   };
 }

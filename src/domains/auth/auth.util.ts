@@ -20,6 +20,7 @@ export class AuthUtils {
           nbf: currentUnix,
           exp: expiredUnix,
         };
+      case JWT_TYPE.ACTIVATE_ACCOUNT:
       case JWT_TYPE.RESET_PASSWORD:
         return {
           sub: request.username,
