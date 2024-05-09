@@ -23,8 +23,8 @@
   },
   "generic": {
     "error": {
-      "other": "Something went wrong",
-      "not_found": "The requested item was not found"
+      "other": "something went wrong",
+      "not_found": "the requested item was not found"
     }
   },
   "dynamic": {
@@ -36,14 +36,14 @@
   },
   "user": {
     "error": {
-      "not_activated": "User is not activated"
+      "not_activated": "user is not activated"
     }
   },
   "auth": {
     "error": {
-      "unauthenticated": "Invalid credentials",
-      "unauthorized": "Insufficient permissions",
-      "already_activated": "User already activated"
+      "unauthenticated": "invalid credentials",
+      "unauthorized": "insufficient permissions",
+      "already_activated": "user already activated"
     },
     "message": {
       "activate_account_email_sent": "A link to activate your account has been emailed to the address provided",

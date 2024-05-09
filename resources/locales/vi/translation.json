@@ -23,8 +23,8 @@
   },
   "generic": {
     "error": {
-      "other": "Có lỗi xảy ra",
-      "not_found": "Tài nguyên yêu cầu không tồn tại"
+      "other": "có lỗi xảy ra",
+      "not_found": "tài nguyên yêu cầu không tồn tại"
     }
   },
   "dynamic": {
@@ -36,17 +36,18 @@
   },
   "user": {
     "error": {
-      "not_activated": "Người dùng chưa trong trạng thái hoạt động"
+      "not_activated": "người dùng chưa trong trạng thái hoạt động"
     }
   },
   "auth": {
     "error": {
-      "unauthenticated": "Thông tin đăng nhập không chính xác",
-      "unauthorized": "Bạn không có quyền truy cập tài nguyên này",
-      "already_activated": "Người dùng đang ở trạng thái hoạt động"
+      "unauthenticated": "thông tin đăng nhập không chính xác",
+      "unauthorized": "bạn không có quyền truy cập tài nguyên này",
+      "already_activated": "người dùng đang trong trạng thái hoạt động"
     },
     "message": {
-      "forgot_password_email_sent": "Hướng dẫn cài đặt lại mật khẩu đã được gửi đến địa chỉ email của bạn"
+      "activate_account_email_sent": "Hướng dẫn kích hoạt tài khoản đã được gửi tới địa chỉ email của bạn",
+      "forgot_password_email_sent": "Hướng dẫn cài đặt lại mật khẩu đã được gửi tới địa chỉ email của bạn"
     }
   },
   "permission": {

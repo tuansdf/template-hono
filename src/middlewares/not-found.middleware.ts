@@ -4,6 +4,7 @@ import { RouterUtils } from "~/utils/router.util.js";
 export const notFound = (): NotFoundHandler => {
   return (c) => {
     const t = c.get("t");
-    return RouterUtils.response(c, 404, { message: t("generic.error.not_found") });
+    const errorPrefix = t("field.error_c") + ": ";
+    return RouterUtils.response(c, 404, { message: errorPrefix + t("generic.error.not_found") });
   };
 };
