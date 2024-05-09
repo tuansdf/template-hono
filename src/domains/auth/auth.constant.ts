@@ -3,8 +3,8 @@ import {
   ENV_JWT_ACTIVATE_ACCOUNT_LIFETIME,
   ENV_JWT_REFRESH_LIFETIME,
   ENV_JWT_RESET_PASSWORD_LIFETIME,
-} from "~/constants/env.constant.js";
-import { JwtTokenType } from "~/domains/auth/auth.type.js";
+} from "~/constants/env.constant";
+import { JwtTokenType } from "~/domains/auth/auth.type";
 
 export const JWT_TYPE = {
   ACCESS: 1,

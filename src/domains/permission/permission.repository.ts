@@ -1,15 +1,20 @@
 import { count, eq } from "drizzle-orm";
-import { db } from "~/database/db.js";
-import { PermissionSave, PermissionUpdate } from "~/domains/permission/permission.type.js";
-import { MapRolePermissionTable } from "~/entities/map-role-permission.entity.js";
-import { MapUserRoleTable } from "~/entities/map-user-role.entity.js";
-import { PermissionTable } from "~/entities/permission.entity.js";
+import { db } from "~/database/db";
+import { PermissionSave, PermissionUpdate } from "~/domains/permission/permission.type";
+import { MapRolePermissionTable } from "~/entities/map-role-permission.entity";
+import { MapUserRoleTable } from "~/entities/map-user-role.entity";
+import { PermissionTable } from "~/entities/permission.entity";
 
 const commonSelect = {
   id: PermissionTable.id,
   code: PermissionTable.code,
   name: PermissionTable.code,
   description: PermissionTable.description,
+  status: PermissionTable.status,
+  createdBy: PermissionTable.createdBy,
+  updatedBy: PermissionTable.updatedBy,
+  createdAt: PermissionTable.createdAt,
+  updatedAt: PermissionTable.updatedAt,
 };
 
 export class PermissionRepository {

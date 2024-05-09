@@ -1,9 +1,9 @@
-import { authenticate, authorize } from "~/domains/auth/auth.middleware.js";
-import { PERM_SUPER_ADMIN } from "~/domains/permission/permission.constant.js";
-import { createRoleBodySchema, updateRoleBodySchema } from "~/domains/role/role.schema.js";
-import { RoleService } from "~/domains/role/role.service.js";
-import { validator } from "~/middlewares/validator.middleware.js";
-import { RouterUtils } from "~/utils/router.util.js";
+import { authenticate, authorize } from "~/domains/auth/auth.middleware";
+import { PERM_SUPER_ADMIN } from "~/domains/permission/permission.constant";
+import { createRoleBodySchema, updateRoleBodySchema } from "~/domains/role/role.schema";
+import { RoleService } from "~/domains/role/role.service";
+import { validator } from "~/middlewares/validator.middleware";
+import { RouterUtils } from "~/utils/router.util";
 
 export const roleRouter = RouterUtils.init();
 

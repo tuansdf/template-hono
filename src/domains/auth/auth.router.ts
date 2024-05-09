@@ -1,14 +1,14 @@
-import { JWT_TYPE } from "~/domains/auth/auth.constant.js";
-import { authenticate } from "~/domains/auth/auth.middleware.js";
+import { JWT_TYPE } from "~/domains/auth/auth.constant";
+import { authenticate } from "~/domains/auth/auth.middleware";
 import {
   forgotPasswordRequestSchema,
   loginRequestSchema,
   registerRequestSchema,
   resetPasswordRequestSchema,
-} from "~/domains/auth/auth.schema.js";
-import { AuthService } from "~/domains/auth/auth.service.js";
-import { validator } from "~/middlewares/validator.middleware.js";
-import { RouterUtils } from "~/utils/router.util.js";
+} from "~/domains/auth/auth.schema";
+import { AuthService } from "~/domains/auth/auth.service";
+import { validator } from "~/middlewares/validator.middleware";
+import { RouterUtils } from "~/utils/router.util";
 
 export const authRouter = RouterUtils.init();
 
@@ -21,7 +21,7 @@ authRouter.post("/login", validator("json", loginRequestSchema), async (c) => {
 authRouter.post("/register", validator("json", registerRequestSchema), async (c) => {
   const t = c.get("t");
   const body = c.req.valid("json");
-  await AuthService.register(body);
+  await AuthService.register(body, t);
   return RouterUtils.response(c, 200, { message: t("auth.message.activate_account_email_sent") });
 });
 
@@ -40,7 +40,7 @@ authRouter.post("/token/invalidate", authenticate(JWT_TYPE.ACCESS), async (c) =>
 authRouter.post("/password/forgot", validator("json", forgotPasswordRequestSchema), async (c) => {
   const t = c.get("t");
   const body = c.req.valid("json");
-  await AuthService.forgotPassword(body);
+  await AuthService.forgotPassword(body, t);
   return RouterUtils.response(c, 200, { message: t("auth.message.forgot_password_email_sent") });
 });
 

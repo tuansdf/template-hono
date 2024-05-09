@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { UserSearchRequestDTO } from "~/domains/user/user.type.js";
+import { UserSearchRequestDTO } from "~/domains/user/user.type";
 
 export const getUserDetailByUsernameQuerySchema = z.object({
   q: z.string({

@@ -1,9 +1,9 @@
-import { authenticate, authorize } from "~/domains/auth/auth.middleware.js";
-import { PERM_SUPER_ADMIN } from "~/domains/permission/permission.constant.js";
-import { createPermissionBodySchema, updatePermissionBodySchema } from "~/domains/permission/permission.schema.js";
-import { PermissionService } from "~/domains/permission/permission.service.js";
-import { validator } from "~/middlewares/validator.middleware.js";
-import { RouterUtils } from "~/utils/router.util.js";
+import { authenticate, authorize } from "~/domains/auth/auth.middleware";
+import { PERM_SUPER_ADMIN } from "~/domains/permission/permission.constant";
+import { createPermissionBodySchema, updatePermissionBodySchema } from "~/domains/permission/permission.schema";
+import { PermissionService } from "~/domains/permission/permission.service";
+import { validator } from "~/middlewares/validator.middleware";
+import { RouterUtils } from "~/utils/router.util";
 
 export const permissionRouter = RouterUtils.init();
 

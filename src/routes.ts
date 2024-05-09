@@ -1,9 +1,9 @@
-import { authRouter } from "~/domains/auth/auth.router.js";
-import { healthRouter } from "~/domains/health/health.router.js";
-import { permissionRouter } from "~/domains/permission/permission.router.js";
-import { roleRouter } from "~/domains/role/role.router.js";
-import { userRouter } from "~/domains/user/user.router.js";
-import { RouterUtils } from "~/utils/router.util.js";
+import { authRouter } from "~/domains/auth/auth.router";
+import { healthRouter } from "~/domains/health/health.router";
+import { permissionRouter } from "~/domains/permission/permission.router";
+import { roleRouter } from "~/domains/role/role.router";
+import { userRouter } from "~/domains/user/user.router";
+import { RouterUtils } from "~/utils/router.util";
 
 export const routes = RouterUtils.init();
 

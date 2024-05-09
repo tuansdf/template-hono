@@ -1,5 +1,5 @@
 import { NotFoundHandler } from "hono";
-import { RouterUtils } from "~/utils/router.util.js";
+import { RouterUtils } from "~/utils/router.util";
 
 export const notFound = (): NotFoundHandler => {
   return (c) => {

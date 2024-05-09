@@ -1,6 +1,6 @@
-import { PermissionRepository } from "~/domains/permission/permission.repository.js";
-import { CreatePermissionBodyDTO, UpdatePermissionBodyDTO } from "~/domains/permission/permission.type.js";
-import { CustomException } from "~/exceptions/custom-exception.js";
+import { PermissionRepository } from "~/domains/permission/permission.repository";
+import { CreatePermissionBodyDTO, UpdatePermissionBodyDTO } from "~/domains/permission/permission.type";
+import { CustomException } from "~/exceptions/custom-exception";
 
 export class PermissionService {
   static findAll = async () => {

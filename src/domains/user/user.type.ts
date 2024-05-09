@@ -1,9 +1,11 @@
-import { Permission } from "~/domains/permission/permission.type.js";
-import { Role } from "~/domains/role/role.type.js";
-import { UserTable } from "~/entities/user.entity.js";
-import { Nullish } from "~/types/common.type.js";
+import { Permission } from "~/domains/permission/permission.type";
+import { Role } from "~/domains/role/role.type";
+import { UserTable } from "~/entities/user.entity";
+import { Nullish } from "~/types/common.type";
 
 export type User = typeof UserTable.$inferSelect;
+
+export type UserSelect = Partial<Record<keyof User, IGNORE>>;
 
 export type UserSave = typeof UserTable.$inferInsert;
 

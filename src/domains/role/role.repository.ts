@@ -1,8 +1,8 @@
 import { count, eq } from "drizzle-orm";
-import { db } from "~/database/db.js";
-import { RoleSave, RoleUpdate } from "~/domains/role/role.type.js";
-import { MapUserRoleTable } from "~/entities/map-user-role.entity.js";
-import { RoleTable } from "~/entities/role.entity.js";
+import { db } from "~/database/db";
+import { RoleSave, RoleUpdate } from "~/domains/role/role.type";
+import { MapUserRoleTable } from "~/entities/map-user-role.entity";
+import { RoleTable } from "~/entities/role.entity";
 
 const commonSelect = {
   id: RoleTable.id,

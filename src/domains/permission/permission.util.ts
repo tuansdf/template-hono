@@ -1,5 +1,5 @@
-import { PERM_INDEX } from "~/domains/permission/permission.constant.js";
-import { Permission } from "~/domains/permission/permission.type.js";
+import { PERM_INDEX } from "~/domains/permission/permission.constant";
+import { Permission } from "~/domains/permission/permission.type";
 
 export class PermissionUtils {
   static codesToIndexes = (perms: string[]): number[] => {

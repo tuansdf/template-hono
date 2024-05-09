@@ -1,10 +1,10 @@
 import { ErrorHandler } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { ZodError } from "zod";
-import { CustomException } from "~/exceptions/custom-exception.js";
-import { I18nUtils } from "~/i18n/i18n.util.js";
-import { logger } from "~/lib/logger/logger.js";
-import { RouterUtils } from "~/utils/router.util.js";
+import { CustomException } from "~/exceptions/custom-exception";
+import { I18nUtils } from "~/i18n/i18n.util";
+import { logger } from "~/lib/logger/logger";
+import { RouterUtils } from "~/utils/router.util";
 
 export class ExceptionUtils {
   static response: ErrorHandler = (err, c) => {

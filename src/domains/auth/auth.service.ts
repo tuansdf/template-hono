@@ -1,22 +1,29 @@
 import { eq } from "drizzle-orm";
-import { STATUS_ACTIVE, STATUS_PENDING } from "~/constants/status.constant.js";
-import { db } from "~/database/db.js";
-import { JWT_TYPE } from "~/domains/auth/auth.constant.js";
+import { STATUS_ACTIVE, STATUS_PENDING } from "~/constants/status.constant";
+import { db } from "~/database/db";
+import { JWT_TYPE } from "~/domains/auth/auth.constant";
 import {
   ForgotPasswordRequestDTO,
   LoginRequestDTO,
   RegisterRequestDTO,
   ResetPasswordRequestDTO,
-} from "~/domains/auth/auth.type.js";
-import { AuthUtils } from "~/domains/auth/auth.util.js";
-import { PermissionRepository } from "~/domains/permission/permission.repository.js";
-import { UserRepository } from "~/domains/user/user.repository.js";
-import { UserDTO } from "~/domains/user/user.type.js";
-import { UserTable } from "~/entities/user.entity.js";
-import { CustomException } from "~/exceptions/custom-exception.js";
-import { dated } from "~/lib/date/date.js";
-import { HashUtils } from "~/lib/hash/hash.util.js";
-import { logger } from "~/lib/logger/logger.js";
+} from "~/domains/auth/auth.type";
+import { AuthUtils } from "~/domains/auth/auth.util";
+import { PermissionRepository } from "~/domains/permission/permission.repository";
+import {
+  EMAIL_USAGE_CODE_ACTIVATE_ACCOUNT,
+  EMAIL_USAGE_CODE_RESET_PASSWORD,
+} from "~/domains/send-email/send-email.constant";
+import { SendEmailService } from "~/domains/send-email/send-email.service";
+import { SendEmailSave } from "~/domains/send-email/send-email.type";
+import { UserRepository } from "~/domains/user/user.repository";
+import { User, UserDTO } from "~/domains/user/user.type";
+import { UserTable } from "~/entities/user.entity";
+import { CustomException } from "~/exceptions/custom-exception";
+import { TFn } from "~/i18n/i18n.type";
+import { dated } from "~/lib/date/date";
+import { HashUtils } from "~/lib/hash/hash.util";
+import { logger } from "~/lib/logger/logger";
 
 export class AuthService {
   static login = async (requestDTO: LoginRequestDTO): Promise<UserDTO> => {
@@ -39,7 +46,7 @@ export class AuthService {
     return { ...result, accessToken, refreshToken };
   };
 
-  static register = async (requestDTO: RegisterRequestDTO) => {
+  static register = async (requestDTO: RegisterRequestDTO, t: TFn) => {
     const existUserWithUsername = await UserRepository.existByUsername(requestDTO.username);
     if (existUserWithUsername) {
       throw new CustomException("dynamic.error.not_available:::field.username", 409);
@@ -51,10 +58,9 @@ export class AuthService {
       return;
     }
     requestDTO.password = await HashUtils.hash(requestDTO.password);
-    await UserRepository.save({ ...requestDTO, status: STATUS_PENDING });
+    const saved = await UserRepository.save({ ...requestDTO, status: STATUS_PENDING });
     const token = await AuthUtils.createToken({ username: requestDTO.email, type: JWT_TYPE.ACTIVATE_ACCOUNT });
-    console.log({ token });
-    // TODO: send email
+    await _AuthService.sendForgotPasswordEmail(saved, token, t);
   };
 
   static refreshToken = async (userId: number, currentTokenIat: number) => {
@@ -82,7 +88,7 @@ export class AuthService {
     await db.update(UserTable).set({ tokenNbf: dated().toISOString() }).where(eq(UserTable.id, userId));
   };
 
-  static forgotPassword = async (requestDTO: ForgotPasswordRequestDTO) => {
+  static forgotPassword = async (requestDTO: ForgotPasswordRequestDTO, t: TFn) => {
     const user = await UserRepository.findTopByUsernameOrEmail(requestDTO.username);
     if (!user) {
       // https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#password-recovery
@@ -90,8 +96,7 @@ export class AuthService {
       return;
     }
     const token = await AuthUtils.createToken({ username: requestDTO.username, type: JWT_TYPE.RESET_PASSWORD });
-    console.log({ token });
-    // TODO: send email
+    await _AuthService.sendForgotPasswordEmail(user, token, t);
   };
 
   static resetPassword = async (requestDTO: ResetPasswordRequestDTO, username: string) => {
@@ -118,5 +123,28 @@ export class AuthService {
       .update(UserTable)
       .set({ status: STATUS_ACTIVE, tokenNbf: dated().toISOString() })
       .where(eq(UserTable.id, user.id));
+  };
+}
+
+class _AuthService {
+  static sendForgotPasswordEmail = async (user: User, token: string, t: TFn) => {
+    const item: SendEmailSave = {
+      fromEmail: "PLACEHOLDER",
+      toEmail: user.email,
+      usageCode: EMAIL_USAGE_CODE_RESET_PASSWORD,
+      subject: t("auth.message.forgot_password_email_subject"),
+      content: t("auth.message.forgot_password_email_content", { 1: user.email, 2: token }),
+    };
+    await SendEmailService.send(item);
+  };
+  static sendActivateAccountEmail = async (user: User, token: string, t: TFn) => {
+    const item: SendEmailSave = {
+      fromEmail: "PLACEHOLDER",
+      toEmail: user.email,
+      usageCode: EMAIL_USAGE_CODE_ACTIVATE_ACCOUNT,
+      subject: t("auth.message.activate_account_email_subject"),
+      content: t("auth.message.activate_account_email_content", { 1: user.email, 2: token }),
+    };
+    await SendEmailService.send(item);
   };
 }

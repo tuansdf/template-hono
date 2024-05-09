@@ -1,5 +1,5 @@
 import { MiddlewareHandler } from "hono";
-import { logger } from "~/lib/logger/logger.js";
+import { logger } from "~/lib/logger/logger";
 
 export const loggerM = (): MiddlewareHandler => async (c, next) => {
   const url = new URL(c.req.url);

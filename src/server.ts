@@ -2,16 +2,16 @@ import dotenv from "dotenv";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
-import { ENV_APP_PORT } from "~/constants/env.constant.js";
-import { errorHandler } from "~/exceptions/error-handler.middleware.js";
-import { detectLanguage } from "~/i18n/i18n.middleware.js";
-import { loggerM } from "~/middlewares/logger.middleware.js";
-import { notFound } from "~/middlewares/not-found.middleware.js";
-import { routes } from "~/routes.js";
+import { ENV_APP_PORT } from "~/constants/env.constant";
+import { errorHandler } from "~/exceptions/error-handler.middleware";
+import { detectLanguage } from "~/i18n/i18n.middleware";
+import { loggerM } from "~/middlewares/logger.middleware";
+import { notFound } from "~/middlewares/not-found.middleware";
+import { routes } from "~/routes";
 
-import "~/constants/env.constant.js";
-import "~/database/db.js";
-import "~/i18n/i18n.util.js";
+import "~/constants/env.constant";
+import "~/database/db";
+import "~/i18n/i18n.util";
 
 dotenv.config();
 

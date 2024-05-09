@@ -1,4 +1,4 @@
-import { Nullish } from "~/types/common.type.js";
+import { Nullish } from "~/types/common.type";
 
 export type JwtTokenPayload = Record<string, unknown> & JwtTokenClaims;
 

@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import Backend from "i18next-fs-backend";
-import { defaultLang, validLangs } from "~/i18n/i18n.constant.js";
-import { TFn, ValidLang } from "~/i18n/i18n.type.js";
+import { defaultLang, validLangs } from "~/i18n/i18n.constant";
+import { TFn, ValidLang } from "~/i18n/i18n.type";
 
 await i18n.use(Backend).init({
   fallbackLng: defaultLang,

@@ -1,7 +1,7 @@
-import { JWT_TYPE } from "~/domains/auth/auth.constant.js";
-import { UserDTO } from "~/domains/user/user.type.js";
-import { JwtTokenClaims } from "~/lib/jwt/jwt.type.js";
-import { Nullish } from "~/types/common.type.js";
+import { JWT_TYPE } from "~/domains/auth/auth.constant";
+import { UserDTO } from "~/domains/user/user.type";
+import { JwtTokenClaims } from "~/lib/jwt/jwt.type";
+import { Nullish } from "~/types/common.type";
 
 export type LoginRequestDTO = {
   username: string;

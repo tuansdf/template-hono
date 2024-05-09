@@ -1,7 +1,7 @@
 import { MiddlewareHandler } from "hono";
 import { accepts } from "hono/accepts";
-import { defaultLang, validLangs } from "~/i18n/i18n.constant.js";
-import { I18nUtils } from "~/i18n/i18n.util.js";
+import { defaultLang, validLangs } from "~/i18n/i18n.constant";
+import { I18nUtils } from "~/i18n/i18n.util";
 
 export const detectLanguage = (): MiddlewareHandler => {
   return async (c, next) => {

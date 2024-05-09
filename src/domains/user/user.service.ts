@@ -1,10 +1,10 @@
 import { ilike, or } from "drizzle-orm";
-import { STATUS_ACTIVE } from "~/constants/status.constant.js";
-import { db } from "~/database/db.js";
-import { userCommonSelect, UserRepository } from "~/domains/user/user.repository.js";
-import { UserSearchRequestDTO } from "~/domains/user/user.type.js";
-import { UserTable } from "~/entities/user.entity.js";
-import { CustomException } from "~/exceptions/custom-exception.js";
+import { STATUS_ACTIVE } from "~/constants/status.constant";
+import { db } from "~/database/db";
+import { userCommonSelect, UserRepository } from "~/domains/user/user.repository";
+import { UserSearchRequestDTO } from "~/domains/user/user.type";
+import { UserTable } from "~/entities/user.entity";
+import { CustomException } from "~/exceptions/custom-exception";
 
 export class UserService {
   static async findOneById(userId: number) {

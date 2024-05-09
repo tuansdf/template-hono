@@ -1,9 +1,9 @@
-import { JWT_TYPE, JWT_TYPE_LIFETIME } from "~/domains/auth/auth.constant.js";
-import { AuthJwtTokenPayload, CreateTokenRequest, JwtTokenType } from "~/domains/auth/auth.type.js";
-import { PermissionUtils } from "~/domains/permission/permission.util.js";
-import { CustomException } from "~/exceptions/custom-exception.js";
-import { dated } from "~/lib/date/date.js";
-import { JwtUtils } from "~/lib/jwt/jwt.util.js";
+import { JWT_TYPE, JWT_TYPE_LIFETIME } from "~/domains/auth/auth.constant";
+import { AuthJwtTokenPayload, CreateTokenRequest, JwtTokenType } from "~/domains/auth/auth.type";
+import { PermissionUtils } from "~/domains/permission/permission.util";
+import { CustomException } from "~/exceptions/custom-exception";
+import { dated } from "~/lib/date/date";
+import { JwtUtils } from "~/lib/jwt/jwt.util";
 
 export class AuthUtils {
   static createTokenPayload(request: CreateTokenRequest): AuthJwtTokenPayload {

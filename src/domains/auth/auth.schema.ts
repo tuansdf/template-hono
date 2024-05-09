@@ -4,7 +4,7 @@ import {
   LoginRequestDTO,
   RegisterRequestDTO,
   ResetPasswordRequestDTO,
-} from "~/domains/auth/auth.type.js";
+} from "~/domains/auth/auth.type";
 
 const emailSchema = z
   .string({

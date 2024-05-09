@@ -1,6 +1,6 @@
 import { decode, sign, verify } from "hono/jwt";
-import { ENV_JWT_SECRET } from "~/constants/env.constant.js";
-import { JwtTokenPayload } from "~/lib/jwt/jwt.type.js";
+import { ENV_JWT_SECRET } from "~/constants/env.constant";
+import { JwtTokenPayload } from "~/lib/jwt/jwt.type";
 
 export class JwtUtils {
   static async decode(toBeDecoded: string) {

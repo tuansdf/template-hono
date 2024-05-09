@@ -1,5 +1,5 @@
-import { PermissionTable } from "~/entities/permission.entity.js";
-import { Nullish } from "~/types/common.type.js";
+import { PermissionTable } from "~/entities/permission.entity";
+import { Nullish } from "~/types/common.type";
 
 export type Permission = typeof PermissionTable.$inferSelect;
 export type PermissionSave = typeof PermissionTable.$inferInsert;

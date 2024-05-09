@@ -1,6 +1,6 @@
 import { Context, Hono } from "hono";
-import { Nullish } from "~/types/common.type.js";
-import { StatusCode } from "~/types/status-code.type.js";
+import { Nullish } from "~/types/common.type";
+import { StatusCode } from "~/types/status-code.type";
 
 export class RouterUtils {
   static init = () => {

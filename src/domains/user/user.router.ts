@@ -1,13 +1,13 @@
-import { authenticate } from "~/domains/auth/auth.middleware.js";
+import { authenticate } from "~/domains/auth/auth.middleware";
 import {
   getUserDetailByEmailQuerySchema,
   getUserDetailByIdParamSchema,
   getUserDetailByUsernameQuerySchema,
   searchUserQuerySchema,
-} from "~/domains/user/user.schema.js";
-import { UserService } from "~/domains/user/user.service.js";
-import { validator } from "~/middlewares/validator.middleware.js";
-import { RouterUtils } from "~/utils/router.util.js";
+} from "~/domains/user/user.schema";
+import { UserService } from "~/domains/user/user.service";
+import { validator } from "~/middlewares/validator.middleware";
+import { RouterUtils } from "~/utils/router.util";
 
 export const userRouter = RouterUtils.init();
 

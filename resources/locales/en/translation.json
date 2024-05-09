@@ -47,7 +47,11 @@
     },
     "message": {
       "activate_account_email_sent": "A link to activate your account has been emailed to the address provided",
-      "forgot_password_email_sent": "If that email address is in our database, we will send you an email to reset your password"
+      "activate_account_email_subject": "Activate your account",
+      "activate_account_email_content": "Dear {{1}},<br/><br/>Please click the following link to activate your account: {{2}}.<br/><br/>Best regards.",
+      "forgot_password_email_sent": "If that email address is in our database, we will send you an email to reset your password",
+      "forgot_password_email_subject": "Reset your password",
+      "forgot_password_email_content": "Dear {{1}},<br/><br/>Please click the following link to reset your password: {{2}}.<br/><br/>Best regards."
     }
   },
   "permission": {

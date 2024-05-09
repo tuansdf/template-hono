@@ -6,7 +6,7 @@ import {
   ENV_DB_PASSWORD,
   ENV_DB_PORT,
   ENV_DB_USER,
-} from "~/constants/env.constant.js";
+} from "~/constants/env.constant";
 
 const pool = new Pool({
   host: ENV_DB_HOST,

@@ -1,6 +1,6 @@
-import { StatusCode } from "~/types/status-code.type.js";
+import { StatusCode } from "~/types/status-code.type";
 
-export type Nullish = undefined | null | void;
+export type Nullish = undefined | null;
 
 export type CommonResponse<T = unknown> = {
   status: StatusCode;

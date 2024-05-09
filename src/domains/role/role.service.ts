@@ -1,6 +1,6 @@
-import { RoleRepository } from "~/domains/role/role.repository.js";
-import { CreateRoleBodyDTO, UpdateRoleBodyDTO } from "~/domains/role/role.type.js";
-import { CustomException } from "~/exceptions/custom-exception.js";
+import { RoleRepository } from "~/domains/role/role.repository";
+import { CreateRoleBodyDTO, UpdateRoleBodyDTO } from "~/domains/role/role.type";
+import { CustomException } from "~/exceptions/custom-exception";
 
 export class RoleService {
   static findAll = async () => {

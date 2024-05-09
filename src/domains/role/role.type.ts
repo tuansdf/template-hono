@@ -1,5 +1,5 @@
-import { RoleTable } from "~/entities/role.entity.js";
-import { Nullish } from "~/types/common.type.js";
+import { RoleTable } from "~/entities/role.entity";
+import { Nullish } from "~/types/common.type";
 
 export type Role = typeof RoleTable.$inferSelect;
 export type RoleSave = typeof RoleTable.$inferInsert;
