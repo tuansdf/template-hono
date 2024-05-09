@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import Backend from "i18next-fs-backend";
 import { defaultLang, validLangs } from "~/i18n/i18n.constant.js";
-import { ValidLang } from "~/i18n/i18n.type.js";
+import { TFn, ValidLang } from "~/i18n/i18n.type.js";
 
 await i18n.use(Backend).init({
   fallbackLng: defaultLang,
@@ -12,6 +12,8 @@ await i18n.use(Backend).init({
     loadPath: "./resources/locales/{{lng}}/{{ns}}.json",
   },
 });
+
+const KEY_SEPARATED_BY = ":::";
 
 export class I18nUtils {
   static getLang(lang?: string): ValidLang {
@@ -26,8 +28,20 @@ export class I18nUtils {
     return i18n.getFixedT(this.getLang(lang));
   }
 
-  static getMessage(key: string, lang?: string) {
-    const t = this.getT(lang);
+  static getMessage(t: TFn, key: string) {
     return t(key);
+  }
+
+  static getMessageAndParams(t: TFn, input: string): string {
+    const split = input.split(KEY_SEPARATED_BY);
+    const mainKey = split[0] || "";
+    const length = split.length;
+    const params: Record<string, string> = {};
+    if (length > 1) {
+      for (let i = 1; i < length; i++) {
+        params[String(i)] = t(split[i]!);
+      }
+    }
+    return t(mainKey, params);
   }
 }

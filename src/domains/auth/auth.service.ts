@@ -37,11 +37,11 @@ export class AuthService {
   static register = async (requestDTO: RegisterRequestDTO): Promise<UserDTO> => {
     const existUserWithUsername = await UserRepository.existByUsername(requestDTO.username);
     if (existUserWithUsername) {
-      throw new CustomException("auth.error.duplicated_username", 409);
+      throw new CustomException("dynamic.error.not_available:::field.username", 409);
     }
     const existUserWithEmail = await UserRepository.existByEmail(requestDTO.email);
     if (existUserWithEmail) {
-      throw new CustomException("auth.error.duplicated_email", 409);
+      throw new CustomException("dynamic.error.not_available:::field.email", 409);
     }
     requestDTO.password = await HashUtils.hash(requestDTO.password);
     const saved = await UserRepository.save(requestDTO);
@@ -83,7 +83,7 @@ export class AuthService {
   static resetPassword = async (requestDTO: ResetPasswordRequestDTO, username: string) => {
     const user = await UserRepository.findTopByUsernameOrEmail(username);
     if (!user) {
-      throw new CustomException("user.error.not_found", 404);
+      throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
     const hashedPassword = await HashUtils.hash(requestDTO.password);
     await db

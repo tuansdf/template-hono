@@ -8,26 +8,26 @@ import {
 
 const emailSchema = z
   .string({
-    required_error: "form.error.email.required",
-    invalid_type_error: "form.error.email.invalid",
+    required_error: "form.error.missing:::field.email",
+    invalid_type_error: "form.error.invalid:::field.email",
   })
   .trim()
-  .email("form.error.email.invalid");
+  .email("form.error.invalid:::field.email");
 const usernameSchema = z
   .string({
-    required_error: "form.error.username.required",
-    invalid_type_error: "form.error.username.invalid",
+    required_error: "form.error.missing:::field.username",
+    invalid_type_error: "form.error.invalid:::field.username",
   })
   .trim()
-  .min(4, "form.error.username.min_length_4")
-  .max(255, "form.error.username.max_length_255");
+  .min(2, "form.error.under_min_length:::field.username:::2")
+  .max(255, "form.error.over_max_length:::field.username:::255");
 const passwordSchema = z
   .string({
-    required_error: "form.error.password.required",
-    invalid_type_error: "form.error.password.invalid",
+    required_error: "form.error.missing:::field.password",
+    invalid_type_error: "form.error.invalid:::field.password",
   })
-  .min(8, "form.error.password.min_length_8")
-  .max(64, "form.error.password.max_length_64");
+  .min(8, "form.error.under_min_length:::field.password:::8")
+  .max(64, "form.error.over_max_length:::field.password:::64");
 
 export const loginRequestSchema: z.ZodType<LoginRequestDTO> = z.object({
   username: usernameSchema,

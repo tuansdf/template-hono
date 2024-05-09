@@ -1,37 +1,24 @@
 {
+  "field": {
+    "error_c": "Error",
+    "email": "email",
+    "username": "username",
+    "password": "password",
+    "code": "code",
+    "name": "name",
+    "description": "description",
+    "user": "user",
+    "id": "id",
+    "search_query": "search query",
+    "permission": "permission",
+    "role": "role"
+  },
   "form": {
     "error": {
-      "email": {
-        "required": "Email is required",
-        "invalid": "Email is invalid"
-      },
-      "username": {
-        "required": "Username is required",
-        "invalid": "Username is invalid",
-        "min_length_4": "Username must have at least 4 characters",
-        "max_length_255": "Username cannot exceed 255 characters"
-      },
-      "password": {
-        "required": "Password is required",
-        "invalid": "Password is invalid",
-        "min_length_8": "Password must have at least 8 characters",
-        "max_length_64": "Password cannot exceed 64 characters"
-      },
-      "code": {
-        "required": "Code is required",
-        "invalid": "Code is invalid",
-        "max_length_255": "Code cannot exceed 255 characters"
-      },
-      "name": {
-        "required": "Name is required",
-        "invalid": "Name is invalid",
-        "max_length_255": "Name cannot exceed 255 characters"
-      },
-      "description": {
-        "required": "Description is required",
-        "invalid": "Description is invalid",
-        "max_length_255": "Description cannot exceed 255 characters"
-      }
+      "required": "{{1}} is required",
+      "invalid": "{{1}} is invalid",
+      "under_min_length": "{{1}} must have at least {{2}} characters",
+      "over_max_length": "{{1}} cannot exceed {{2}} characters"
     }
   },
   "common": {
@@ -40,26 +27,26 @@
       "not_found": "The requested item was not found"
     }
   },
-  "user": {
+  "dynamic": {
     "error": {
-      "not_found": "User not found"
+      "not_found": "{{1}} not found",
+      "not_available": "{{1}} is already in use",
+      "duplicated": "{{1}} already exists"
     }
+  },
+  "user": {
+    "error": {}
   },
   "auth": {
     "error": {
-      "duplicated_username": "This username is already taken",
-      "duplicated_email": "This email address is already registered",
       "unauthenticated": "Invalid credentials",
       "unauthorized": "Insufficient permissions"
     },
     "message": {
-      "forgot_password_email_sent": "A reset password email was sent to your email address. Please check your inbox"
+      "forgot_password_email_sent": "A reset password email was sent to your email address"
     }
   },
   "permission": {
-    "error": {
-      "not_found": "Permission not found",
-      "duplicated_code": "There is already a permission with this code"
-    }
+    "error": {}
   }
 }

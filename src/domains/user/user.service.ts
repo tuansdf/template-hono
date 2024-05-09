@@ -9,7 +9,7 @@ export class UserService {
   static async findOneById(userId: number) {
     const user = await UserRepository.findTopById(userId);
     if (!user) {
-      throw new CustomException("user.error.not_found", 404);
+      throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
     return user;
   }
@@ -17,7 +17,7 @@ export class UserService {
   static async findOneByUsername(username: string) {
     const user = await UserRepository.findTopByUsername(username);
     if (!user) {
-      throw new CustomException("user.error.not_found", 404);
+      throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
     return user;
   }
@@ -25,7 +25,7 @@ export class UserService {
   static async findOneByEmail(email: string) {
     const user = await UserRepository.findTopByEmail(email);
     if (!user) {
-      throw new CustomException("user.error.not_found", 404);
+      throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
     return user;
   }

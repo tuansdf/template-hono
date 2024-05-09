@@ -1,32 +1,34 @@
 import { z } from "zod";
 import { CreateRoleBodyDTO, UpdateRoleBodyDTO } from "~/domains/role/role.type.js";
 
-const idSchema = z.coerce.number({ required_error: "form.error.id.invalid" }).min(1, "form.error.id.invalid");
+const idSchema = z.coerce
+  .number({ required_error: "form.error.missing:::field.id", invalid_type_error: "form.error.invalid:::field.id" })
+  .min(1, "form.error.invalid:::field.id");
 const codeSchema = z
   .string({
-    required_error: "form.error.code.required",
-    invalid_type_error: "form.error.code.invalid",
+    required_error: "form.error.missing:::field.code",
+    invalid_type_error: "form.error.invalid:::field.code",
   })
   .trim()
-  .min(1, "form.error.code.required")
-  .max(255, "form.error.code.max_length_255")
+  .min(1, "form.error.missing:::field.code")
+  .max(255, "form.error.over_max_length:::field.code:::255")
   .toUpperCase();
 const nameSchema = z
   .string({
-    required_error: "form.error.name.required",
-    invalid_type_error: "form.error.name.invalid",
+    required_error: "form.error.missing:::field.name",
+    invalid_type_error: "form.error.invalid:::field.name",
   })
   .trim()
-  .min(1, "form.error.name.required")
-  .max(255, "form.error.name.max_length_255");
+  .min(1, "form.error.missing:::field.name")
+  .max(255, "form.error.over_max_length:::field.name:::255");
 const descriptionSchema = z
   .string({
-    required_error: "form.error.description.required",
-    invalid_type_error: "form.error.description.invalid",
+    required_error: "form.error.missing:::field.description",
+    invalid_type_error: "form.error.invalid:::field.description",
   })
   .trim()
-  .min(1, "form.error.description.required")
-  .max(255, "form.error.description.max_length_255");
+  .min(1, "form.error.missing:::field.description")
+  .max(255, "form.error.over_max_length:::field.description:::255");
 
 export const createRoleBodySchema: z.ZodType<CreateRoleBodyDTO> = z.object({
   code: codeSchema,

@@ -10,7 +10,7 @@ export class PermissionService {
   static findOneById = async (id: number) => {
     const result = PermissionRepository.findTopById(id);
     if (!result) {
-      throw new CustomException("permission.error.not_found", 404);
+      throw new CustomException("dynamic.error.not_found:::field.permission", 404);
     }
     return result;
   };
@@ -21,7 +21,7 @@ export class PermissionService {
     }
     const isCodeDuplicated = await PermissionRepository.existByCode(requestDTO.code);
     if (isCodeDuplicated) {
-      throw new CustomException("permission.error.duplicated_code", 409);
+      throw new CustomException("dynamic.error.duplicated:::field.code", 409);
     }
     return PermissionRepository.save(requestDTO);
   };
@@ -29,7 +29,7 @@ export class PermissionService {
   static update = async (requestDTO: UpdatePermissionBodyDTO) => {
     const isIdValid = await PermissionRepository.existById(requestDTO.id);
     if (!isIdValid) {
-      throw new CustomException("permission.error.not_found", 404);
+      throw new CustomException("dynamic.error.not_found:::field.permission", 404);
     }
     return PermissionRepository.update(requestDTO);
   };
