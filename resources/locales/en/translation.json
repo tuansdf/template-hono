@@ -43,15 +43,17 @@
     "error": {
       "unauthenticated": "invalid credentials",
       "unauthorized": "insufficient permissions",
-      "already_activated": "user already activated"
+      "already_activated": "user is already activated"
     },
     "message": {
       "activate_account_email_sent": "A link to activate your account has been emailed to the address provided",
       "activate_account_email_subject": "Activate your account",
       "activate_account_email_content": "Dear {{1}},<br/><br/>Please click the following link to activate your account: {{2}}.<br/><br/>Best regards.",
+      "activate_account_successful": "Your account has been activated.",
+      "activate_account_failed": "Activation failed.",
       "forgot_password_email_sent": "If that email address is in our database, we will send you an email to reset your password",
       "forgot_password_email_subject": "Reset your password",
-      "forgot_password_email_content": "Dear {{1}},<br/><br/>Please click the following link to reset your password: {{2}}.<br/><br/>Best regards."
+      "forgot_password_email_content": "Dear {{1}},<br/><br/>Please click the following link to reset your password:<br/>{{2}}<br/><br/>Best regards."
     }
   },
   "permission": {

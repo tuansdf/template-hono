@@ -1,8 +1,10 @@
 import { eq } from "drizzle-orm";
+import { ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL } from "~/constants/env.constant";
 import { STATUS_ACTIVE, STATUS_PENDING } from "~/constants/status.constant";
 import { db } from "~/database/db";
 import { JWT_TYPE } from "~/domains/auth/auth.constant";
 import {
+  AuthJwtTokenPayload,
   ForgotPasswordRequestDTO,
   LoginRequestDTO,
   RegisterRequestDTO,
@@ -111,8 +113,18 @@ export class AuthService {
       .where(eq(UserTable.id, user.id));
   };
 
-  static activateAccount = async (username: string) => {
-    const user = await UserRepository.findTopByUsernameOrEmail(username);
+  static activateAccount = async (token: string) => {
+    let payload: AuthJwtTokenPayload;
+    try {
+      payload = await AuthUtils.verifyToken(token, JWT_TYPE.ACTIVATE_ACCOUNT);
+    } catch (e) {
+      throw new CustomException("auth.message.activate_account_failed", 404);
+    }
+    const username = payload.sub;
+    if (!username) {
+      throw new CustomException("dynamic.error.not_found:::field.user", 404);
+    }
+    const user = await UserRepository.findTopByUsernameOrEmail(String(username));
     if (!user) {
       throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
@@ -133,7 +145,10 @@ class _AuthService {
       toEmail: user.email,
       usageCode: EMAIL_USAGE_CODE_RESET_PASSWORD,
       subject: t("auth.message.forgot_password_email_subject"),
-      content: t("auth.message.forgot_password_email_content", { 1: user.email, 2: token }),
+      content: t("auth.message.forgot_password_email_content", {
+        1: user.email,
+        2: ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL + token,
+      }),
     };
     await SendEmailService.send(item);
   };

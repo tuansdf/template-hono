@@ -2,6 +2,7 @@ import { ErrorHandler } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { ZodError } from "zod";
 import { CustomException } from "~/exceptions/custom-exception";
+import { TFn } from "~/i18n/i18n.type";
 import { I18nUtils } from "~/i18n/i18n.util";
 import { logger } from "~/lib/logger/logger";
 import { RouterUtils } from "~/utils/router.util";
@@ -27,5 +28,19 @@ export class ExceptionUtils {
       });
     }
     return RouterUtils.response(c, 500, { message: errorPrefix + t("generic.error.other") });
+  };
+
+  static getMessage = (err: Error, t: TFn): string => {
+    const errorPrefix = t("field.error_c") + ": ";
+    if (err instanceof CustomException) {
+      return errorPrefix + I18nUtils.getMessageAndParams(t, err.message || "generic.error.other");
+    }
+    if (err instanceof HTTPException) {
+      return errorPrefix + I18nUtils.getMessageAndParams(t, err.message || "generic.error.other");
+    }
+    if (err instanceof ZodError) {
+      return errorPrefix + I18nUtils.getMessageAndParams(t, err.errors[0]?.message || "generic.error.other");
+    }
+    return errorPrefix + t("generic.error.other");
   };
 }

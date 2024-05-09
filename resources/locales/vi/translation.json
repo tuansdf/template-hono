@@ -47,9 +47,13 @@
     },
     "message": {
       "activate_account_email_sent": "Hướng dẫn kích hoạt tài khoản đã được gửi tới địa chỉ email của bạn",
-      "activate_account_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để kích hoạt tài khoản của bạn: {{2}}.<br/><br/>Trân trọng cảm ơn."
+      "activate_account_email_subject": "Kích hoạt tài khoản",
+      "activate_account_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để kích hoạt tài khoản của bạn: {{2}}.<br/><br/>Trân trọng cảm ơn",
+      "activate_account_successful": "Tài khoản của bạn đã được kích hoạt",
+      "activate_account_failed": "Kích hoạt tài khoản không thành công",
       "forgot_password_email_sent": "Hướng dẫn cài đặt lại mật khẩu đã được gửi tới địa chỉ email của bạn",
-      "forgot_password_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để cài đặt lại mật khẩu của bạn: {{2}}.<br/><br/>Trân trọng cảm ơn.",
+      "forgot_password_email_subject": "Cài đặt lại mật khẩu",
+      "forgot_password_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để cài đặt lại mật khẩu của bạn: {{2}}.<br/><br/>Trân trọng cảm ơn"
     }
   },
   "permission": {

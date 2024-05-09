@@ -44,13 +44,6 @@ authRouter.post("/password/forgot", validator("json", forgotPasswordRequestSchem
   return RouterUtils.response(c, 200, { message: t("auth.message.forgot_password_email_sent") });
 });
 
-authRouter.post("/account/activate", authenticate(JWT_TYPE.ACTIVATE_ACCOUNT), async (c) => {
-  const authPayload = c.get("authPayload");
-  const username = String(authPayload?.sub);
-  await AuthService.activateAccount(username);
-  return RouterUtils.response(c, 200);
-});
-
 authRouter.post(
   "/password/reset",
   authenticate(JWT_TYPE.RESET_PASSWORD),
