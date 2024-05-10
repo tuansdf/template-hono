@@ -4,6 +4,7 @@
     "email": "địa chỉ email",
     "username": "tên đăng nhập",
     "password": "mật khẩu",
+    "password_confirm": "mật khẩu xác nhận",
     "code": "mã hiệu",
     "name": "tên",
     "description": "nội dung",
@@ -11,12 +12,14 @@
     "id": "mã định danh",
     "search_query": "từ tìm kiếm",
     "permission": "quyền",
-    "role": "vai trò"
+    "role": "vai trò",
+    "token": "mã xác minh"
   },
   "form": {
     "error": {
       "missing": "thiếu thông tin {{1}}",
       "invalid": "{{1}} không hợp lệ",
+      "not_match": "{{1}} không đúng",
       "under_min_length": "{{1}} phải có tối thiểu {{2}} ký tự",
       "over_max_length": "{{1}} chỉ chứa tối đa {{2}} ký tự"
     }
@@ -49,11 +52,12 @@
       "activate_account_email_sent": "Hướng dẫn kích hoạt tài khoản đã được gửi tới địa chỉ email của bạn",
       "activate_account_email_subject": "Kích hoạt tài khoản",
       "activate_account_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để kích hoạt tài khoản của bạn: {{2}}.<br/><br/>Trân trọng cảm ơn",
-      "activate_account_successful": "Tài khoản của bạn đã được kích hoạt",
-      "activate_account_failed": "Kích hoạt tài khoản không thành công",
-      "forgot_password_email_sent": "Hướng dẫn cài đặt lại mật khẩu đã được gửi tới địa chỉ email của bạn",
-      "forgot_password_email_subject": "Cài đặt lại mật khẩu",
-      "forgot_password_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để cài đặt lại mật khẩu của bạn: {{2}}.<br/><br/>Trân trọng cảm ơn"
+      "activate_account_success": "Tài khoản của bạn đã được kích hoạt",
+      "activate_account_fail": "Kích hoạt tài khoản không thành công",
+      "reset_password_email_sent": "Hướng dẫn cài đặt lại mật khẩu đã được gửi tới địa chỉ email của bạn",
+      "reset_password_email_subject": "Cài đặt lại mật khẩu",
+      "reset_password_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để cài đặt lại mật khẩu của bạn: {{2}}.<br/><br/>Trân trọng cảm ơn",
+      "reset_password_success": "Thiết lập mật khẩu thành công"
     }
   },
   "permission": {

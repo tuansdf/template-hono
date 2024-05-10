@@ -7,7 +7,7 @@ import { errorHandler } from "~/exceptions/error-handler.middleware";
 import { detectLanguage } from "~/i18n/i18n.middleware";
 import { loggerM } from "~/middlewares/logger.middleware";
 import { notFound } from "~/middlewares/not-found.middleware";
-import { routes } from "~/routes";
+import { mainRouter } from "~/routes/main.router";
 
 import "~/constants/env.constant";
 import "~/database/db";
@@ -22,7 +22,7 @@ app.use(cors());
 app.use(secureHeaders());
 app.use(detectLanguage());
 
-app.route("/", routes);
+app.route("/", mainRouter);
 
 app.notFound(notFound());
 app.onError(errorHandler());

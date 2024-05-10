@@ -19,7 +19,9 @@ export type ForgotPasswordRequestDTO = {
 };
 
 export type ResetPasswordRequestDTO = {
+  t: string;
   password: string;
+  passwordConfirm: string;
 };
 
 export type AuthJwtTokenPayload = {

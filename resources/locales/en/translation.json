@@ -4,6 +4,7 @@
     "email": "email",
     "username": "username",
     "password": "password",
+    "password_confirm": "confirm password",
     "code": "code",
     "name": "name",
     "description": "description",
@@ -11,12 +12,14 @@
     "id": "id",
     "search_query": "search query",
     "permission": "permission",
-    "role": "role"
+    "role": "role",
+    "token": "token"
   },
   "form": {
     "error": {
       "missing": "{{1}} is required",
       "invalid": "{{1}} is invalid",
+      "not_match": "{{1}} doesn't match",
       "under_min_length": "{{1}} must have at least {{2}} characters",
       "over_max_length": "{{1}} cannot exceed {{2}} characters"
     }
@@ -49,11 +52,12 @@
       "activate_account_email_sent": "A link to activate your account has been emailed to the address provided",
       "activate_account_email_subject": "Activate your account",
       "activate_account_email_content": "Dear {{1}},<br/><br/>Please click the following link to activate your account: {{2}}.<br/><br/>Best regards.",
-      "activate_account_successful": "Your account has been activated.",
-      "activate_account_failed": "Activation failed.",
-      "forgot_password_email_sent": "If that email address is in our database, we will send you an email to reset your password",
-      "forgot_password_email_subject": "Reset your password",
-      "forgot_password_email_content": "Dear {{1}},<br/><br/>Please click the following link to reset your password:<br/>{{2}}<br/><br/>Best regards."
+      "activate_account_success": "Your account has been activated.",
+      "activate_account_fail": "Activation failed.",
+      "reset_password_email_sent": "If that email address is in our database, we will send you an email to reset your password",
+      "reset_password_email_subject": "Reset your password",
+      "reset_password_email_content": "Dear {{1}},<br/><br/>Please click the following link to reset your password:<br/>{{2}}<br/><br/>Best regards.",
+      "reset_password_success": "Password reset successfully"
     }
   },
   "permission": {

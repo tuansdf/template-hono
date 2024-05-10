@@ -1,10 +1,9 @@
 import { eq } from "drizzle-orm";
-import { ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL } from "~/constants/env.constant";
+import { ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL, ENV_EMAIL_RESET_PASSWORD_BASE_URL } from "~/constants/env.constant";
 import { STATUS_ACTIVE, STATUS_PENDING } from "~/constants/status.constant";
 import { db } from "~/database/db";
 import { JWT_TYPE } from "~/domains/auth/auth.constant";
 import {
-  AuthJwtTokenPayload,
   ForgotPasswordRequestDTO,
   LoginRequestDTO,
   RegisterRequestDTO,
@@ -23,6 +22,7 @@ import { User, UserDTO } from "~/domains/user/user.type";
 import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
 import { TFn } from "~/i18n/i18n.type";
+import { Base64Utils } from "~/lib/base64/base64.util";
 import { dated } from "~/lib/date/date";
 import { HashUtils } from "~/lib/hash/hash.util";
 import { logger } from "~/lib/logger/logger";
@@ -62,7 +62,7 @@ export class AuthService {
     requestDTO.password = await HashUtils.hash(requestDTO.password);
     const saved = await UserRepository.save({ ...requestDTO, status: STATUS_PENDING });
     const token = await AuthUtils.createToken({ username: requestDTO.email, type: JWT_TYPE.ACTIVATE_ACCOUNT });
-    await _AuthService.sendForgotPasswordEmail(saved, token, t);
+    await _AuthService.sendActivateAccountEmail(saved, Base64Utils.encode(token), t);
   };
 
   static refreshToken = async (userId: number, currentTokenIat: number) => {
@@ -98,11 +98,16 @@ export class AuthService {
       return;
     }
     const token = await AuthUtils.createToken({ username: requestDTO.username, type: JWT_TYPE.RESET_PASSWORD });
-    await _AuthService.sendForgotPasswordEmail(user, token, t);
+    await _AuthService.sendResetPasswordEmail(user, Base64Utils.encode(token), t);
   };
 
-  static resetPassword = async (requestDTO: ResetPasswordRequestDTO, username: string) => {
-    const user = await UserRepository.findTopByUsernameOrEmail(username);
+  static resetPassword = async (requestDTO: ResetPasswordRequestDTO) => {
+    const payload = await AuthUtils.verifyToken(Base64Utils.decode(requestDTO.t), JWT_TYPE.RESET_PASSWORD);
+    const username = payload.sub;
+    if (!username) {
+      throw new CustomException("dynamic.error.not_found:::field.user", 404);
+    }
+    const user = await UserRepository.findTopByUsernameOrEmail(String(username));
     if (!user) {
       throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
@@ -114,12 +119,7 @@ export class AuthService {
   };
 
   static activateAccount = async (token: string) => {
-    let payload: AuthJwtTokenPayload;
-    try {
-      payload = await AuthUtils.verifyToken(token, JWT_TYPE.ACTIVATE_ACCOUNT);
-    } catch (e) {
-      throw new CustomException("auth.message.activate_account_failed", 404);
-    }
+    const payload = await AuthUtils.verifyToken(Base64Utils.decode(token), JWT_TYPE.ACTIVATE_ACCOUNT);
     const username = payload.sub;
     if (!username) {
       throw new CustomException("dynamic.error.not_found:::field.user", 404);
@@ -139,15 +139,15 @@ export class AuthService {
 }
 
 class _AuthService {
-  static sendForgotPasswordEmail = async (user: User, token: string, t: TFn) => {
+  static sendResetPasswordEmail = async (user: User, token: string, t: TFn) => {
     const item: SendEmailSave = {
       fromEmail: "PLACEHOLDER",
       toEmail: user.email,
       usageCode: EMAIL_USAGE_CODE_RESET_PASSWORD,
-      subject: t("auth.message.forgot_password_email_subject"),
-      content: t("auth.message.forgot_password_email_content", {
+      subject: t("auth.message.reset_password_email_subject"),
+      content: t("auth.message.reset_password_email_content", {
         1: user.email,
-        2: ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL + token,
+        2: ENV_EMAIL_RESET_PASSWORD_BASE_URL + token,
       }),
     };
     await SendEmailService.send(item);
@@ -158,7 +158,10 @@ class _AuthService {
       toEmail: user.email,
       usageCode: EMAIL_USAGE_CODE_ACTIVATE_ACCOUNT,
       subject: t("auth.message.activate_account_email_subject"),
-      content: t("auth.message.activate_account_email_content", { 1: user.email, 2: token }),
+      content: t("auth.message.activate_account_email_content", {
+        1: user.email,
+        2: ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL + token,
+      }),
     };
     await SendEmailService.send(item);
   };

@@ -5,8 +5,6 @@ import { Nullish } from "~/types/common.type";
 
 export type User = typeof UserTable.$inferSelect;
 
-export type UserSelect = Partial<Record<keyof User, IGNORE>>;
-
 export type UserSave = typeof UserTable.$inferInsert;
 
 export type UserDTO = {

@@ -1,6 +1,7 @@
 import { JWT_TYPE } from "~/domains/auth/auth.constant";
 import { authenticate } from "~/domains/auth/auth.middleware";
 import {
+  activateAccountBodySchema,
   forgotPasswordRequestSchema,
   loginRequestSchema,
   registerRequestSchema,
@@ -41,18 +42,20 @@ authRouter.post("/password/forgot", validator("json", forgotPasswordRequestSchem
   const t = c.get("t");
   const body = c.req.valid("json");
   await AuthService.forgotPassword(body, t);
-  return RouterUtils.response(c, 200, { message: t("auth.message.forgot_password_email_sent") });
+  return RouterUtils.response(c, 200, { message: t("auth.message.reset_password_email_sent") });
 });
 
-authRouter.post(
-  "/password/reset",
-  authenticate(JWT_TYPE.RESET_PASSWORD),
-  validator("json", resetPasswordRequestSchema),
-  async (c) => {
-    const authPayload = c.get("authPayload");
-    const username = String(authPayload?.sub);
-    const body = c.req.valid("json");
-    await AuthService.resetPassword(body, username);
-    return RouterUtils.response(c, 200);
-  },
-);
+authRouter.post("/password/reset", validator("json", resetPasswordRequestSchema), async (c) => {
+  const t = c.get("t");
+  const body = c.req.valid("json");
+  let message = t("auth.message.reset_password_success");
+  await AuthService.resetPassword(body);
+  return RouterUtils.response(c, 200, { message });
+});
+
+authRouter.post("/account/activate", validator("json", activateAccountBodySchema), async (c) => {
+  const t = c.get("t");
+  const body = c.req.valid("json");
+  await AuthService.activateAccount(body.t);
+  return RouterUtils.response(c, 200, { message: t("auth.message.activate_account_success") });
+});

@@ -44,6 +44,24 @@ export const forgotPasswordRequestSchema: z.ZodType<ForgotPasswordRequestDTO> = 
   username: usernameSchema,
 });
 
-export const resetPasswordRequestSchema: z.ZodType<ResetPasswordRequestDTO> = z.object({
-  password: passwordSchema,
+const tokenSchema = z
+  .string({
+    required_error: "form.error.invalid:::field.token",
+    invalid_type_error: "form.error.invalid:::field.token",
+  })
+  .min(1, "form.error.invalid:::field.token");
+
+export const resetPasswordRequestSchema: z.ZodType<ResetPasswordRequestDTO> = z
+  .object({
+    t: tokenSchema,
+    password: passwordSchema,
+    passwordConfirm: passwordSchema,
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    message: "form.error.not_match:::field.password_confirm",
+    path: ["passwordConfirm"],
+  });
+
+export const activateAccountBodySchema = z.object({
+  t: tokenSchema,
 });
