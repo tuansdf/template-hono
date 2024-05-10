@@ -2,6 +2,7 @@ import type { FC, PropsWithChildren } from "hono/jsx";
 import { resetPasswordRequestSchema } from "~/domains/auth/auth.schema";
 import { AuthService } from "~/domains/auth/auth.service";
 import { ExceptionUtils } from "~/exceptions/exception.util";
+import { cn } from "~/utils/classname.util";
 import { RouterUtils } from "~/utils/router.util";
 
 export const viewRouter = RouterUtils.init();
@@ -38,10 +39,15 @@ const AnnouncePage: FC<{ title: string; message: string }> = ({ title, message }
   );
 };
 
-const ResetPasswordPage: FC<{ title: string; token: string }> = ({ title, token }) => {
+const ResetPasswordPage: FC<{ title: string; token: string; message?: string; isError?: boolean }> = ({
+  title,
+  token,
+  message,
+  isError,
+}) => {
   return (
     <Layout title={title}>
-      <form method="POST" action="/password/reset" className="align-middle">
+      <form method="POST" action={`/password/reset?t=${token}`} className="align-middle">
         <h1>Reset your password</h1>
         <fieldset>
           <label htmlFor="password" className="form-label">
@@ -69,6 +75,7 @@ const ResetPasswordPage: FC<{ title: string; token: string }> = ({ title, token 
           />
           <input name="t" type="text" className="invisible" value={token} hidden />
         </fieldset>
+        {!!message && <div className={cn("alert", isError ? "alert-danger" : "alert-success")}>{message}</div>}
         <input className="btn btn-primary" type="submit" value="Submit" />
       </form>
     </Layout>
@@ -96,13 +103,22 @@ viewRouter.get("/password/reset", async (c) => {
 
 viewRouter.post("/password/reset", async (c) => {
   const t = c.get("t");
-  let message: string;
+  const token = c.req.query("t");
+  let errorMessage: string | undefined;
+  let successMessage: string | undefined;
   try {
     const body = await resetPasswordRequestSchema.parseAsync(await c.req.parseBody());
     await AuthService.resetPassword(body);
-    message = t("auth.message.reset_password_success");
+    successMessage = t("auth.message.reset_password_success");
   } catch (e) {
-    message = ExceptionUtils.getMessage(e as Error, t);
+    errorMessage = ExceptionUtils.getMessage(e as Error, t);
   }
-  return c.html(<AnnouncePage title={t("auth.message.reset_password_email_subject")} message={message} />);
+  return c.html(
+    <ResetPasswordPage
+      title={t("auth.message.reset_password_email_subject")}
+      token={String(token)}
+      isError={!!errorMessage}
+      message={errorMessage || successMessage}
+    />,
+  );
 });

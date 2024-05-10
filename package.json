@@ -40,6 +40,7 @@
     "@hono/node-server": "^1.11.1",
     "argon2": "^0.40.1",
     "axios": "^1.6.8",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.11",
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.30.10",
