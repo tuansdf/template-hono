@@ -135,5 +135,6 @@ dist
 
 .env.*
 !.env.example
+temp
 temp.*
 *.temp.*
