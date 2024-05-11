@@ -4,10 +4,9 @@ import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { ENV_APP_PORT } from "~/constants/env.constant";
 import { errorHandler } from "~/exceptions/error-handler.middleware";
-import { detectLanguage } from "~/i18n/i18n.middleware";
 import { loggerM } from "~/middlewares/logger.middleware";
 import { notFound } from "~/middlewares/not-found.middleware";
-import { mainRouter } from "~/routes/main.router";
+import { langRouter } from "~/routes/lang.router";
 
 import "~/constants/env.constant";
 import "~/database/db";
@@ -20,9 +19,8 @@ const app = new Hono();
 app.use(loggerM());
 app.use(cors());
 app.use(secureHeaders());
-app.use(detectLanguage());
 
-app.route("/", mainRouter);
+app.route("/", langRouter);
 
 app.notFound(notFound());
 app.onError(errorHandler());

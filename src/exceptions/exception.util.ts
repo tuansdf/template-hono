@@ -30,17 +30,18 @@ export class ExceptionUtils {
     return RouterUtils.response(c, 500, { message: errorPrefix + t("generic.error.other") });
   };
 
-  static getMessage = (err: Error, t: TFn): string => {
-    const errorPrefix = t("field.error_c") + ": ";
+  static getMessage = (err: Error, t: TFn, prefix: boolean = true): string => {
+    let errorMessage = "";
+    let errorPrefix = prefix ? t("field.error_c") + ": " : "";
     if (err instanceof CustomException) {
-      return errorPrefix + I18nUtils.getMessageAndParams(t, err.message || "generic.error.other");
+      errorMessage = I18nUtils.getMessageAndParams(t, err.message || "generic.error.other");
     }
     if (err instanceof HTTPException) {
-      return errorPrefix + I18nUtils.getMessageAndParams(t, err.message || "generic.error.other");
+      errorMessage = I18nUtils.getMessageAndParams(t, err.message || "generic.error.other");
     }
     if (err instanceof ZodError) {
-      return errorPrefix + I18nUtils.getMessageAndParams(t, err.errors[0]?.message || "generic.error.other");
+      errorMessage = I18nUtils.getMessageAndParams(t, err.errors[0]?.message || "generic.error.other");
     }
-    return errorPrefix + t("generic.error.other");
+    return errorPrefix + (errorMessage || t("generic.error.other"));
   };
 }

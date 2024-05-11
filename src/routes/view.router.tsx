@@ -2,6 +2,7 @@ import type { FC, PropsWithChildren } from "hono/jsx";
 import { resetPasswordRequestSchema } from "~/domains/auth/auth.schema";
 import { AuthService } from "~/domains/auth/auth.service";
 import { ExceptionUtils } from "~/exceptions/exception.util";
+import { TFn } from "~/i18n/i18n.type";
 import { cn } from "~/utils/classname.util";
 import { RouterUtils } from "~/utils/router.util";
 
@@ -14,12 +15,8 @@ const Layout: FC<PropsWithChildren<{ title: string }>> = ({ children, title }) =
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="light dark" />
-        <link
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-          crossOrigin="anonymous"
-        />
+        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css" />
         <title>{title}</title>
       </head>
       <body className="container" style={{ height: "100vh" }}>
@@ -39,16 +36,17 @@ const AnnouncePage: FC<{ title: string; message: string }> = ({ title, message }
   );
 };
 
-const ResetPasswordPage: FC<{ title: string; token: string; message?: string; isError?: boolean }> = ({
-  title,
-  token,
-  message,
-  isError,
-}) => {
+const ResetPasswordPage: FC<{ token: string; t: TFn }> = ({ token, t }) => {
+  const title = t("view.reset_password.title");
   return (
     <Layout title={title}>
-      <form method="POST" action={`/password/reset?t=${token}`} className="align-middle">
-        <h1>Reset your password</h1>
+      <form
+        hx-post={`/password/reset?t=${token}`}
+        className="align-middle"
+        hx-target="#error-message"
+        hx-swap="outerHTML"
+      >
+        <h1>{title}</h1>
         <fieldset>
           <label htmlFor="password" className="form-label">
             Password
@@ -61,6 +59,7 @@ const ResetPasswordPage: FC<{ title: string; token: string; message?: string; is
             autoComplete="password"
             className="form-control mb-3"
             autoFocus
+            required
           />
           <label htmlFor="passwordConfirm" className="form-label">
             Confirm password
@@ -72,13 +71,22 @@ const ResetPasswordPage: FC<{ title: string; token: string; message?: string; is
             placeholder="••••••••"
             autoComplete="password"
             className="form-control mb-3"
+            required
           />
-          <input name="t" type="text" className="invisible" value={token} hidden />
+          <input name="t" type="text" value={token} hidden readOnly aria-hidden />
         </fieldset>
-        {!!message && <div className={cn("alert", isError ? "alert-danger" : "alert-success")}>{message}</div>}
+        <div hidden id="error-message"></div>
         <input className="btn btn-primary" type="submit" value="Submit" />
       </form>
     </Layout>
+  );
+};
+
+const AlertMessage: FC<{ message: string; isError: boolean }> = ({ message, isError }) => {
+  return (
+    <div className={cn("alert", isError ? "alert-danger" : "alert-success")} id="error-message">
+      {message}
+    </div>
   );
 };
 
@@ -98,14 +106,13 @@ viewRouter.get("/account/activate", async (c) => {
 viewRouter.get("/password/reset", async (c) => {
   const t = c.get("t");
   const token = c.req.query("t");
-  return c.html(<ResetPasswordPage title={t("auth.message.reset_password_email_subject")} token={String(token)} />);
+  return c.html(<ResetPasswordPage token={String(token)} t={t} />);
 });
 
 viewRouter.post("/password/reset", async (c) => {
   const t = c.get("t");
-  const token = c.req.query("t");
-  let errorMessage: string | undefined;
-  let successMessage: string | undefined;
+  let errorMessage: string = "";
+  let successMessage: string = "";
   try {
     const body = await resetPasswordRequestSchema.parseAsync(await c.req.parseBody());
     await AuthService.resetPassword(body);
@@ -113,12 +120,5 @@ viewRouter.post("/password/reset", async (c) => {
   } catch (e) {
     errorMessage = ExceptionUtils.getMessage(e as Error, t);
   }
-  return c.html(
-    <ResetPasswordPage
-      title={t("auth.message.reset_password_email_subject")}
-      token={String(token)}
-      isError={!!errorMessage}
-      message={errorMessage || successMessage}
-    />,
-  );
+  return c.html(<AlertMessage isError={!!errorMessage} message={errorMessage || successMessage} />);
 });

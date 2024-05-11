@@ -6,6 +6,11 @@ import { I18nUtils } from "~/i18n/i18n.util";
 export const detectLanguage = (): MiddlewareHandler => {
   return async (c, next) => {
     let lang = c.req.query("lng");
+    // @ts-expect-error
+    const langParams = c.req.param("lng");
+    if (!lang && langParams) {
+      lang = langParams;
+    }
     if (!lang) {
       lang = accepts(c, {
         header: "Accept-Language",

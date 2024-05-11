@@ -62,5 +62,13 @@
   },
   "permission": {
     "error": {}
+  },
+  "view": {
+    "reset_password": {
+      "title": "Reset your password"
+    },
+    "activate_account": {
+      "title": "Activate your account"
+    }
   }
 }
