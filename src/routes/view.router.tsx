@@ -7,14 +7,14 @@ import { RouterUtils } from "~/utils/router.util";
 
 export const viewRouter = RouterUtils.init();
 
-const Layout: FC<PropsWithChildren<{ title: string }>> = ({ children, title }) => {
+const RootLayout: FC<PropsWithChildren<{ title: string; useJs?: boolean }>> = ({ children, title, useJs = false }) => {
   return (
     <html style={{ "--pico-font-size": "100%" }}>
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="color-scheme" content="light dark" />
-        <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+        {useJs && <script src="https://unpkg.com/htmx.org@1.9.12"></script>}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.indigo.min.css" />
         <title>{title}</title>
       </head>
@@ -25,18 +25,18 @@ const Layout: FC<PropsWithChildren<{ title: string }>> = ({ children, title }) =
 
 const AnnouncePage: FC<{ title: string; message: string }> = ({ title, message }) => {
   return (
-    <Layout title={title}>
+    <RootLayout title={title}>
       <main className="container">
         <div>{message}</div>
       </main>
-    </Layout>
+    </RootLayout>
   );
 };
 
 const ResetPasswordPage: FC<{ formUrl: string; token: string; t: TFn }> = ({ formUrl, token, t }) => {
   const title = t("view.reset_password.title");
   return (
-    <Layout title={title}>
+    <RootLayout title={title} useJs>
       <main className="container" style={{ maxWidth: "30rem" }}>
         <form hx-post={formUrl} hx-target="#error-message" hx-swap="outerHTML">
           <h1>{title}</h1>
@@ -70,7 +70,7 @@ const ResetPasswordPage: FC<{ formUrl: string; token: string; t: TFn }> = ({ for
           <input type="submit" value={t("view.button.submit")} />
         </form>
       </main>
-    </Layout>
+    </RootLayout>
   );
 };
 
