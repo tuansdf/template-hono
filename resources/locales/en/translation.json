@@ -5,6 +5,8 @@
     "username": "username",
     "password": "password",
     "password_confirm": "confirm password",
+    "password_c": "Password",
+    "password_confirm_c": "Confirm password",
     "code": "code",
     "name": "name",
     "description": "description",
@@ -69,6 +71,9 @@
     },
     "activate_account": {
       "title": "Activate your account"
+    },
+    "button": {
+      "submit": "Submit"
     }
   }
 }

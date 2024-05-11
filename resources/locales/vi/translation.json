@@ -5,6 +5,8 @@
     "username": "tên đăng nhập",
     "password": "mật khẩu",
     "password_confirm": "mật khẩu xác nhận",
+    "password_c": "Mật khẩu",
+    "password_confirm_c": "Mật khẩu xác nhận",
     "code": "mã hiệu",
     "name": "tên",
     "description": "nội dung",
@@ -69,6 +71,9 @@
     },
     "activate_account": {
       "title": "Kích hoạt tài khoản của bạn"
+    },
+    "button": {
+      "submit": "Lưu"
     }
   }
 }
