@@ -76,7 +76,7 @@ const ResetPasswordPage: FC<{ formUrl: string; token: string; t: TFn }> = ({ for
 
 const AlertMessage: FC<{ message: string; isError: boolean }> = ({ message, isError }) => {
   return (
-    <article id="error-message" style={{ color: isError ? "#ef4444" : undefined }}>
+    <article id="error-message" style={{ color: isError ? "#ef4444" : "#10b981" }}>
       {message}
     </article>
   );
