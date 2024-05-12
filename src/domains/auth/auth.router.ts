@@ -8,6 +8,7 @@ import {
   resetPasswordRequestSchema,
 } from "~/domains/auth/auth.schema";
 import { AuthService } from "~/domains/auth/auth.service";
+import { TokenService } from "~/domains/token/token.service";
 import { validator } from "~/middlewares/validator.middleware";
 import { RouterUtils } from "~/utils/router.util";
 
@@ -33,10 +34,18 @@ authRouter.post("/token/refresh", authenticate(JWT_TYPE.REFRESH), async (c) => {
   return RouterUtils.response(c, 200, { data: result });
 });
 
-authRouter.post("/token/revoke/:tokenId", authenticate(JWT_TYPE.REFRESH), async (c) => {
-  const tokenId = c.req.param("tokenId");
+authRouter.post("/token/revoke/all", authenticate(JWT_TYPE.ACCESS), async (c) => {
   const authPayload = c.get("authPayload");
-  await AuthService.revokeToken(Number(authPayload?.sid), Number(tokenId));
+  const userId = Number(authPayload?.sid);
+  await TokenService.revokeTokenByUserId(userId);
+  return RouterUtils.response(c, 200);
+});
+
+authRouter.post("/token/revoke/:tokenId", authenticate(JWT_TYPE.ACCESS), async (c) => {
+  const tokenId = Number(c.req.param("tokenId"));
+  const authPayload = c.get("authPayload");
+  const userId = Number(authPayload?.sid);
+  await TokenService.revokeTokenById(tokenId, userId);
   return RouterUtils.response(c, 200);
 });
 

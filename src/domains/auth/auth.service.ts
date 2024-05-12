@@ -93,14 +93,6 @@ export class AuthService {
     };
   };
 
-  static revokeToken = async (userId: number, tokenId: number) => {
-    const token = await TokenRepository.findTopByIdAndForeignId(tokenId, userId);
-    if (!token) {
-      throw new CustomException("dynamic.error.not_found:::field.token");
-    }
-    await db.update(TokenTable).set({ status: STATUS.INACTIVE }).where(eq(TokenTable.id, tokenId));
-  };
-
   static forgotPassword = async (requestDTO: ForgotPasswordRequestDTO, t: TFn) => {
     const user = await UserRepository.findTopByUsernameOrEmail(requestDTO.username);
     if (!user) {

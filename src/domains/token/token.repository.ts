@@ -68,4 +68,15 @@ export class TokenRepository {
   static async saveAll(data: TokenSave[]) {
     return db.insert(TokenTable).values(data);
   }
+
+  static updateStatusByTokenIdAndForeignId = async (status: string, tokenId: number, foreignId: number) => {
+    await db
+      .update(TokenTable)
+      .set({ status })
+      .where(and(eq(TokenTable.id, tokenId), eq(TokenTable.foreignId, foreignId)));
+  };
+
+  static updateStatusByForeignId = async (status: string, foreignId: number) => {
+    await db.update(TokenTable).set({ status }).where(eq(TokenTable.foreignId, foreignId));
+  };
 }
