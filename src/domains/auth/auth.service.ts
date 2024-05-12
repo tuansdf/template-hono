@@ -40,7 +40,7 @@ export class AuthService {
     if (!user) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
-    const isPasswordMatch = await HashUtils.verify(user.password || "", requestDTO.password);
+    const isPasswordMatch = await HashUtils.verify(String(user.password), requestDTO.password);
     if (!isPasswordMatch) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }

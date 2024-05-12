@@ -1,4 +1,5 @@
 import { hash, verify } from "argon2";
+import { logger } from "~/lib/logger/logger";
 
 export class HashUtils {
   static async hash(toBeHashed: string): Promise<string> {
@@ -6,6 +7,11 @@ export class HashUtils {
   }
 
   static async verify(hashed: string, toBeVerified: string): Promise<boolean> {
-    return verify(hashed, toBeVerified);
+    try {
+      return await verify(hashed, toBeVerified);
+    } catch (e) {
+      logger.error(e);
+      return false;
+    }
   }
 }

@@ -10,7 +10,6 @@ export const userPasswordSelect = {
   username: UserTable.username,
   password: UserTable.password,
   status: UserTable.status,
-  tokenNbf: UserTable.tokenNbf,
 };
 
 export const userCommonSelect = {
@@ -27,7 +26,6 @@ export const userAllSelect = {
   email: UserTable.email,
   username: UserTable.username,
   password: UserTable.password,
-  tokenNbf: UserTable.tokenNbf,
   status: UserTable.status,
   createdBy: UserTable.createdBy,
   updatedBy: UserTable.updatedBy,
