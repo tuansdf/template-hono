@@ -49,7 +49,7 @@
       "unauthenticated": "Thông tin đăng nhập không chính xác",
       "unauthorized": "Bạn không có quyền truy cập tài nguyên này",
       "already_activated": "Người dùng đang trong trạng thái hoạt động",
-      "token_used_or_invalid": "Mã xác thực đã hết hạn hoặc không hợp lệ. Vui lòng tạo 1 yêu cầu xác thực khác"
+      "token_used_or_invalid": "Mã xác thực đã hết hạn hoặc không hợp lệ. Vui lòng tạo 1 yêu cầu mới"
     },
     "message": {
       "activate_account_email_sent": "Hướng dẫn kích hoạt tài khoản đã được gửi tới địa chỉ email của bạn",

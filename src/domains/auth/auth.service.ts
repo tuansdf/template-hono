@@ -106,7 +106,11 @@ export class AuthService {
 
   static resetPassword = async (requestDTO: ResetPasswordRequestDTO) => {
     const tokenValue = requestDTO.t;
-    await AuthUtils.verifyToken(Base64Utils.decode(tokenValue), JWT_TYPE.RESET_PASSWORD);
+    try {
+      await AuthUtils.verifyToken(Base64Utils.decode(tokenValue), JWT_TYPE.RESET_PASSWORD);
+    } catch (e) {
+      throw new CustomException("auth.error.token_used_or_invalid");
+    }
     const token = await TokenRepository.findTopByValueAndStatus(tokenValue, STATUS.ACTIVE);
     if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
       throw new CustomException("auth.error.token_used_or_invalid", 401);
@@ -121,7 +125,11 @@ export class AuthService {
   };
 
   static activateAccount = async (tokenValue: string) => {
-    await AuthUtils.verifyToken(Base64Utils.decode(tokenValue), JWT_TYPE.ACTIVATE_ACCOUNT);
+    try {
+      await AuthUtils.verifyToken(Base64Utils.decode(tokenValue), JWT_TYPE.ACTIVATE_ACCOUNT);
+    } catch (e) {
+      throw new CustomException("auth.error.token_used_or_invalid");
+    }
     const token = await TokenRepository.findTopByValueAndStatus(tokenValue, STATUS.ACTIVE);
     if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
       throw new CustomException("auth.error.token_used_or_invalid", 401);
