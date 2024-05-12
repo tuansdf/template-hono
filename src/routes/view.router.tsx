@@ -98,7 +98,7 @@ viewRouter.get("/account/activate", async (c) => {
 viewRouter.get("/password/reset", async (c) => {
   const t = c.get("t");
   const token = c.req.query("t");
-  return c.html(<ResetPasswordPage formUrl={`${c.req.path}?t=${token}`} token={String(token)} t={t} />);
+  return c.html(<ResetPasswordPage formUrl={c.req.path} token={String(token)} t={t} />);
 });
 
 viewRouter.post("/password/reset", async (c) => {
