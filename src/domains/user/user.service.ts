@@ -1,5 +1,5 @@
 import { ilike, or } from "drizzle-orm";
-import { STATUS_ACTIVE } from "~/constants/status.constant";
+import { STATUS } from "~/constants/status.constant";
 import { db } from "~/database/db";
 import { userCommonSelect, UserRepository } from "~/domains/user/user.repository";
 import { UserSearchRequestDTO } from "~/domains/user/user.type";
@@ -32,7 +32,7 @@ export class UserService {
   }
 
   static async findAll() {
-    return UserRepository.findAllByStatus(STATUS_ACTIVE);
+    return UserRepository.findAllByStatus(STATUS.ACTIVE);
   }
 
   static async search(requestDTO: UserSearchRequestDTO) {

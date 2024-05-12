@@ -1,6 +1,13 @@
 import { eq } from "drizzle-orm";
-import { ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL, ENV_EMAIL_RESET_PASSWORD_BASE_URL } from "~/constants/env.constant";
-import { STATUS_ACTIVE, STATUS_PENDING } from "~/constants/status.constant";
+import {
+  ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL,
+  ENV_EMAIL_RESET_PASSWORD_BASE_URL,
+  ENV_JWT_REFRESH_LIFETIME,
+  ENV_TOKEN_ACTIVATE_ACCOUNT_LIFETIME,
+  ENV_TOKEN_RESET_PASSWORD_LIFETIME,
+} from "~/constants/env.constant";
+import { STATUS } from "~/constants/status.constant";
+import { TYPE } from "~/constants/type.constant";
 import { db } from "~/database/db";
 import { JWT_TYPE } from "~/domains/auth/auth.constant";
 import {
@@ -11,14 +18,14 @@ import {
 } from "~/domains/auth/auth.type";
 import { AuthUtils } from "~/domains/auth/auth.util";
 import { PermissionRepository } from "~/domains/permission/permission.repository";
-import {
-  EMAIL_USAGE_CODE_ACTIVATE_ACCOUNT,
-  EMAIL_USAGE_CODE_RESET_PASSWORD,
-} from "~/domains/send-email/send-email.constant";
 import { SendEmailService } from "~/domains/send-email/send-email.service";
 import { SendEmailSave } from "~/domains/send-email/send-email.type";
+import { TokenRepository } from "~/domains/token/token.repository";
+import { TokenService } from "~/domains/token/token.service";
+import { TokenSave } from "~/domains/token/token.type";
 import { UserRepository } from "~/domains/user/user.repository";
 import { User, UserDTO } from "~/domains/user/user.type";
+import { TokenTable } from "~/entities/token.entity";
 import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
 import { TFn } from "~/i18n/i18n.type";
@@ -37,15 +44,15 @@ export class AuthService {
     if (!isPasswordMatch) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
-    if (user.status !== STATUS_ACTIVE) {
+    if (user.status !== STATUS.ACTIVE) {
       throw new CustomException("user.error.not_activated", 401);
     }
     const permissions = await PermissionRepository.findAllByUserId(user.id);
-    const { password, tokenNbf, ...result } = user;
+    const { password, ...result } = user;
     const tokenPayload: UserDTO = { ...result, permissions };
     const accessToken = await AuthUtils.createToken({ user: tokenPayload, type: JWT_TYPE.ACCESS });
-    const refreshToken = await AuthUtils.createToken({ user: tokenPayload, type: JWT_TYPE.REFRESH });
-    return { ...result, accessToken, refreshToken };
+    const refreshToken = await _AuthService.createRefreshToken(user);
+    return { ...result, accessToken, refreshToken: refreshToken.value };
   };
 
   static register = async (requestDTO: RegisterRequestDTO, t: TFn) => {
@@ -60,25 +67,25 @@ export class AuthService {
       return;
     }
     requestDTO.password = await HashUtils.hash(requestDTO.password);
-    const saved = await UserRepository.save({ ...requestDTO, status: STATUS_PENDING });
-    const token = await AuthUtils.createToken({ username: requestDTO.email, type: JWT_TYPE.ACTIVATE_ACCOUNT });
-    await _AuthService.sendActivateAccountEmail(saved, Base64Utils.encode(token), t);
+    const saved = await UserRepository.save({ ...requestDTO, status: STATUS.PENDING });
+    const token = await _AuthService.createActivateAccountToken(saved);
+    await _AuthService.sendActivateAccountEmail(saved, token.value, t);
   };
 
-  static refreshToken = async (userId: number, currentTokenIat: number) => {
-    const user = await UserRepository.findTopByIdPrivate(userId);
+  static refreshToken = async (userId: number, tokenValue: string) => {
+    const token = await TokenRepository.findTopByValueAndForeignIdAndStatus(tokenValue, userId, STATUS.ACTIVE);
+    if (!token) {
+      throw new CustomException("auth.error.unauthenticated", 401);
+    }
+    const user = await UserRepository.findTopById(userId);
     if (!user) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
-    const isTokenInvalidated = currentTokenIat < dated(user.tokenNbf).unix();
-    if (isTokenInvalidated) {
-      throw new CustomException("auth.error.unauthenticated", 401);
-    }
-    if (user.status !== STATUS_ACTIVE) {
+    if (user.status !== STATUS.ACTIVE) {
       throw new CustomException("user.error.not_activated", 401);
     }
     const permissions = await PermissionRepository.findAllByUserId(user.id);
-    const { password, tokenNbf, ...result } = user;
+    const { password, ...result } = user;
     const tokenPayload: UserDTO = { ...result, permissions };
     const accessToken = await AuthUtils.createToken({ user: tokenPayload, type: JWT_TYPE.ACCESS });
     return {
@@ -86,8 +93,12 @@ export class AuthService {
     };
   };
 
-  static invalidateToken = async (userId: number) => {
-    await db.update(UserTable).set({ tokenNbf: dated().toISOString() }).where(eq(UserTable.id, userId));
+  static revokeToken = async (userId: number, tokenId: number) => {
+    const token = await TokenRepository.findTopByIdAndForeignId(tokenId, userId);
+    if (!token) {
+      throw new CustomException("dynamic.error.not_found:::field.token");
+    }
+    await db.update(TokenTable).set({ status: STATUS.INACTIVE }).where(eq(TokenTable.id, tokenId));
   };
 
   static forgotPassword = async (requestDTO: ForgotPasswordRequestDTO, t: TFn) => {
@@ -97,44 +108,41 @@ export class AuthService {
       logger.error("Request password recovery with not registered email");
       return;
     }
-    const token = await AuthUtils.createToken({ username: requestDTO.username, type: JWT_TYPE.RESET_PASSWORD });
-    await _AuthService.sendResetPasswordEmail(user, Base64Utils.encode(token), t);
+    const token = await _AuthService.createResetPasswordToken(user);
+    await _AuthService.sendResetPasswordEmail(user, token.value, t);
   };
 
   static resetPassword = async (requestDTO: ResetPasswordRequestDTO) => {
-    const payload = await AuthUtils.verifyToken(Base64Utils.decode(requestDTO.t), JWT_TYPE.RESET_PASSWORD);
-    const username = payload.sub;
-    if (!username) {
-      throw new CustomException("dynamic.error.not_found:::field.user", 404);
+    const tokenValue = requestDTO.t;
+    await AuthUtils.verifyToken(Base64Utils.decode(tokenValue), JWT_TYPE.RESET_PASSWORD);
+    const token = await TokenRepository.findTopByValueAndStatus(tokenValue, STATUS.ACTIVE);
+    if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
+      throw new CustomException("auth.error.token_used_or_invalid", 401);
     }
-    const user = await UserRepository.findTopByUsernameOrEmail(String(username));
+    const user = await UserRepository.findTopById(token.foreignId);
     if (!user) {
       throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
     const hashedPassword = await HashUtils.hash(requestDTO.password);
-    await db
-      .update(UserTable)
-      .set({ password: hashedPassword, tokenNbf: dated().toISOString() })
-      .where(eq(UserTable.id, user.id));
+    await db.update(TokenTable).set({ status: STATUS.INACTIVE }).where(eq(TokenTable.id, token.id));
+    await db.update(UserTable).set({ password: hashedPassword }).where(eq(UserTable.id, user.id));
   };
 
-  static activateAccount = async (token: string) => {
-    const payload = await AuthUtils.verifyToken(Base64Utils.decode(token), JWT_TYPE.ACTIVATE_ACCOUNT);
-    const username = payload.sub;
-    if (!username) {
-      throw new CustomException("dynamic.error.not_found:::field.user", 404);
+  static activateAccount = async (tokenValue: string) => {
+    await AuthUtils.verifyToken(Base64Utils.decode(tokenValue), JWT_TYPE.ACTIVATE_ACCOUNT);
+    const token = await TokenRepository.findTopByValueAndStatus(tokenValue, STATUS.ACTIVE);
+    if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
+      throw new CustomException("auth.error.token_used_or_invalid", 401);
     }
-    const user = await UserRepository.findTopByUsernameOrEmail(String(username));
+    const user = await UserRepository.findTopById(token.foreignId);
     if (!user) {
       throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
-    if (user.status === STATUS_ACTIVE) {
+    if (user.status === STATUS.ACTIVE) {
       throw new CustomException("auth.error.already_activated", 400);
     }
-    await db
-      .update(UserTable)
-      .set({ status: STATUS_ACTIVE, tokenNbf: dated().toISOString() })
-      .where(eq(UserTable.id, user.id));
+    await db.update(TokenTable).set({ status: STATUS.INACTIVE }).where(eq(TokenTable.id, token.id));
+    await db.update(UserTable).set({ status: STATUS.ACTIVE }).where(eq(UserTable.id, user.id));
   };
 }
 
@@ -143,7 +151,7 @@ class _AuthService {
     const item: SendEmailSave = {
       fromEmail: "PLACEHOLDER",
       toEmail: user.email,
-      usageCode: EMAIL_USAGE_CODE_RESET_PASSWORD,
+      type: TYPE.RESET_PASSWORD,
       subject: t("auth.message.reset_password_email_subject"),
       content: t("auth.message.reset_password_email_content", {
         1: user.email,
@@ -156,7 +164,7 @@ class _AuthService {
     const item: SendEmailSave = {
       fromEmail: "PLACEHOLDER",
       toEmail: user.email,
-      usageCode: EMAIL_USAGE_CODE_ACTIVATE_ACCOUNT,
+      type: TYPE.ACTIVATE_ACCOUNT,
       subject: t("auth.message.activate_account_email_subject"),
       content: t("auth.message.activate_account_email_content", {
         1: user.email,
@@ -164,5 +172,45 @@ class _AuthService {
       }),
     };
     await SendEmailService.send(item);
+  };
+  static createActivateAccountToken = async (user: User) => {
+    const tokenValue = Base64Utils.encode(
+      await AuthUtils.createToken({ type: JWT_TYPE.ACTIVATE_ACCOUNT, username: user.username }),
+    );
+    const expiresAt = dated().add(ENV_TOKEN_ACTIVATE_ACCOUNT_LIFETIME, "minute").toISOString();
+    const item: TokenSave = {
+      foreignId: user.id,
+      value: tokenValue,
+      type: TYPE.ACTIVATE_ACCOUNT,
+      expiresAt,
+      status: STATUS.ACTIVE,
+    };
+    return TokenService.save(item);
+  };
+  static createResetPasswordToken = async (user: User) => {
+    const tokenValue = Base64Utils.encode(
+      await AuthUtils.createToken({ type: JWT_TYPE.RESET_PASSWORD, username: user.username }),
+    );
+    const expiresAt = dated().add(ENV_TOKEN_RESET_PASSWORD_LIFETIME, "minute").toISOString();
+    const item: TokenSave = {
+      foreignId: user.id,
+      value: tokenValue,
+      type: TYPE.RESET_PASSWORD,
+      expiresAt,
+      status: STATUS.ACTIVE,
+    };
+    return TokenService.save(item);
+  };
+  static createRefreshToken = async (user: User) => {
+    const tokenValue = await AuthUtils.createToken({ type: JWT_TYPE.REFRESH, user });
+    const expiresAt = dated().add(ENV_JWT_REFRESH_LIFETIME, "minute").toISOString();
+    const item: TokenSave = {
+      foreignId: user.id,
+      value: tokenValue,
+      type: TYPE.REFRESH_TOKEN,
+      expiresAt,
+      status: STATUS.ACTIVE,
+    };
+    return TokenService.save(item);
   };
 }

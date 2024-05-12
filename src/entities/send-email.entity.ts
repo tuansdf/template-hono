@@ -8,7 +8,7 @@ export const SendEmailTable = pgTable("send_email", {
   ccEmail: text("cc_email"),
   subject: text("subject"),
   content: text("content"),
-  usageCode: text("usage_code"),
+  type: text("type"),
   retryCount: integer("retry_count"),
   ...commonColumns,
 });

@@ -28,13 +28,15 @@ authRouter.post("/register", validator("json", registerRequestSchema), async (c)
 
 authRouter.post("/token/refresh", authenticate(JWT_TYPE.REFRESH), async (c) => {
   const authPayload = c.get("authPayload");
-  const result = await AuthService.refreshToken(Number(authPayload?.sid), Number(authPayload?.iat));
+  const authToken = c.get("authToken");
+  const result = await AuthService.refreshToken(Number(authPayload?.sid), String(authToken));
   return RouterUtils.response(c, 200, { data: result });
 });
 
-authRouter.post("/token/invalidate", authenticate(JWT_TYPE.ACCESS), async (c) => {
+authRouter.post("/token/revoke/:tokenId", authenticate(JWT_TYPE.REFRESH), async (c) => {
+  const tokenId = c.req.param("tokenId");
   const authPayload = c.get("authPayload");
-  await AuthService.invalidateToken(Number(authPayload?.sid));
+  await AuthService.revokeToken(Number(authPayload?.sid), Number(tokenId));
   return RouterUtils.response(c, 200);
 });
 
@@ -48,9 +50,8 @@ authRouter.post("/password/forgot", validator("json", forgotPasswordRequestSchem
 authRouter.post("/password/reset", validator("json", resetPasswordRequestSchema), async (c) => {
   const t = c.get("t");
   const body = c.req.valid("json");
-  let message = t("auth.message.reset_password_success");
   await AuthService.resetPassword(body);
-  return RouterUtils.response(c, 200, { message });
+  return RouterUtils.response(c, 200, { message: t("auth.message.reset_password_success") });
 });
 
 authRouter.post("/account/activate", validator("json", activateAccountBodySchema), async (c) => {

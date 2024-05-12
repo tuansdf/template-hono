@@ -15,7 +15,7 @@
     "search_query": "từ tìm kiếm",
     "permission": "quyền",
     "role": "vai trò",
-    "token": "mã xác minh"
+    "token": "mã xác thực"
   },
   "form": {
     "error": {
@@ -28,8 +28,8 @@
   },
   "generic": {
     "error": {
-      "other": "có lỗi xảy ra",
-      "not_found": "tài nguyên yêu cầu không tồn tại"
+      "other": "Có lỗi xảy ra",
+      "not_found": "Tài nguyên yêu cầu không tồn tại"
     }
   },
   "dynamic": {
@@ -41,24 +41,25 @@
   },
   "user": {
     "error": {
-      "not_activated": "người dùng chưa trong trạng thái hoạt động"
+      "not_activated": "Người dùng chưa trong trạng thái hoạt động"
     }
   },
   "auth": {
     "error": {
-      "unauthenticated": "thông tin đăng nhập không chính xác",
-      "unauthorized": "bạn không có quyền truy cập tài nguyên này",
-      "already_activated": "người dùng đang trong trạng thái hoạt động"
+      "unauthenticated": "Thông tin đăng nhập không chính xác",
+      "unauthorized": "Bạn không có quyền truy cập tài nguyên này",
+      "already_activated": "Người dùng đang trong trạng thái hoạt động",
+      "token_used_or_invalid": "Mã xác thực đã hết hạn hoặc không hợp lệ. Vui lòng tạo 1 yêu cầu xác thực khác"
     },
     "message": {
       "activate_account_email_sent": "Hướng dẫn kích hoạt tài khoản đã được gửi tới địa chỉ email của bạn",
       "activate_account_email_subject": "Kích hoạt tài khoản",
-      "activate_account_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để kích hoạt tài khoản của bạn: {{2}}.<br/><br/>Trân trọng cảm ơn",
+      "activate_account_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để kích hoạt tài khoản của bạn: {{2}}<br/><br/>Trân trọng cảm ơn",
       "activate_account_success": "Tài khoản của bạn đã được kích hoạt",
       "activate_account_fail": "Kích hoạt tài khoản không thành công",
       "reset_password_email_sent": "Hướng dẫn cài đặt lại mật khẩu đã được gửi tới địa chỉ email của bạn",
       "reset_password_email_subject": "Cài đặt lại mật khẩu",
-      "reset_password_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để cài đặt lại mật khẩu của bạn: {{2}}.<br/><br/>Trân trọng cảm ơn",
+      "reset_password_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để cài đặt lại mật khẩu của bạn: {{2}}<br/><br/>Trân trọng cảm ơn",
       "reset_password_success": "Thiết lập mật khẩu thành công"
     }
   },

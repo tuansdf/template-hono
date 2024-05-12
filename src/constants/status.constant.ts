@@ -1,3 +1,6 @@
-export const STATUS_PENDING = "PENDING";
-export const STATUS_ACTIVE = "ACTIVE";
-export const STATUS_INACTIVE = "INACTIVE";
+export const STATUS = {
+  PENDING: "PENDING",
+  ACTIVE: "ACTIVE",
+  INACTIVE: "INACTIVE",
+  CLOSED: "CLOSED",
+} as const;

@@ -49,11 +49,6 @@ export class UserRepository {
     return result?.[0];
   }
 
-  static async findTopByIdPrivate(id: number) {
-    const result = await db.select(userAllSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
-    return result?.[0];
-  }
-
   static async findTopByUsernameOrEmailWithPassword(username: string) {
     const result = await db
       .select(userAllSelect)

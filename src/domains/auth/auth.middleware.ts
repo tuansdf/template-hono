@@ -24,6 +24,7 @@ export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHa
 
     const payload = await AuthUtils.verifyToken(bearerToken, type);
     c.set("authPayload", payload);
+    c.set("authToken", bearerToken);
 
     await next();
   };

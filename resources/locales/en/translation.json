@@ -28,8 +28,8 @@
   },
   "generic": {
     "error": {
-      "other": "something went wrong",
-      "not_found": "the requested item was not found"
+      "other": "Something went wrong",
+      "not_found": "The requested item was not found"
     }
   },
   "dynamic": {
@@ -41,19 +41,20 @@
   },
   "user": {
     "error": {
-      "not_activated": "user is not activated"
+      "not_activated": "User is not activated"
     }
   },
   "auth": {
     "error": {
-      "unauthenticated": "invalid credentials",
-      "unauthorized": "insufficient permissions",
-      "already_activated": "user is already activated"
+      "unauthenticated": "Invalid credentials",
+      "unauthorized": "Insufficient permissions",
+      "already_activated": "User is already activated",
+      "token_used_or_invalid": "The token you used is expired or invalid. Please request a new one"
     },
     "message": {
       "activate_account_email_sent": "A link to activate your account has been emailed to the address provided",
       "activate_account_email_subject": "Activate your account",
-      "activate_account_email_content": "Dear {{1}},<br/><br/>Please click the following link to activate your account: {{2}}.<br/><br/>Best regards.",
+      "activate_account_email_content": "Dear {{1}},<br/><br/>Please click the following link to activate your account: {{2}}<br/><br/>Best regards.",
       "activate_account_success": "Your account has been activated.",
       "activate_account_fail": "Activation failed.",
       "reset_password_email_sent": "If that email address is in our database, we will send you an email to reset your password",
