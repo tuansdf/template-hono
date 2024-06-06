@@ -1,7 +1,7 @@
 import {
   ENV_JWT_ACCESS_LIFETIME,
-  ENV_TOKEN_ACTIVATE_ACCOUNT_LIFETIME,
   ENV_JWT_REFRESH_LIFETIME,
+  ENV_TOKEN_ACTIVATE_ACCOUNT_LIFETIME,
   ENV_TOKEN_RESET_PASSWORD_LIFETIME,
 } from "~/constants/env.constant";
 import { JwtTokenType } from "~/domains/auth/auth.type";
@@ -12,6 +12,11 @@ export const JWT_TYPE = {
   RESET_PASSWORD: 3,
   ACTIVATE_ACCOUNT: 4,
 } as const;
+
+export const TOKEN_TYPE = {
+  JWT: 1,
+  JWT_WITH_ID: 2,
+};
 
 export const JWT_TYPE_LIFETIME: Readonly<Record<JwtTokenType, number>> = {
   [JWT_TYPE.ACCESS]: ENV_JWT_ACCESS_LIFETIME,

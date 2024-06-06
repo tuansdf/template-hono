@@ -1,4 +1,4 @@
-import { JWT_TYPE } from "~/domains/auth/auth.constant";
+import { JWT_TYPE, TOKEN_TYPE } from "~/domains/auth/auth.constant";
 import { UserDTO } from "~/domains/user/user.type";
 import { JwtTokenClaims } from "~/lib/jwt/jwt.type";
 import { Nullish } from "~/types/common.type";
@@ -31,6 +31,7 @@ export type AuthJwtTokenPayload = {
 } & JwtTokenClaims;
 
 export type JwtTokenType = (typeof JWT_TYPE)[keyof typeof JWT_TYPE];
+export type TokenType = (typeof TOKEN_TYPE)[keyof typeof TOKEN_TYPE];
 
 export type CreateTokenRequest =
   | {

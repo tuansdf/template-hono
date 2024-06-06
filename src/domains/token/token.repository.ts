@@ -69,6 +69,10 @@ export class TokenRepository {
     return db.insert(TokenTable).values(data);
   }
 
+  static updateValueByTokenId = async (value: string, id: number) => {
+    await db.update(TokenTable).set({ value }).where(eq(TokenTable.id, id));
+  };
+
   static updateStatusByTokenIdAndForeignId = async (status: string, tokenId: number, foreignId: number) => {
     await db
       .update(TokenTable)

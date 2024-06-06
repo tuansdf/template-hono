@@ -1,4 +1,4 @@
-import { JWT_TYPE } from "~/domains/auth/auth.constant";
+import { JWT_TYPE, TOKEN_TYPE } from "~/domains/auth/auth.constant";
 import { authenticate } from "~/domains/auth/auth.middleware";
 import {
   activateAccountBodySchema,
@@ -27,7 +27,7 @@ authRouter.post("/register", validator("json", registerRequestSchema), async (c)
   return RouterUtils.response(c, 200, { message: t("auth.message.activate_account_email_sent") });
 });
 
-authRouter.post("/token/refresh", authenticate(JWT_TYPE.REFRESH), async (c) => {
+authRouter.post("/token/refresh", authenticate(JWT_TYPE.REFRESH, TOKEN_TYPE.JWT_WITH_ID), async (c) => {
   const authPayload = c.get("authPayload");
   const authToken = c.get("authToken");
   const result = await AuthService.refreshToken(Number(authPayload?.sid), String(authToken));

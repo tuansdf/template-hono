@@ -31,11 +31,11 @@ export const userAllSelect = {
   updatedBy: UserTable.updatedBy,
   createdAt: UserTable.createdAt,
   updatedAt: UserTable.updatedAt,
-};
+} as const;
 
 export class UserRepository {
   static async findAll() {
-    return db.select(userAllSelect).from(UserTable);
+    return db.select().from(UserTable);
   }
 
   static async findAllByStatus(status: string) {

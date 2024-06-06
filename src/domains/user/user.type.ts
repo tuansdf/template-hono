@@ -4,8 +4,8 @@ import { UserTable } from "~/entities/user.entity";
 import { Nullish } from "~/types/common.type";
 
 export type User = typeof UserTable.$inferSelect;
-
 export type UserSave = typeof UserTable.$inferInsert;
+export type UserSelectKey = keyof User;
 
 export type UserDTO = {
   id?: number | Nullish;

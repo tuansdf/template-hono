@@ -20,7 +20,6 @@ import { AuthUtils } from "~/domains/auth/auth.util";
 import { PermissionRepository } from "~/domains/permission/permission.repository";
 import { SendEmailService } from "~/domains/send-email/send-email.service";
 import { SendEmailSave } from "~/domains/send-email/send-email.type";
-import { TokenRepository } from "~/domains/token/token.repository";
 import { TokenService } from "~/domains/token/token.service";
 import { TokenSave } from "~/domains/token/token.type";
 import { UserRepository } from "~/domains/user/user.repository";
@@ -29,7 +28,6 @@ import { TokenTable } from "~/entities/token.entity";
 import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
 import { TFn } from "~/i18n/i18n.type";
-import { Base64Utils } from "~/lib/base64/base64.util";
 import { dated } from "~/lib/date/date";
 import { HashUtils } from "~/lib/hash/hash.util";
 import { logger } from "~/lib/logger/logger";
@@ -73,8 +71,11 @@ export class AuthService {
   };
 
   static refreshToken = async (userId: number, tokenValue: string) => {
-    const token = await TokenRepository.findTopByValueAndForeignIdAndStatus(tokenValue, userId, STATUS.ACTIVE);
+    const token = await TokenService.findByValueId(tokenValue);
     if (!token) {
+      throw new CustomException("auth.error.unauthenticated", 401);
+    }
+    if (token.status !== STATUS.ACTIVE || token.foreignId !== userId) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
     const user = await UserRepository.findTopById(userId);
@@ -106,14 +107,14 @@ export class AuthService {
 
   static resetPassword = async (requestDTO: ResetPasswordRequestDTO) => {
     const tokenValue = requestDTO.t;
-    try {
-      await AuthUtils.verifyToken(Base64Utils.decode(tokenValue), JWT_TYPE.RESET_PASSWORD);
-    } catch (e) {
-      throw new CustomException("auth.error.token_used_or_invalid");
-    }
-    const token = await TokenRepository.findTopByValueAndStatus(tokenValue, STATUS.ACTIVE);
+    const token = await TokenService.findByValueId(tokenValue);
     if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
       throw new CustomException("auth.error.token_used_or_invalid", 401);
+    }
+    try {
+      await AuthUtils.verifyToken(token.value, JWT_TYPE.RESET_PASSWORD);
+    } catch (e) {
+      throw new CustomException("auth.error.token_used_or_invalid");
     }
     const user = await UserRepository.findTopById(token.foreignId);
     if (!user) {
@@ -125,14 +126,14 @@ export class AuthService {
   };
 
   static activateAccount = async (tokenValue: string) => {
-    try {
-      await AuthUtils.verifyToken(Base64Utils.decode(tokenValue), JWT_TYPE.ACTIVATE_ACCOUNT);
-    } catch (e) {
-      throw new CustomException("auth.error.token_used_or_invalid");
-    }
-    const token = await TokenRepository.findTopByValueAndStatus(tokenValue, STATUS.ACTIVE);
+    const token = await TokenService.findByValueId(tokenValue);
     if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
       throw new CustomException("auth.error.token_used_or_invalid", 401);
+    }
+    try {
+      await AuthUtils.verifyToken(token.value, JWT_TYPE.ACTIVATE_ACCOUNT);
+    } catch (e) {
+      throw new CustomException("auth.error.token_used_or_invalid");
     }
     const user = await UserRepository.findTopById(token.foreignId);
     if (!user) {
@@ -174,9 +175,7 @@ class _AuthService {
     await SendEmailService.send(item);
   };
   static createActivateAccountToken = async (user: User) => {
-    const tokenValue = Base64Utils.encode(
-      await AuthUtils.createToken({ type: JWT_TYPE.ACTIVATE_ACCOUNT, username: user.username }),
-    );
+    const tokenValue = await AuthUtils.createToken({ type: JWT_TYPE.ACTIVATE_ACCOUNT, username: user.username });
     const expiresAt = dated().add(ENV_TOKEN_ACTIVATE_ACCOUNT_LIFETIME, "minute").toISOString();
     const item: TokenSave = {
       foreignId: user.id,
@@ -185,12 +184,10 @@ class _AuthService {
       expiresAt,
       status: STATUS.ACTIVE,
     };
-    return TokenService.save(item);
+    return TokenService.saveValueWithId(item);
   };
   static createResetPasswordToken = async (user: User) => {
-    const tokenValue = Base64Utils.encode(
-      await AuthUtils.createToken({ type: JWT_TYPE.RESET_PASSWORD, username: user.username }),
-    );
+    const tokenValue = await AuthUtils.createToken({ type: JWT_TYPE.RESET_PASSWORD, username: user.username });
     const expiresAt = dated().add(ENV_TOKEN_RESET_PASSWORD_LIFETIME, "minute").toISOString();
     const item: TokenSave = {
       foreignId: user.id,
@@ -199,7 +196,7 @@ class _AuthService {
       expiresAt,
       status: STATUS.ACTIVE,
     };
-    return TokenService.save(item);
+    return TokenService.saveValueWithId(item);
   };
   static createRefreshToken = async (user: User) => {
     const tokenValue = await AuthUtils.createToken({ type: JWT_TYPE.REFRESH, user });
@@ -211,6 +208,6 @@ class _AuthService {
       expiresAt,
       status: STATUS.ACTIVE,
     };
-    return TokenService.save(item);
+    return TokenService.saveValueWithId(item);
   };
 }

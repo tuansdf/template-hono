@@ -1,11 +1,16 @@
 import { MiddlewareHandler } from "hono";
-import { JWT_TYPE } from "~/domains/auth/auth.constant";
-import { JwtTokenType } from "~/domains/auth/auth.type";
+import { JWT_TYPE, TOKEN_TYPE } from "~/domains/auth/auth.constant";
+import { JwtTokenType, TokenType } from "~/domains/auth/auth.type";
 import { AuthUtils } from "~/domains/auth/auth.util";
 import { PermissionUtils } from "~/domains/permission/permission.util";
+import { TokenValueWithId } from "~/domains/token/token.type";
 import { CustomException } from "~/exceptions/custom-exception";
+import { Base64Utils } from "~/lib/base64/base64.util";
 
-export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHandler => {
+export const authenticate = (
+  type: JwtTokenType = JWT_TYPE.ACCESS,
+  tokenType: TokenType = TOKEN_TYPE.JWT,
+): MiddlewareHandler => {
   return async (c, next) => {
     const authHeader = c.req.header("Authorization");
     if (!authHeader) {
@@ -16,8 +21,19 @@ export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHa
       throw new CustomException("auth.error.unauthenticated", 401);
     }
 
-    const bearerToken = authHeader.split(" ")[1];
-
+    let bearerToken = authHeader.split(" ")[1];
+    if (!bearerToken) {
+      throw new CustomException("auth.error.unauthenticated", 401);
+    }
+    try {
+      if (tokenType === TOKEN_TYPE.JWT_WITH_ID) {
+        const decoded = Base64Utils.decode(bearerToken);
+        const obj: TokenValueWithId = JSON.parse(decoded);
+        bearerToken = obj.v;
+      }
+    } catch (e) {
+      throw new CustomException("auth.error.unauthenticated", 401);
+    }
     if (!bearerToken) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
