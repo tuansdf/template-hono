@@ -1,23 +1,25 @@
+import * as console from "node:console";
+import * as process from "node:process";
 import { z } from "zod";
 
 const ENV_OBJ = process.env || {};
 
 const requireString = (input: unknown, field: string) => {
-  return z
-    .string({
-      invalid_type_error: `Invalid ${field}`,
-      required_error: `${field} missing`,
-    })
-    .parse(input);
+  try {
+    return z.string().parse(input);
+  } catch (e) {
+    console.error(`Invalid ENV ${field}`);
+    process.exit(1);
+  }
 };
 
 const requireNumber = (input: unknown, field: string) => {
-  return z.coerce
-    .number({
-      invalid_type_error: `Invalid ${field}`,
-      required_error: `${field} missing`,
-    })
-    .parse(input);
+  try {
+    return z.coerce.number().parse(input);
+  } catch (e) {
+    console.error(`Invalid ENV ${field}`);
+    process.exit(1);
+  }
 };
 
 export const ENV_DB_HOST = requireString(ENV_OBJ.APP_DB_HOST, "DB_HOST");

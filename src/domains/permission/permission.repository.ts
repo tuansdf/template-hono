@@ -19,16 +19,16 @@ const commonSelect = {
 
 export class PermissionRepository {
   static async findAll() {
-    return db.select(commonSelect).from(PermissionTable);
+    return db.main.select(commonSelect).from(PermissionTable);
   }
 
   static async findTopById(id: number) {
-    const result = await db.select(commonSelect).from(PermissionTable).where(eq(PermissionTable.id, id)).limit(1);
+    const result = await db.main.select(commonSelect).from(PermissionTable).where(eq(PermissionTable.id, id)).limit(1);
     return result?.[0];
   }
 
   static async findAllByRoleId(roleId: number) {
-    return db
+    return db.main
       .select(commonSelect)
       .from(PermissionTable)
       .innerJoin(MapRolePermissionTable, eq(MapRolePermissionTable.permissionId, PermissionTable.id))
@@ -36,7 +36,7 @@ export class PermissionRepository {
   }
 
   static async findAllByUserId(userId: number) {
-    return db
+    return db.main
       .select(commonSelect)
       .from(PermissionTable)
       .innerJoin(MapRolePermissionTable, eq(MapRolePermissionTable.permissionId, PermissionTable.id))
@@ -45,12 +45,12 @@ export class PermissionRepository {
   }
 
   static async countByCode(code: string) {
-    const result = await db.select({ value: count() }).from(PermissionTable).where(eq(PermissionTable.code, code));
+    const result = await db.main.select({ value: count() }).from(PermissionTable).where(eq(PermissionTable.code, code));
     return result?.[0]?.value || 0;
   }
 
   static async countById(id: number) {
-    const result = await db.select({ value: count() }).from(PermissionTable).where(eq(PermissionTable.id, id));
+    const result = await db.main.select({ value: count() }).from(PermissionTable).where(eq(PermissionTable.id, id));
     return result?.[0]?.value || 0;
   }
 
@@ -65,11 +65,11 @@ export class PermissionRepository {
   }
 
   static async save(permission: PermissionSave) {
-    await db.insert(PermissionTable).values(permission);
+    await db.main.insert(PermissionTable).values(permission);
   }
 
   static async update(request: PermissionUpdate) {
-    await db
+    await db.main
       .update(PermissionTable)
       .set({ name: request.name, description: request.description })
       .where(eq(PermissionTable.id, Number(request.id)));

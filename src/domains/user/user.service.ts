@@ -36,7 +36,7 @@ export class UserService {
   }
 
   static async search(requestDTO: UserSearchRequestDTO) {
-    const query = db.select(userCommonSelect).from(UserTable);
+    const query = db.main.select(userCommonSelect).from(UserTable);
     if (requestDTO.q) {
       query.where(or(ilike(UserTable.email, `%${requestDTO.q}%`), ilike(UserTable.username, `%${requestDTO.q}%`)));
     }

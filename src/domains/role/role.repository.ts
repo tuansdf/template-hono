@@ -13,11 +13,11 @@ const commonSelect = {
 
 export class RoleRepository {
   static async findAll() {
-    return db.select(commonSelect).from(RoleTable);
+    return db.main.select(commonSelect).from(RoleTable);
   }
 
   static async findAllByUserId(userId: number) {
-    return db
+    return db.main
       .select(commonSelect)
       .from(RoleTable)
       .innerJoin(MapUserRoleTable, eq(MapUserRoleTable.roleId, RoleTable.id))
@@ -25,17 +25,17 @@ export class RoleRepository {
   }
 
   static async findTopById(id: number) {
-    const result = await db.select(commonSelect).from(RoleTable).where(eq(RoleTable.id, id)).limit(1);
+    const result = await db.main.select(commonSelect).from(RoleTable).where(eq(RoleTable.id, id)).limit(1);
     return result?.[0];
   }
 
   static async countByCode(code: string) {
-    const result = await db.select({ value: count() }).from(RoleTable).where(eq(RoleTable.code, code));
+    const result = await db.main.select({ value: count() }).from(RoleTable).where(eq(RoleTable.code, code));
     return result?.[0]?.value || 0;
   }
 
   static async countById(id: number) {
-    const result = await db.select({ value: count() }).from(RoleTable).where(eq(RoleTable.id, id));
+    const result = await db.main.select({ value: count() }).from(RoleTable).where(eq(RoleTable.id, id));
     return result?.[0]?.value || 0;
   }
 
@@ -50,12 +50,12 @@ export class RoleRepository {
   }
 
   static async save(role: RoleSave) {
-    const saved = await db.insert(RoleTable).values(role).returning(commonSelect);
+    const saved = await db.main.insert(RoleTable).values(role).returning(commonSelect);
     return saved[0]!;
   }
 
   static async update(request: RoleUpdate) {
-    await db
+    await db.main
       .update(RoleTable)
       .set({ name: request.name, description: request.description })
       .where(eq(RoleTable.id, Number(request.id)));

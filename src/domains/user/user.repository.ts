@@ -35,20 +35,20 @@ export const userAllSelect = {
 
 export class UserRepository {
   static async findAll() {
-    return db.select().from(UserTable);
+    return db.main.select().from(UserTable);
   }
 
   static async findAllByStatus(status: string) {
-    return db.select(userAllSelect).from(UserTable).where(eq(UserTable.status, status));
+    return db.main.select(userAllSelect).from(UserTable).where(eq(UserTable.status, status));
   }
 
   static async findTopById(id: number) {
-    const result = await db.select(userAllSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
+    const result = await db.main.select(userAllSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
     return result?.[0];
   }
 
   static async findTopByUsernameOrEmailWithPassword(username: string) {
-    const result = await db
+    const result = await db.main
       .select(userAllSelect)
       .from(UserTable)
       .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
@@ -57,7 +57,7 @@ export class UserRepository {
   }
 
   static async findTopByUsernameOrEmail(username: string) {
-    const result = await db
+    const result = await db.main
       .select(userAllSelect)
       .from(UserTable)
       .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
@@ -66,22 +66,22 @@ export class UserRepository {
   }
 
   static async findTopByUsername(username: string) {
-    const result = await db.select(userAllSelect).from(UserTable).where(eq(UserTable.username, username)).limit(1);
+    const result = await db.main.select(userAllSelect).from(UserTable).where(eq(UserTable.username, username)).limit(1);
     return result?.[0];
   }
 
   static async findTopByEmail(email: string) {
-    const result = await db.select(userAllSelect).from(UserTable).where(eq(UserTable.email, email)).limit(1);
+    const result = await db.main.select(userAllSelect).from(UserTable).where(eq(UserTable.email, email)).limit(1);
     return result?.[0];
   }
 
   static async countByUsername(username: string) {
-    const result = await db.select({ value: count() }).from(UserTable).where(eq(UserTable.username, username));
+    const result = await db.main.select({ value: count() }).from(UserTable).where(eq(UserTable.username, username));
     return result?.[0]?.value || 0;
   }
 
   static async countByUsernameOrEmail(username: string) {
-    const result = await db
+    const result = await db.main
       .select({ value: count() })
       .from(UserTable)
       .where(or(eq(UserTable.username, username), eq(UserTable.email, username)));
@@ -99,7 +99,7 @@ export class UserRepository {
   }
 
   static async countByEmail(email: string) {
-    const result = await db.select({ value: count() }).from(UserTable).where(eq(UserTable.email, email));
+    const result = await db.main.select({ value: count() }).from(UserTable).where(eq(UserTable.email, email));
     return result?.[0]?.value || 0;
   }
 
@@ -109,11 +109,11 @@ export class UserRepository {
   }
 
   static async save(user: UserSave) {
-    const result = await db.insert(UserTable).values(user).returning(userAllSelect);
+    const result = await db.main.insert(UserTable).values(user).returning(userAllSelect);
     return result[0]!;
   }
 
   static async saveAll(users: UserSave[]) {
-    return db.insert(UserTable).values(users);
+    return db.main.insert(UserTable).values(users);
   }
 }

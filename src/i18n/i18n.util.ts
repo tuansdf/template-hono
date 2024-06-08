@@ -1,17 +1,7 @@
-import i18n from "i18next";
+import i18nGlobal from "i18next";
 import Backend from "i18next-fs-backend";
 import { defaultLang, validLangs } from "~/i18n/i18n.constant";
 import { TFn, ValidLang } from "~/i18n/i18n.type";
-
-await i18n.use(Backend).init({
-  fallbackLng: defaultLang,
-  preload: validLangs,
-  ns: ["translation"],
-  defaultNS: "translation",
-  backend: {
-    loadPath: "./resources/locales/{{lng}}/{{ns}}.json",
-  },
-});
 
 const KEY_SEPARATED_BY = ":::";
 
@@ -22,10 +12,6 @@ export class I18nUtils {
       result = lang as ValidLang;
     }
     return result;
-  }
-
-  static getT(lang?: string) {
-    return i18n.getFixedT(this.getLang(lang));
   }
 
   static getMessage(t: TFn, key: string) {
@@ -45,3 +31,23 @@ export class I18nUtils {
     return t(mainKey, params);
   }
 }
+
+class I18n {
+  public async init() {
+    await i18nGlobal.use(Backend).init({
+      fallbackLng: defaultLang,
+      preload: validLangs,
+      ns: ["translation"],
+      defaultNS: "translation",
+      backend: {
+        loadPath: "./resources/locales/{{lng}}/{{ns}}.json",
+      },
+    });
+  }
+
+  public getT(lang?: string) {
+    return i18nGlobal.getFixedT(I18nUtils.getLang(lang));
+  }
+}
+
+export const i18n = new I18n();

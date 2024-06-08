@@ -121,8 +121,8 @@ export class AuthService {
       throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
     const hashedPassword = await HashUtils.hash(requestDTO.password);
-    await db.update(TokenTable).set({ status: STATUS.INACTIVE }).where(eq(TokenTable.id, token.id));
-    await db.update(UserTable).set({ password: hashedPassword }).where(eq(UserTable.id, user.id));
+    await db.main.update(TokenTable).set({ status: STATUS.INACTIVE }).where(eq(TokenTable.id, token.id));
+    await db.main.update(UserTable).set({ password: hashedPassword }).where(eq(UserTable.id, user.id));
   };
 
   static activateAccount = async (tokenValue: string) => {
@@ -142,8 +142,8 @@ export class AuthService {
     if (user.status === STATUS.ACTIVE) {
       throw new CustomException("auth.error.already_activated", 400);
     }
-    await db.update(TokenTable).set({ status: STATUS.INACTIVE }).where(eq(TokenTable.id, token.id));
-    await db.update(UserTable).set({ status: STATUS.ACTIVE }).where(eq(UserTable.id, user.id));
+    await db.main.update(TokenTable).set({ status: STATUS.INACTIVE }).where(eq(TokenTable.id, token.id));
+    await db.main.update(UserTable).set({ status: STATUS.ACTIVE }).where(eq(UserTable.id, user.id));
   };
 }
 

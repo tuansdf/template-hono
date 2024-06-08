@@ -5,10 +5,10 @@ import { SendEmailTable } from "~/entities/send-email.entity";
 
 export class SendEmailRepository {
   static findAllByStatus = async (status: string) => {
-    return db.select().from(SendEmailTable).where(eq(SendEmailTable.status, status));
+    return db.main.select().from(SendEmailTable).where(eq(SendEmailTable.status, status));
   };
 
   static save = async (item: SendEmailSave) => {
-    await db.insert(SendEmailTable).values(item);
+    await db.main.insert(SendEmailTable).values(item);
   };
 }
