@@ -1,6 +1,6 @@
 import type { FC, PropsWithChildren } from "hono/jsx";
 import { resetPasswordRequestSchema } from "~/domains/auth/auth.schema";
-import { AuthService } from "~/domains/auth/auth.service";
+import { authService } from "~/domains/auth/auth.service";
 import { ExceptionUtils } from "~/exceptions/exception.util";
 import { TFn } from "~/i18n/i18n.type";
 import { RouterUtils } from "~/utils/router.util";
@@ -87,7 +87,7 @@ viewRouter.get("/account/activate", async (c) => {
   let message: string;
   try {
     const token = c.req.query("t");
-    await AuthService.activateAccount(String(token));
+    await authService.activateAccount(String(token));
     message = t("auth.message.activate_account_success");
   } catch (e) {
     message = ExceptionUtils.getMessage(e as Error, t);
@@ -107,7 +107,7 @@ viewRouter.post("/password/reset", async (c) => {
   let successMessage: string = "";
   try {
     const body = await resetPasswordRequestSchema.parseAsync(await c.req.parseBody());
-    await AuthService.resetPassword(body);
+    await authService.resetPassword(body);
     successMessage = t("auth.message.reset_password_success");
   } catch (e) {
     errorMessage = ExceptionUtils.getMessage(e as Error, t);

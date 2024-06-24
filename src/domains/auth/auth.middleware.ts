@@ -1,8 +1,8 @@
 import { MiddlewareHandler } from "hono";
 import { JWT_TYPE, TOKEN_TYPE } from "~/domains/auth/auth.constant";
 import { JwtTokenType, TokenType } from "~/domains/auth/auth.type";
-import { AuthUtils } from "~/domains/auth/auth.util";
-import { PermissionUtils } from "~/domains/permission/permission.util";
+import { authUtils } from "~/domains/auth/auth.util";
+import { permissionUtils } from "~/domains/permission/permission.util";
 import { TokenValueWithId } from "~/domains/token/token.type";
 import { CustomException } from "~/exceptions/custom-exception";
 import { Base64Utils } from "~/lib/base64/base64.util";
@@ -38,7 +38,7 @@ export const authenticate = (
       throw new CustomException("auth.error.unauthenticated", 401);
     }
 
-    const payload = await AuthUtils.verifyToken(bearerToken, type);
+    const payload = await authUtils.verifyToken(bearerToken, type);
     c.set("authPayload", payload);
     c.set("authToken", bearerToken);
 
@@ -62,7 +62,7 @@ export const authorize = (perms: string[]): MiddlewareHandler => {
     }
 
     const hasPerm = perms.some((item) => {
-      return PermissionUtils.hasPerm(item, permissions);
+      return permissionUtils.hasPerm(item, permissions);
     });
     if (!hasPerm) {
       throw new CustomException("generic.error.not_found", 404);

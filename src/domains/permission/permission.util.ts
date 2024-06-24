@@ -2,7 +2,7 @@ import { PERM_INDEX } from "~/domains/permission/permission.constant";
 import { Permission } from "~/domains/permission/permission.type";
 
 export class PermissionUtils {
-  static codesToIndexes = (perms: string[]): number[] => {
+  public codesToIndexes = (perms: string[]): number[] => {
     const result: number[] = [];
     perms.forEach((item) => {
       const index = PERM_INDEX[item];
@@ -11,7 +11,7 @@ export class PermissionUtils {
     return result;
   };
 
-  static dtosToIndexes = (perms: Permission[]) => {
+  public dtosToIndexes = (perms: Permission[]) => {
     const result: number[] = [];
     perms.forEach((item) => {
       const index = PERM_INDEX[item.code];
@@ -20,9 +20,11 @@ export class PermissionUtils {
     return result;
   };
 
-  static hasPerm = (currentPerm: string, requiredPerms: (string | number)[]) => {
+  public hasPerm = (currentPerm: string, requiredPerms: (string | number)[]) => {
     const index = PERM_INDEX[currentPerm];
     if (!index) return false;
     return requiredPerms.some((item) => index == item);
   };
 }
+
+export const permissionUtils = new PermissionUtils();

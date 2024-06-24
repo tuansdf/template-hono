@@ -1,30 +1,30 @@
 import { STATUS } from "~/constants/status.constant";
-import { TokenRepository } from "~/domains/token/token.repository";
+import { tokenRepository } from "~/domains/token/token.repository";
 import { TokenSave, TokenValueWithId } from "~/domains/token/token.type";
 import { Base64Utils } from "~/lib/base64/base64.util";
 import { logger } from "~/lib/logger/logger";
 
 export class TokenService {
-  static save = (item: TokenSave) => {
-    return TokenRepository.save(item);
+  public save = (item: TokenSave) => {
+    return tokenRepository.save(item);
   };
 
-  static saveValueWithId = async (item: TokenSave) => {
-    const token = await TokenService.save(item);
+  public saveValueWithId = async (item: TokenSave) => {
+    const token = await this.save(item);
     const valueObj: TokenValueWithId = {
       v: token.value,
       i: token.id,
     };
     token.value = Base64Utils.encode(JSON.stringify(valueObj));
-    await TokenRepository.updateValueByTokenId(token.value, token.id);
+    await tokenRepository.updateValueByTokenId(token.value, token.id);
     return token;
   };
 
-  static findByValueId = async (tokenValue: string) => {
+  public findByValueId = async (tokenValue: string) => {
     try {
       const decoded = Base64Utils.decode(tokenValue);
       const valueWithId = JSON.parse(decoded) as TokenValueWithId;
-      const token = await TokenRepository.findTopById(Number(valueWithId.i));
+      const token = await tokenRepository.findTopById(Number(valueWithId.i));
       if (!token || token.value !== tokenValue) {
         throw new Error();
       }
@@ -36,11 +36,13 @@ export class TokenService {
     }
   };
 
-  static revokeTokenById = async (tokenId: number, userId: number) => {
-    await TokenRepository.updateStatusByTokenIdAndForeignId(STATUS.INACTIVE, tokenId, userId);
+  public revokeTokenById = async (tokenId: number, userId: number) => {
+    await tokenRepository.updateStatusByTokenIdAndForeignId(STATUS.INACTIVE, tokenId, userId);
   };
 
-  static revokeTokenByUserId = async (userId: number) => {
-    await TokenRepository.updateStatusByForeignId(STATUS.INACTIVE, userId);
+  public revokeTokenByUserId = async (userId: number) => {
+    await tokenRepository.updateStatusByForeignId(STATUS.INACTIVE, userId);
   };
 }
+
+export const tokenService = new TokenService();

@@ -5,7 +5,7 @@ import {
   getUserDetailByUsernameQuerySchema,
   searchUserQuerySchema,
 } from "~/domains/user/user.schema";
-import { UserService } from "~/domains/user/user.service";
+import { userService } from "~/domains/user/user.service";
 import { validator } from "~/middlewares/validator.middleware";
 import { RouterUtils } from "~/utils/router.util";
 
@@ -17,31 +17,31 @@ userRouter.get(
   validator("query", getUserDetailByUsernameQuerySchema),
   async (c) => {
     const query = c.req.valid("query");
-    const result = await UserService.findOneByUsername(query.q);
+    const result = await userService.findOneByUsername(query.q);
     return RouterUtils.response(c, 200, { data: result });
   },
 );
 
 userRouter.get("/detail/by-email", authenticate(), validator("query", getUserDetailByEmailQuerySchema), async (c) => {
   const query = c.req.valid("query");
-  const result = await UserService.findOneByEmail(query.q);
+  const result = await userService.findOneByEmail(query.q);
   return RouterUtils.response(c, 200, { data: result });
 });
 
 userRouter.get("/detail/:id", authenticate(), validator("param", getUserDetailByIdParamSchema), async (c) => {
   const params = c.req.valid("param");
   const id = params.id;
-  const result = await UserService.findOneById(id);
+  const result = await userService.findOneById(id);
   return RouterUtils.response(c, 200, { data: result });
 });
 
 userRouter.get("/", authenticate(), async (c) => {
-  const result = await UserService.findAll();
+  const result = await userService.findAll();
   return RouterUtils.response(c, 200, { data: result });
 });
 
 userRouter.get("/search", authenticate(), validator("query", searchUserQuerySchema), async (c) => {
   const requestDTO = c.req.valid("query");
-  const result = await UserService.search(requestDTO);
+  const result = await userService.search(requestDTO);
   return RouterUtils.response(c, 200, { data: result });
 });

@@ -1,12 +1,12 @@
 import { JWT_TYPE, JWT_TYPE_LIFETIME } from "~/domains/auth/auth.constant";
 import { AuthJwtTokenPayload, CreateTokenRequest, JwtTokenType } from "~/domains/auth/auth.type";
-import { PermissionUtils } from "~/domains/permission/permission.util";
+import { permissionUtils } from "~/domains/permission/permission.util";
 import { CustomException } from "~/exceptions/custom-exception";
 import { dated } from "~/lib/date/date";
 import { JwtUtils } from "~/lib/jwt/jwt.util";
 
 export class AuthUtils {
-  static createTokenPayload(request: CreateTokenRequest): AuthJwtTokenPayload {
+  public createTokenPayload(request: CreateTokenRequest): AuthJwtTokenPayload {
     const current = dated();
     const currentUnix = current.unix();
     const expiredUnix = current.add(JWT_TYPE_LIFETIME[request.type], "minute").unix();
@@ -34,7 +34,7 @@ export class AuthUtils {
         return {
           sid: user.id,
           for: request.type,
-          pms: PermissionUtils.dtosToIndexes(user.permissions || []),
+          pms: permissionUtils.dtosToIndexes(user.permissions || []),
           sub: user.username,
           iat: currentUnix,
           nbf: currentUnix,
@@ -43,12 +43,12 @@ export class AuthUtils {
     }
   }
 
-  static async createToken(request: CreateTokenRequest): Promise<string> {
+  public async createToken(request: CreateTokenRequest): Promise<string> {
     const payload = this.createTokenPayload(request);
     return JwtUtils.sign(payload);
   }
 
-  static async verifyToken(token: string, type: JwtTokenType = JWT_TYPE.ACCESS): Promise<AuthJwtTokenPayload> {
+  public async verifyToken(token: string, type: JwtTokenType = JWT_TYPE.ACCESS): Promise<AuthJwtTokenPayload> {
     try {
       const payload: AuthJwtTokenPayload = await JwtUtils.verify(token);
       if (payload.for !== type) {
@@ -60,3 +60,5 @@ export class AuthUtils {
     }
   }
 }
+
+export const authUtils = new AuthUtils();

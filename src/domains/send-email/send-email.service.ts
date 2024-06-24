@@ -1,9 +1,11 @@
-import { SendEmailRepository } from "~/domains/send-email/send-email.repository";
+import { sendEmailRepository } from "~/domains/send-email/send-email.repository";
 import { SendEmailSave } from "~/domains/send-email/send-email.type";
 
 export class SendEmailService {
-  static send = async (item: SendEmailSave) => {
+  public send = async (item: SendEmailSave) => {
     // TODO: actual send email
-    await SendEmailRepository.save(item);
+    await sendEmailRepository.save(item);
   };
 }
+
+export const sendEmailService = new SendEmailService();
