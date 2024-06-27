@@ -16,7 +16,6 @@ export class TokenService {
       i: token.id,
     };
     token.value = Base64Utils.encode(JSON.stringify(valueObj));
-    await tokenRepository.updateValueByTokenId(token.value, token.id);
     return token;
   };
 
@@ -25,10 +24,9 @@ export class TokenService {
       const decoded = Base64Utils.decode(tokenValue);
       const valueWithId = JSON.parse(decoded) as TokenValueWithId;
       const token = await tokenRepository.findTopById(Number(valueWithId.i));
-      if (!token || token.value !== tokenValue) {
+      if (!token || token.value !== valueWithId.v) {
         throw new Error();
       }
-      token.value = valueWithId.v || "";
       return token;
     } catch (e) {
       logger.error("ERROR ERROR_FIND_TOKEN_BY_VALUE_ID", e);

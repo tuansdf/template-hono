@@ -7,5 +7,6 @@ declare module "hono" {
     lang: ValidLang;
     authPayload?: AuthJwtTokenPayload;
     authToken?: string;
+    originalAuthToken?: string;
   }
 }

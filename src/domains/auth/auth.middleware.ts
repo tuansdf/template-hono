@@ -22,6 +22,7 @@ export const authenticate = (
     }
 
     let bearerToken = authHeader.split(" ")[1];
+    const originalBearerToken = bearerToken;
     if (!bearerToken) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
@@ -41,6 +42,7 @@ export const authenticate = (
     const payload = await authUtils.verifyToken(bearerToken, type);
     c.set("authPayload", payload);
     c.set("authToken", bearerToken);
+    c.set("originalAuthToken", originalBearerToken);
 
     await next();
   };

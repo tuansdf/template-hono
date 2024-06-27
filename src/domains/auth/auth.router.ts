@@ -29,7 +29,7 @@ authRouter.post("/register", validator("json", registerRequestSchema), async (c)
 
 authRouter.post("/token/refresh", authenticate(JWT_TYPE.REFRESH, TOKEN_TYPE.JWT_WITH_ID), async (c) => {
   const authPayload = c.get("authPayload");
-  const authToken = c.get("authToken");
+  const authToken = c.get("originalAuthToken");
   const result = await authService.refreshToken(Number(authPayload?.sid), String(authToken));
   return RouterUtils.response(c, 200, { data: result });
 });

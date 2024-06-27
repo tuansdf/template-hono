@@ -7,4 +7,4 @@ export const mainRouter = RouterUtils.init();
 
 mainRouter.use(detectLanguage());
 mainRouter.route("/api", apiRouter);
-mainRouter.route("/", viewRouter);
+mainRouter.route("/_", viewRouter);

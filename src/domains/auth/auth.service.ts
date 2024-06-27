@@ -153,7 +153,7 @@ export class AuthService {
       type: TYPE.RESET_PASSWORD,
       subject: t("auth.message.reset_password_email_subject"),
       content: t("auth.message.reset_password_email_content", {
-        1: user.email,
+        1: user.username,
         2: ENV_EMAIL_RESET_PASSWORD_BASE_URL + token,
       }),
     };
@@ -167,7 +167,7 @@ export class AuthService {
       type: TYPE.ACTIVATE_ACCOUNT,
       subject: t("auth.message.activate_account_email_subject"),
       content: t("auth.message.activate_account_email_content", {
-        1: user.email,
+        1: user.username,
         2: ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL + token,
       }),
     };

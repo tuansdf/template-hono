@@ -1,14 +1,16 @@
-import { hash, verify } from "argon2";
+import bcryptjs from "bcryptjs";
 import { logger } from "~/lib/logger/logger";
+
+const SALT_SIZE = 10;
 
 export class HashUtils {
   static async hash(toBeHashed: string): Promise<string> {
-    return hash(toBeHashed);
+    return await bcryptjs.hash(toBeHashed, SALT_SIZE);
   }
 
   static async verify(hashed: string, toBeVerified: string): Promise<boolean> {
     try {
-      return await verify(hashed, toBeVerified);
+      return await bcryptjs.compare(toBeVerified, hashed);
     } catch (e) {
       logger.error(e);
       return false;
