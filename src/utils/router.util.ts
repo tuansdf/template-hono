@@ -3,11 +3,13 @@ import { Nullish } from "~/types/common.type";
 import { StatusCode } from "~/types/status-code.type";
 
 export class RouterUtils {
-  static init = () => {
-    return new Hono();
+  public init = (cb: (app: Hono) => void) => {
+    const instance = new Hono();
+    cb(instance);
+    return instance;
   };
 
-  static response = (
+  public response = (
     c: Context,
     status: StatusCode,
     body?: { data?: Record<string, unknown> | Record<string, unknown>[] | Nullish; message?: string | Nullish },
@@ -16,3 +18,5 @@ export class RouterUtils {
     return c.json({ status, message, data }, status);
   };
 }
+
+export const routerUtils = new RouterUtils();

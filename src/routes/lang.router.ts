@@ -1,7 +1,7 @@
 import { mainRouter } from "~/routes/main.router";
-import { RouterUtils } from "~/utils/router.util";
+import { routerUtils } from "~/utils/router.util";
 
-export const langRouter = RouterUtils.init();
-
-langRouter.route("/:lng", mainRouter);
-langRouter.route("/", mainRouter);
+export const langRouter = routerUtils.init((app) => {
+  app.route("/:lng", mainRouter);
+  app.route("/", mainRouter);
+});

@@ -1,14 +1,14 @@
-import { Hono } from "hono";
 import { db } from "~/database/db";
+import { routerUtils } from "~/utils/router.util";
 
-export const healthRouter = new Hono();
+export const healthRouter = routerUtils.init((app) => {
+  app.get("/", async (c) => {
+    await db.healthCheck();
+    return c.text("OK");
+  });
 
-healthRouter.get("/", async (c) => {
-  await db.healthCheck();
-  return c.text("OK");
-});
-
-healthRouter.post("/", async (c) => {
-  await db.healthCheck();
-  return c.text("OK");
+  app.post("/", async (c) => {
+    await db.healthCheck();
+    return c.text("OK");
+  });
 });

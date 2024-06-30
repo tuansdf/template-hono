@@ -3,9 +3,7 @@ import { resetPasswordRequestSchema } from "~/domains/auth/auth.schema";
 import { authService } from "~/domains/auth/auth.service";
 import { ExceptionUtils } from "~/exceptions/exception.util";
 import { TFn } from "~/i18n/i18n.type";
-import { RouterUtils } from "~/utils/router.util";
-
-export const viewRouter = RouterUtils.init();
+import { routerUtils } from "~/utils/router.util";
 
 const RootLayout: FC<PropsWithChildren<{ title: string; useJs?: boolean }>> = ({ children, title, useJs = false }) => {
   return (
@@ -82,35 +80,37 @@ const AlertMessage: FC<{ message: string; isError: boolean }> = ({ message, isEr
   );
 };
 
-viewRouter.get("/account/activate", async (c) => {
-  const t = c.get("t");
-  let message: string;
-  try {
+export const viewRouter = routerUtils.init((app) => {
+  app.get("/account/activate", async (c) => {
+    const t = c.get("t");
+    let message: string;
+    try {
+      const token = c.req.query("t");
+      await authService.activateAccount(String(token));
+      message = t("auth.message.activate_account_success");
+    } catch (e) {
+      message = ExceptionUtils.getMessage(e as Error, t);
+    }
+    return c.html(<AnnouncePage title={t("view.activate_account.title")} message={t(message)} />);
+  });
+
+  app.get("/password/reset", async (c) => {
+    const t = c.get("t");
     const token = c.req.query("t");
-    await authService.activateAccount(String(token));
-    message = t("auth.message.activate_account_success");
-  } catch (e) {
-    message = ExceptionUtils.getMessage(e as Error, t);
-  }
-  return c.html(<AnnouncePage title={t("view.activate_account.title")} message={t(message)} />);
-});
+    return c.html(<ResetPasswordPage formUrl={c.req.path} token={String(token)} t={t} />);
+  });
 
-viewRouter.get("/password/reset", async (c) => {
-  const t = c.get("t");
-  const token = c.req.query("t");
-  return c.html(<ResetPasswordPage formUrl={c.req.path} token={String(token)} t={t} />);
-});
-
-viewRouter.post("/password/reset", async (c) => {
-  const t = c.get("t");
-  let errorMessage: string = "";
-  let successMessage: string = "";
-  try {
-    const body = await resetPasswordRequestSchema.parseAsync(await c.req.parseBody());
-    await authService.resetPassword(body);
-    successMessage = t("auth.message.reset_password_success");
-  } catch (e) {
-    errorMessage = ExceptionUtils.getMessage(e as Error, t);
-  }
-  return c.html(<AlertMessage isError={!!errorMessage} message={errorMessage || successMessage} />, 200);
+  app.post("/password/reset", async (c) => {
+    const t = c.get("t");
+    let errorMessage: string = "";
+    let successMessage: string = "";
+    try {
+      const body = await resetPasswordRequestSchema.parseAsync(await c.req.parseBody());
+      await authService.resetPassword(body);
+      successMessage = t("auth.message.reset_password_success");
+    } catch (e) {
+      errorMessage = ExceptionUtils.getMessage(e as Error, t);
+    }
+    return c.html(<AlertMessage isError={!!errorMessage} message={errorMessage || successMessage} />, 200);
+  });
 });
