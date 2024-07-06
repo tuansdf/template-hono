@@ -9,7 +9,7 @@ class Database {
   private RETRY_MAX = 5;
   private retryCount = 0;
 
-  public async init() {
+  public async init(doHealthCheck: boolean = true) {
     const pool = new Pool({
       host: ENV_DB_HOST,
       port: ENV_DB_PORT,
@@ -19,22 +19,24 @@ class Database {
     });
     this._conn = pool;
     this._main = drizzle(pool);
+    if (doHealthCheck) await this.healthCheck();
   }
 
-  public async initAndRetry() {
+  public async initAndRetry(doHealthCheck: boolean = true) {
     try {
       if (this.retryCount > 0) {
         console.info("Reconnecting to databases " + this.retryCount);
       } else {
         console.info("Connecting to databases");
       }
-      await this.init();
+      await this.init(doHealthCheck);
     } catch (e) {
-      await new Promise((r) => setTimeout(r, 1000));
+      await this._conn?.end();
       if (this.retryCount >= this.RETRY_MAX) {
         throw new Error("Error connecting to databases");
       }
       this.retryCount++;
+      await new Promise((r) => setTimeout(r, 1000));
       await this.initAndRetry();
     }
   }

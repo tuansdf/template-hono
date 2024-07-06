@@ -1,4 +1,4 @@
-FROM oven/bun:1-alpine as base
+FROM oven/bun:1-alpine AS base
 WORKDIR /usr/src/app
 
 RUN apk add --no-cache python3
