@@ -1,7 +1,7 @@
 import { ilike, or } from "drizzle-orm";
 import { STATUS } from "~/constants/status.constant";
 import { db } from "~/database/db";
-import { userCommonSelect, userRepository } from "~/domains/user/user.repository";
+import { userRepository, userSelector } from "~/domains/user/user.repository";
 import { UserSearchRequestDTO } from "~/domains/user/user.type";
 import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
@@ -36,7 +36,7 @@ export class UserService {
   }
 
   public async search(requestDTO: UserSearchRequestDTO) {
-    const query = db.main.select(userCommonSelect).from(UserTable);
+    const query = db.main.select(userSelector.search).from(UserTable);
     if (requestDTO.q) {
       query.where(or(ilike(UserTable.email, `%${requestDTO.q}%`), ilike(UserTable.username, `%${requestDTO.q}%`)));
     }

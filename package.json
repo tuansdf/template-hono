@@ -7,7 +7,8 @@
     "build": "rimraf dist && rollup -c && cpy \"resources/**/*\" dist/resources --parents",
     "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
-    "generate-schema": "drizzle-kit generate:pg"
+    "gen-migration": "drizzle-kit generate",
+    "do-migration": "drizzle-kit up"
   },
   "keywords": [],
   "author": "",

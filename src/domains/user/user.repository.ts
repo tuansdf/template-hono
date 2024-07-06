@@ -3,53 +3,45 @@ import { db } from "~/database/db";
 import { UserSave } from "~/domains/user/user.type";
 import { UserTable } from "~/entities/user.entity";
 
-export const userPasswordSelect = {
-  id: UserTable.id,
-  name: UserTable.name,
-  email: UserTable.email,
-  username: UserTable.username,
-  password: UserTable.password,
-  status: UserTable.status,
-};
-
-export const userCommonSelect = {
-  id: UserTable.id,
-  name: UserTable.name,
-  email: UserTable.email,
-  username: UserTable.username,
-  status: UserTable.status,
-};
-
-export const userAllSelect = {
-  id: UserTable.id,
-  name: UserTable.name,
-  email: UserTable.email,
-  username: UserTable.username,
-  password: UserTable.password,
-  status: UserTable.status,
-  createdBy: UserTable.createdBy,
-  updatedBy: UserTable.updatedBy,
-  createdAt: UserTable.createdAt,
-  updatedAt: UserTable.updatedAt,
+export const userSelector = {
+  all: {
+    id: UserTable.id,
+    name: UserTable.name,
+    email: UserTable.email,
+    username: UserTable.username,
+    password: UserTable.password,
+    status: UserTable.status,
+    createdBy: UserTable.createdBy,
+    updatedBy: UserTable.updatedBy,
+    createdAt: UserTable.createdAt,
+    updatedAt: UserTable.updatedAt,
+  },
+  search: {
+    id: UserTable.id,
+    name: UserTable.name,
+    email: UserTable.email,
+    username: UserTable.username,
+    status: UserTable.status,
+  },
 } as const;
 
 export class UserRepository {
   public async findAll() {
-    return db.main.select().from(UserTable);
+    return db.main.select(userSelector.all).from(UserTable);
   }
 
   public async findAllByStatus(status: string) {
-    return db.main.select(userAllSelect).from(UserTable).where(eq(UserTable.status, status));
+    return db.main.select(userSelector.all).from(UserTable).where(eq(UserTable.status, status));
   }
 
   public async findTopById(id: number) {
-    const result = await db.main.select(userAllSelect).from(UserTable).where(eq(UserTable.id, id)).limit(1);
+    const result = await db.main.select(userSelector.all).from(UserTable).where(eq(UserTable.id, id)).limit(1);
     return result?.[0];
   }
 
   public async findTopByUsernameOrEmailWithPassword(username: string) {
     const result = await db.main
-      .select(userAllSelect)
+      .select(userSelector.all)
       .from(UserTable)
       .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
       .limit(1);
@@ -58,7 +50,7 @@ export class UserRepository {
 
   public async findTopByUsernameOrEmail(username: string) {
     const result = await db.main
-      .select(userAllSelect)
+      .select(userSelector.all)
       .from(UserTable)
       .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
       .limit(1);
@@ -66,12 +58,16 @@ export class UserRepository {
   }
 
   public async findTopByUsername(username: string) {
-    const result = await db.main.select(userAllSelect).from(UserTable).where(eq(UserTable.username, username)).limit(1);
+    const result = await db.main
+      .select(userSelector.all)
+      .from(UserTable)
+      .where(eq(UserTable.username, username))
+      .limit(1);
     return result?.[0];
   }
 
   public async findTopByEmail(email: string) {
-    const result = await db.main.select(userAllSelect).from(UserTable).where(eq(UserTable.email, email)).limit(1);
+    const result = await db.main.select(userSelector.all).from(UserTable).where(eq(UserTable.email, email)).limit(1);
     return result?.[0];
   }
 
@@ -109,7 +105,7 @@ export class UserRepository {
   }
 
   public async save(user: UserSave) {
-    const result = await db.main.insert(UserTable).values(user).returning(userAllSelect);
+    const result = await db.main.insert(UserTable).values(user).returning(userSelector.all);
     return result[0]!;
   }
 
