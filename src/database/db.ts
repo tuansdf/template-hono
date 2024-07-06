@@ -5,6 +5,7 @@ import { UserTable } from "~/entities/user.entity";
 
 class Database {
   private _main!: NodePgDatabase;
+  private _conn!: Pool;
   private RETRY_MAX = 5;
   private retryCount = 0;
 
@@ -16,6 +17,7 @@ class Database {
       password: ENV_DB_PASSWORD,
       database: ENV_DB_DATABASE_NAME,
     });
+    this._conn = pool;
     this._main = drizzle(pool);
     await this.healthCheck();
   }
@@ -44,6 +46,9 @@ class Database {
 
   public get main(): NodePgDatabase {
     return this._main;
+  }
+  public get conn(): Pool {
+    return this._conn;
   }
 }
 

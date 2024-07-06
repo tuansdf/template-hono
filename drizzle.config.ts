@@ -7,8 +7,8 @@ export default defineConfig({
   dialect: "postgresql",
   dbCredentials: {
     host: String(process.env.DB_HOST),
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
+    user: String(process.env.DB_USER),
+    password: String(process.env.DB_PASSWORD),
     database: String(process.env.DB_DATABASE_NAME),
   },
 });
