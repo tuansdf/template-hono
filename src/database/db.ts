@@ -4,7 +4,7 @@ import { ENV_DB_DATABASE_NAME, ENV_DB_HOST, ENV_DB_PASSWORD, ENV_DB_PORT, ENV_DB
 import { UserTable } from "~/entities/user.entity";
 
 class Database {
-  private _main: NodePgDatabase = {} as NodePgDatabase;
+  private _main!: NodePgDatabase;
   private RETRY_MAX = 5;
   private retryCount = 0;
 

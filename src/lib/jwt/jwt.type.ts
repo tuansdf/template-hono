@@ -1,6 +1,6 @@
 import { Nullish } from "~/types/common.type";
 
-export type JwtTokenPayload = Record<string, unknown> & JwtTokenClaims;
+export type JwtTokenPayload = Record<string, unknown>;
 
 export type JwtTokenClaims = {
   iss?: string | number | Nullish;

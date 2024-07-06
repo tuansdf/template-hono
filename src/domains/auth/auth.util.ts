@@ -10,37 +10,28 @@ export class AuthUtils {
     const current = dated();
     const currentUnix = current.unix();
     const expiredUnix = current.add(JWT_TYPE_LIFETIME[request.type], "minute").unix();
+    const result: AuthJwtTokenPayload = {
+      iat: currentUnix,
+      nbf: currentUnix,
+      exp: expiredUnix,
+      for: request.type,
+    };
 
     switch (request.type) {
-      case JWT_TYPE.REFRESH:
-        return {
-          sid: request.user.id,
-          for: request.type,
-          iat: currentUnix,
-          nbf: currentUnix,
-          exp: expiredUnix,
-        };
       case JWT_TYPE.ACTIVATE_ACCOUNT:
       case JWT_TYPE.RESET_PASSWORD:
-        return {
-          sub: request.username,
-          for: request.type,
-          iat: currentUnix,
-          nbf: currentUnix,
-          exp: expiredUnix,
-        };
-      default:
-        const user = request.user || {};
-        return {
-          sid: user.id,
-          for: request.type,
-          pms: permissionUtils.dtosToIndexes(user.permissions || []),
-          sub: user.username,
-          iat: currentUnix,
-          nbf: currentUnix,
-          exp: expiredUnix,
-        };
+        result.sub = request.username;
+        break;
+      case JWT_TYPE.REFRESH:
+        result.sid = request.user.id;
+        break;
+      case JWT_TYPE.ACCESS:
+        result.sid = request.user.id;
+        result.pms = permissionUtils.dtosToIndexes(request.user.permissions || []);
+        break;
     }
+
+    return result;
   }
 
   public async createToken(request: CreateTokenRequest): Promise<string> {

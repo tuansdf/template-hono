@@ -1,4 +1,4 @@
-import i18nGlobal from "i18next";
+import i18nGlobal, { i18n as i18nType } from "i18next";
 import Backend from "i18next-fs-backend";
 import { defaultLang, validLangs } from "~/i18n/i18n.constant";
 import { TFn, ValidLang } from "~/i18n/i18n.type";
@@ -33,8 +33,11 @@ export class I18nUtils {
 }
 
 class I18n {
+  private _instance!: i18nType;
+
   public async init() {
-    await i18nGlobal.use(Backend).init({
+    const temp = i18nGlobal.createInstance();
+    await temp.use(Backend).init({
       fallbackLng: defaultLang,
       preload: validLangs,
       ns: ["translation"],
@@ -43,10 +46,11 @@ class I18n {
         loadPath: "./resources/locales/{{lng}}/{{ns}}.json",
       },
     });
+    this._instance = temp;
   }
 
   public getT(lang?: string) {
-    return i18nGlobal.getFixedT(I18nUtils.getLang(lang));
+    return this._instance.getFixedT(I18nUtils.getLang(lang));
   }
 }
 

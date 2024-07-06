@@ -25,8 +25,11 @@ app.route("/", langRouter);
 app.notFound(notFound());
 app.onError(errorHandler());
 
-await i18n.init();
-await db.initAndRetry();
+const initServices = async () => {
+  await i18n.init();
+  await db.initAndRetry();
+};
+await initServices();
 
 const port = ENV_APP_PORT || 5000;
 console.log(`Server is running on port ${port}`);
