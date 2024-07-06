@@ -19,7 +19,6 @@ class Database {
     });
     this._conn = pool;
     this._main = drizzle(pool);
-    await this.healthCheck();
   }
 
   public async initAndRetry() {
