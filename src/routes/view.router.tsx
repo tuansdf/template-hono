@@ -1,7 +1,7 @@
 import type { FC, PropsWithChildren } from "hono/jsx";
 import { resetPasswordRequestSchema } from "~/domains/auth/auth.schema";
 import { authService } from "~/domains/auth/auth.service";
-import { ExceptionUtils } from "~/exceptions/exception.util";
+import { exceptionUtils } from "~/exceptions/exception.util";
 import { TFn } from "~/i18n/i18n.type";
 import { routerUtils } from "~/utils/router.util";
 
@@ -89,7 +89,7 @@ export const viewRouter = routerUtils.init((app) => {
       await authService.activateAccount(String(token));
       message = t("auth.message.activate_account_success");
     } catch (e) {
-      message = ExceptionUtils.getMessage(e as Error, t);
+      message = exceptionUtils.getMessage(e as Error, t);
     }
     return c.html(<AnnouncePage title={t("view.activate_account.title")} message={t(message)} />);
   });
@@ -109,7 +109,7 @@ export const viewRouter = routerUtils.init((app) => {
       await authService.resetPassword(body);
       successMessage = t("auth.message.reset_password_success");
     } catch (e) {
-      errorMessage = ExceptionUtils.getMessage(e as Error, t);
+      errorMessage = exceptionUtils.getMessage(e as Error, t);
     }
     return c.html(<AlertMessage isError={!!errorMessage} message={errorMessage || successMessage} />, 200);
   });

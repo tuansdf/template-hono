@@ -1,6 +1,6 @@
 import { ErrorHandler } from "hono";
-import { ExceptionUtils } from "~/exceptions/exception.util";
+import { exceptionUtils } from "~/exceptions/exception.util";
 
 export const errorHandler = (): ErrorHandler => {
-  return ExceptionUtils.response;
+  return exceptionUtils.response;
 };

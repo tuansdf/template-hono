@@ -2,7 +2,7 @@ import { permissionRepository } from "~/domains/permission/permission.repository
 import { CreatePermissionBodyDTO, UpdatePermissionBodyDTO } from "~/domains/permission/permission.type";
 import { CustomException } from "~/exceptions/custom-exception";
 
-export class PermissionService {
+class PermissionService {
   public findAll = async () => {
     return permissionRepository.findAll();
   };

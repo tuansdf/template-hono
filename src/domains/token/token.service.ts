@@ -4,7 +4,7 @@ import { TokenSave, TokenValueWithId } from "~/domains/token/token.type";
 import { Base64Utils } from "~/lib/base64/base64.util";
 import { logger } from "~/lib/logger/logger";
 
-export class TokenService {
+class TokenService {
   public save = (item: TokenSave) => {
     return tokenRepository.save(item);
   };

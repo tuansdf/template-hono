@@ -5,7 +5,7 @@ import { CustomException } from "~/exceptions/custom-exception";
 import { dated } from "~/lib/date/date";
 import { JwtUtils } from "~/lib/jwt/jwt.util";
 
-export class AuthUtils {
+class AuthUtils {
   public createTokenPayload(request: CreateTokenRequest): AuthJwtTokenPayload {
     const current = dated();
     const currentUnix = current.unix();

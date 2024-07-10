@@ -3,7 +3,7 @@ import { db } from "~/database/db";
 import { TokenSave } from "~/domains/token/token.type";
 import { TokenTable } from "~/entities/token.entity";
 
-export class TokenRepository {
+class TokenRepository {
   public async findAll() {
     return db.main.select().from(TokenTable);
   }

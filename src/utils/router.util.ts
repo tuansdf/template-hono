@@ -2,7 +2,7 @@ import { Context, Hono } from "hono";
 import { Nullish } from "~/types/common.type";
 import { StatusCode } from "~/types/status-code.type";
 
-export class RouterUtils {
+class RouterUtils {
   public init = (cb: (app: Hono) => void) => {
     const instance = new Hono();
     cb(instance);

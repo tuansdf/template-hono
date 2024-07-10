@@ -2,7 +2,7 @@ import { roleRepository } from "~/domains/role/role.repository";
 import { CreateRoleBodyDTO, UpdateRoleBodyDTO } from "~/domains/role/role.type";
 import { CustomException } from "~/exceptions/custom-exception";
 
-export class RoleService {
+class RoleService {
   public findAll = async () => {
     return roleRepository.findAll();
   };

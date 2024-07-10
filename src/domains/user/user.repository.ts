@@ -25,7 +25,7 @@ export const userSelector = {
   },
 } as const;
 
-export class UserRepository {
+class UserRepository {
   public async findAll() {
     return db.main.select(userSelector.all).from(UserTable);
   }

@@ -32,7 +32,7 @@ import { dated } from "~/lib/date/date";
 import { HashUtils } from "~/lib/hash/hash.util";
 import { logger } from "~/lib/logger/logger";
 
-export class AuthService {
+class AuthService {
   public login = async (requestDTO: LoginRequestDTO): Promise<UserDTO> => {
     const user = await userRepository.findTopByUsernameOrEmailWithPassword(requestDTO.username);
     if (!user) {

@@ -6,7 +6,7 @@ import { UserSearchRequestDTO } from "~/domains/user/user.type";
 import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
 
-export class UserService {
+class UserService {
   public async findOneById(userId: number) {
     const user = await userRepository.findTopById(userId);
     if (!user) {

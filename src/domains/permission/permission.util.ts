@@ -1,7 +1,7 @@
 import { PERM_INDEX } from "~/domains/permission/permission.constant";
 import { Permission } from "~/domains/permission/permission.type";
 
-export class PermissionUtils {
+class PermissionUtils {
   public codesToIndexes = (perms: string[]): number[] => {
     const result: number[] = [];
     perms.forEach((item) => {

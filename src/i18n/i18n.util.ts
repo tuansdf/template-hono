@@ -5,8 +5,8 @@ import { TFn, ValidLang } from "~/i18n/i18n.type";
 
 const KEY_SEPARATED_BY = ":::";
 
-export class I18nUtils {
-  static getLang(lang?: string): ValidLang {
+class I18nUtils {
+  public getLang(lang?: string): ValidLang {
     let result: ValidLang = defaultLang;
     if (validLangs.includes(lang as ValidLang)) {
       result = lang as ValidLang;
@@ -14,11 +14,11 @@ export class I18nUtils {
     return result;
   }
 
-  static getMessage(t: TFn, key: string) {
+  public getMessage(t: TFn, key: string) {
     return t(key);
   }
 
-  static getMessageAndParams(t: TFn, input: string): string {
+  public getMessageAndParams(t: TFn, input: string): string {
     const split = input.split(KEY_SEPARATED_BY);
     const mainKey = split[0] || "";
     const length = split.length;
@@ -31,6 +31,8 @@ export class I18nUtils {
     return t(mainKey, params);
   }
 }
+
+export const i18nUtils = new I18nUtils();
 
 class I18n {
   private _instance!: i18nType;
@@ -50,7 +52,7 @@ class I18n {
   }
 
   public getT(lang?: string) {
-    return this._instance.getFixedT(I18nUtils.getLang(lang));
+    return this._instance.getFixedT(i18nUtils.getLang(lang));
   }
 }
 

@@ -17,7 +17,7 @@ const commonSelect = {
   updatedAt: PermissionTable.updatedAt,
 };
 
-export class PermissionRepository {
+class PermissionRepository {
   public async findAll() {
     return db.main.select(commonSelect).from(PermissionTable);
   }

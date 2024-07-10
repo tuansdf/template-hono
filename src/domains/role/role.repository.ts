@@ -11,7 +11,7 @@ const commonSelect = {
   description: RoleTable.description,
 };
 
-export class RoleRepository {
+class RoleRepository {
   public async findAll() {
     return db.main.select(commonSelect).from(RoleTable);
   }
