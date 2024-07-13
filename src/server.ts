@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { ENV_APP_PORT } from "~/constants/env.constant";
@@ -9,21 +8,21 @@ import { i18n } from "~/i18n/i18n.util";
 import { loggerM } from "~/middlewares/logger.middleware";
 import { notFound } from "~/middlewares/not-found.middleware";
 import { langRouter } from "~/routes/lang.router";
-
+import { routerUtils } from "~/utils/router.util";
 import "~/constants/env.constant";
 
 dotenv.config();
 
-const app = new Hono();
+const app = routerUtils.init((app) => {
+  app.use(loggerM());
+  app.use(cors());
+  app.use(secureHeaders());
 
-app.use(loggerM());
-app.use(cors());
-app.use(secureHeaders());
+  app.route("/", langRouter);
 
-app.route("/", langRouter);
-
-app.notFound(notFound());
-app.onError(errorHandler());
+  app.notFound(notFound());
+  app.onError(errorHandler());
+});
 
 const initServices = async () => {
   await i18n.init();

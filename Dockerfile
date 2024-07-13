@@ -1,10 +1,16 @@
-FROM oven/bun:1-alpine AS base
+FROM oven/bun:1-alpine AS build
 WORKDIR /usr/src/app
 
 RUN apk add --no-cache python3
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 COPY . .
+RUN bun run build
+
+FROM oven/bun:1-alpine AS deploy
+WORKDIR /usr/src/app
+
+COPY --from=build /usr/src/app/dist /usr/src/app
 
 EXPOSE 5000/tcp
-ENTRYPOINT [ "bun", "run", "src/server.ts" ]
+ENTRYPOINT [ "bun", "run", "server.js" ]

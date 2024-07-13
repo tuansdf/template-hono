@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "buildts": "tsc && node -r tsconfig-paths/register temp/server.js",
-    "build": "rimraf dist && rollup -c && cpy \"resources/**/*\" dist/resources --parents",
-    "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts",
+    "dev": "bun run src/server.ts",
+    "build": "rimraf dist && bun build src/server.ts --outdir=dist --target=bun --minify-whitespace --minify-identifiers --sourcemap=linked && cpy \"resources/**/*\" dist/resources --parents; cpy .env dist",
+    "start": "bun run dist/server.js",
     "gen-migration": "drizzle-kit generate",
     "do-migration": "drizzle-kit up"
   },
