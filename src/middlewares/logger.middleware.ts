@@ -2,7 +2,6 @@ import { MiddlewareHandler } from "hono";
 import { logger } from "~/lib/logger/logger";
 
 export const loggerM = (): MiddlewareHandler => async (c, next) => {
-  const url = new URL(c.req.url);
   let extra = "";
   if (c.req.method !== "GET") {
     try {
@@ -19,7 +18,11 @@ export const loggerM = (): MiddlewareHandler => async (c, next) => {
       }
     } catch (ignore) {}
   }
-  logger.info(`<-- ENTER ${c.req.method} ${url.pathname}${url.search}${extra}`);
+  const url = new URL(c.req.url);
+  const pathname = url.pathname;
+  const search = url.search;
+  const method = c.req.method.padEnd(7, " ");
+  logger.info(`<-- ENTER ${method} ${pathname}${search}${extra}`);
   await next();
-  logger.info(`--> EXIT ${c.req.method} ${url.pathname} ${c.res.status}`);
+  logger.info(`--> EXIT  ${method} ${pathname} ${c.res.status}`);
 };
