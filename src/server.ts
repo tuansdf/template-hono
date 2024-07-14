@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { ENV_APP_PORT } from "~/constants/env.constant";
@@ -9,9 +8,8 @@ import { loggerM } from "~/middlewares/logger.middleware";
 import { notFound } from "~/middlewares/not-found.middleware";
 import { langRouter } from "~/routes/lang.router";
 import { routerUtils } from "~/utils/router.util";
+import "dotenv/config";
 import "~/constants/env.constant";
-
-dotenv.config();
 
 const app = routerUtils.init((app) => {
   app.use(loggerM());
