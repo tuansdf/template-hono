@@ -6,8 +6,8 @@
     "dev": "bun run --hot src/server.ts",
     "build": "rimraf dist && bun build src/server.ts --outdir=dist --target=bun --sourcemap=linked && cpy resources dist && cpy .env dist",
     "start": "bun run dist/server.js",
-    "gen-migration": "drizzle-kit generate",
-    "do-migration": "drizzle-kit up"
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "bun run src/migrate.ts"
   },
   "keywords": [],
   "author": "",

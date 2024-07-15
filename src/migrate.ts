@@ -1,7 +1,16 @@
 import "dotenv/config";
+import { drizzle } from "drizzle-orm/node-postgres";
 import { migrate } from "drizzle-orm/node-postgres/migrator";
-import { db } from "~/database/db";
+import { Client } from "pg";
+import { ENV_DB_DATABASE_NAME, ENV_DB_HOST, ENV_DB_PASSWORD, ENV_DB_PORT, ENV_DB_USER } from "~/constants/env.constant";
 
-await db.initAndRetry(false);
-await migrate(db.main, { migrationsFolder: "./drizzle" });
-await db.conn.end();
+const client = new Client({
+  host: ENV_DB_HOST,
+  port: ENV_DB_PORT,
+  user: ENV_DB_USER,
+  password: ENV_DB_PASSWORD,
+  database: ENV_DB_DATABASE_NAME,
+});
+const db = drizzle(client);
+await migrate(db, { migrationsFolder: "./drizzle" });
+await client.end();
