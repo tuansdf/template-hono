@@ -2,10 +2,10 @@ import { sendNotificationRepository } from "~/domains/send-notification/send-not
 import { SendNotificationSave } from "~/domains/send-notification/send-notification.type";
 
 class SendNotificationService {
-  public send = async (item: SendNotificationSave) => {
+  public async send(item: SendNotificationSave) {
     // TODO: actually send notification
     await sendNotificationRepository.save(item);
-  };
+  }
 }
 
 export const sendNotificationService = new SendNotificationService();

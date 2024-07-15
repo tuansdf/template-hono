@@ -1,5 +1,5 @@
 import { Context, Hono } from "hono";
-import { Nullish } from "~/types/common.type";
+
 import { StatusCode } from "~/types/status-code.type";
 
 class RouterUtils {
@@ -12,7 +12,7 @@ class RouterUtils {
   public response = (
     c: Context,
     status: StatusCode,
-    body?: { data?: Record<string, unknown> | Record<string, unknown>[] | Nullish; message?: string | Nullish },
+    body?: { data?: Record<string, unknown> | Record<string, unknown>[] | null; message?: string | null },
   ) => {
     const { data = null, message = null } = body || {};
     return c.json({ status, message, data }, status);

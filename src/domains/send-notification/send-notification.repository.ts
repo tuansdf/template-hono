@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/database/db";
-import { SendNotificationSave } from "~/domains/send-notification/send-notification.type";
+import { SendNotificationDTO, SendNotificationSave } from "~/domains/send-notification/send-notification.type";
 import { SendNotificationTable } from "~/entities/send-notification.entity";
 
 const selectAll = {
@@ -22,13 +22,14 @@ const selectAll = {
 } as const;
 
 class SendNotificationRepository {
-  public findAllByStatus = async (status: string) => {
+  public async findAllByStatus(status: string): Promise<SendNotificationDTO[]> {
     return db.main.select(selectAll).from(SendNotificationTable).where(eq(SendNotificationTable.status, status));
-  };
+  }
 
-  public save = async (item: SendNotificationSave) => {
-    await db.main.insert(SendNotificationTable).values(item).returning(selectAll);
-  };
+  public async save(item: SendNotificationSave): Promise<SendNotificationDTO | undefined> {
+    const result = await db.main.insert(SendNotificationTable).values(item).returning(selectAll);
+    return result[0];
+  }
 }
 
 export const sendNotificationRepository = new SendNotificationRepository();

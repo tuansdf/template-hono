@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { db } from "~/database/db";
-import { SendEmailSave } from "~/domains/send-email/send-email.type";
+import { SendEmailDTO, SendEmailSave } from "~/domains/send-email/send-email.type";
 import { SendEmailTable } from "~/entities/send-email.entity";
 
 const selectAll = {
@@ -20,13 +20,14 @@ const selectAll = {
 } as const;
 
 class SendEmailRepository {
-  public findAllByStatus = async (status: string) => {
+  public async findAllByStatus(status: string): Promise<SendEmailDTO[]> {
     return db.main.select(selectAll).from(SendEmailTable).where(eq(SendEmailTable.status, status));
-  };
+  }
 
-  public save = async (item: SendEmailSave) => {
-    await db.main.insert(SendEmailTable).values(item).returning(selectAll);
-  };
+  public async save(item: SendEmailSave): Promise<SendEmailDTO | undefined> {
+    const result = await db.main.insert(SendEmailTable).values(item).returning(selectAll);
+    return result[0];
+  }
 }
 
 export const sendEmailRepository = new SendEmailRepository();

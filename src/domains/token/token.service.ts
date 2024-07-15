@@ -1,25 +1,30 @@
 import { STATUS } from "~/constants/status.constant";
 import { tokenRepository } from "~/domains/token/token.repository";
 import { TokenSave, TokenValueWithId } from "~/domains/token/token.type";
+import { CustomException } from "~/exceptions/custom-exception";
 import { base64Utils } from "~/lib/base64/base64.util";
 import { logger } from "~/lib/logger/logger";
 
 class TokenService {
-  public save = (item: TokenSave) => {
+  public async save(item: TokenSave) {
     return tokenRepository.save(item);
-  };
+  }
 
-  public saveValueWithId = async (item: TokenSave) => {
+  public async saveValueWithId(item: TokenSave) {
+    delete item.id;
     const token = await this.save(item);
+    if (!token) {
+      throw new CustomException("dynamic.error.not_found:::field.token");
+    }
     const valueObj: TokenValueWithId = {
       v: token.value,
       i: token.id,
     };
     token.value = base64Utils.encode(JSON.stringify(valueObj));
     return token;
-  };
+  }
 
-  public findByValueId = async (tokenValue: string) => {
+  public async findByValueId(tokenValue: string) {
     try {
       const decoded = base64Utils.decode(tokenValue);
       const valueWithId = JSON.parse(decoded) as TokenValueWithId;
@@ -32,15 +37,15 @@ class TokenService {
       logger.error("ERROR ERROR_FIND_TOKEN_BY_VALUE_ID", e);
       return null;
     }
-  };
+  }
 
-  public revokeTokenById = async (tokenId: number, userId: number) => {
+  public async revokeTokenById(tokenId: number, userId: number) {
     await tokenRepository.updateStatusByTokenIdAndForeignId(STATUS.INACTIVE, tokenId, userId);
-  };
+  }
 
-  public revokeTokenByUserId = async (userId: number) => {
+  public async revokeTokenByUserId(userId: number) {
     await tokenRepository.updateStatusByForeignId(STATUS.INACTIVE, userId);
-  };
+  }
 }
 
 export const tokenService = new TokenService();

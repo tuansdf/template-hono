@@ -1,18 +1,18 @@
 import { RoleTable } from "~/entities/role.entity";
-import { Nullish } from "~/types/common.type";
 
 export type Role = typeof RoleTable.$inferSelect;
+export type RoleDTO = Partial<Role>;
 export type RoleSave = typeof RoleTable.$inferInsert;
-export type RoleUpdate = Partial<RoleSave>;
+export type RoleSaveDTO = Partial<RoleSave>;
 
 export type CreateRoleBodyDTO = {
   code: string;
-  name?: string | Nullish;
-  description?: string | Nullish;
+  name?: string | null;
+  description?: string | null;
 };
 
 export type UpdateRoleBodyDTO = {
   id: number;
-  name?: string | Nullish;
-  description?: string | Nullish;
+  name?: string | null;
+  description?: string | null;
 };

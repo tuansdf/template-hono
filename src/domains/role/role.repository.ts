@@ -1,6 +1,6 @@
 import { count, eq } from "drizzle-orm";
 import { db } from "~/database/db";
-import { RoleSave, RoleUpdate } from "~/domains/role/role.type";
+import { RoleDTO, RoleSave, RoleSaveDTO } from "~/domains/role/role.type";
 import { MapUserRoleTable } from "~/entities/map-user-role.entity";
 import { RoleTable } from "~/entities/role.entity";
 
@@ -17,11 +17,11 @@ const selectAll = {
 } as const;
 
 class RoleRepository {
-  public async findAll() {
+  public async findAll(): Promise<RoleDTO[]> {
     return db.main.select(selectAll).from(RoleTable);
   }
 
-  public async findAllByUserId(userId: number) {
+  public async findAllByUserId(userId: number): Promise<RoleDTO[]> {
     return db.main
       .select(selectAll)
       .from(RoleTable)
@@ -29,41 +29,43 @@ class RoleRepository {
       .where(eq(MapUserRoleTable.userId, userId));
   }
 
-  public async findTopById(id: number) {
+  public async findTopById(id: number): Promise<RoleDTO | undefined> {
     const result = await db.main.select(selectAll).from(RoleTable).where(eq(RoleTable.id, id)).limit(1);
-    return result?.[0];
+    return result[0];
   }
 
-  public async countByCode(code: string) {
+  public async countByCode(code: string): Promise<number> {
     const result = await db.main.select({ value: count() }).from(RoleTable).where(eq(RoleTable.code, code));
-    return result?.[0]?.value || 0;
+    return result[0]?.value || 0;
   }
 
-  public async countById(id: number) {
+  public async countById(id: number): Promise<number> {
     const result = await db.main.select({ value: count() }).from(RoleTable).where(eq(RoleTable.id, id));
-    return result?.[0]?.value || 0;
+    return result[0]?.value || 0;
   }
 
-  public async existById(id: number) {
+  public async existById(id: number): Promise<boolean> {
     const result = await this.countById(id);
     return result > 0;
   }
 
-  public async existByCode(code: string) {
+  public async existByCode(code: string): Promise<boolean> {
     const result = await this.countByCode(code);
     return result > 0;
   }
 
-  public async save(role: RoleSave) {
-    const saved = await db.main.insert(RoleTable).values(role).returning(selectAll);
-    return saved[0]!;
+  public async save(role: RoleSave): Promise<RoleDTO | undefined> {
+    const result = await db.main.insert(RoleTable).values(role).returning(selectAll);
+    return result[0];
   }
 
-  public async update(request: RoleUpdate) {
-    await db.main
+  public async update(request: RoleSaveDTO): Promise<RoleDTO | undefined> {
+    const result = await db.main
       .update(RoleTable)
       .set({ name: request.name, description: request.description })
-      .where(eq(RoleTable.id, Number(request.id)));
+      .where(eq(RoleTable.id, Number(request.id)))
+      .returning(selectAll);
+    return result[0];
   }
 }
 

@@ -1,25 +1,19 @@
-import { Permission } from "~/domains/permission/permission.type";
-import { Role } from "~/domains/role/role.type";
+import { PermissionDTO } from "~/domains/permission/permission.type";
+import { RoleDTO } from "~/domains/role/role.type";
 import { UserTable } from "~/entities/user.entity";
-import { Nullish } from "~/types/common.type";
 
 export type User = typeof UserTable.$inferSelect;
-export type UserSave = typeof UserTable.$inferInsert;
-export type UserSelectKey = keyof User;
-
-export type UserDTO = {
-  id?: number | Nullish;
-  email?: string | Nullish;
-  name?: string | Nullish;
-  username?: string | Nullish;
-  roles?: Role[] | Nullish;
-  permissions?: Permission[] | Nullish;
-  accessToken?: string | Nullish;
-  refreshToken?: string | Nullish;
+export type UserDTO = Partial<User> & {
+  roles?: RoleDTO[] | null;
+  permissions?: PermissionDTO[] | null;
+  accessToken?: string | null;
+  refreshToken?: string | null;
 };
+export type UserSave = typeof UserTable.$inferInsert;
+export type UserSaveDTO = Partial<UserSave>;
 
 export type UserSearchRequestDTO = {
-  pageNumber?: number | Nullish;
-  pageSize?: number | Nullish;
-  q?: string | Nullish;
+  pageNumber?: number | null;
+  pageSize?: number | null;
+  q?: string | null;
 };

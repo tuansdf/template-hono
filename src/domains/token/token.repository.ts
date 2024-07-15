@@ -1,6 +1,6 @@
 import { and, count, eq } from "drizzle-orm";
 import { db } from "~/database/db";
-import { TokenSave } from "~/domains/token/token.type";
+import { TokenDTO, TokenSave } from "~/domains/token/token.type";
 import { TokenTable } from "~/entities/token.entity";
 
 const selectAll = {
@@ -17,85 +17,94 @@ const selectAll = {
 } as const;
 
 class TokenRepository {
-  public async findAll() {
+  public async findAll(): Promise<TokenDTO[]> {
     return db.main.select(selectAll).from(TokenTable);
   }
 
-  public async findTopById(id: number) {
-    const result = await db.main.select(selectAll).from(TokenTable).where(eq(TokenTable.id, id));
-    return result?.[0];
+  public async findTopById(id: number): Promise<TokenDTO | undefined> {
+    const result = await db.main.select(selectAll).from(TokenTable).where(eq(TokenTable.id, id)).limit(1);
+    return result[0];
   }
 
-  public async findTopByValueAndForeignId(value: string, foreignId: number) {
+  public async findTopByValueAndForeignId(value: string, foreignId: number): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
       .from(TokenTable)
-      .where(and(eq(TokenTable.value, value), eq(TokenTable.foreignId, foreignId)));
-    return result?.[0];
+      .where(and(eq(TokenTable.value, value), eq(TokenTable.foreignId, foreignId)))
+      .limit(1);
+    return result[0];
   }
 
-  public async findTopByValueAndForeignIdAndStatus(value: string, foreignId: number, status: string) {
+  public async findTopByValueAndForeignIdAndStatus(
+    value: string,
+    foreignId: number,
+    status: string,
+  ): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
       .from(TokenTable)
-      .where(and(eq(TokenTable.value, value), eq(TokenTable.foreignId, foreignId), eq(TokenTable.status, status)));
-    return result?.[0];
+      .where(and(eq(TokenTable.value, value), eq(TokenTable.foreignId, foreignId), eq(TokenTable.status, status)))
+      .limit(1);
+    return result[0];
   }
 
-  public async findTopByIdAndForeignId(id: number, foreignId: number) {
+  public async findTopByIdAndForeignId(id: number, foreignId: number): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
       .from(TokenTable)
-      .where(and(eq(TokenTable.id, id), eq(TokenTable.foreignId, foreignId)));
-    return result?.[0];
+      .where(and(eq(TokenTable.id, id), eq(TokenTable.foreignId, foreignId)))
+      .limit(1);
+    return result[0];
   }
 
-  public async findTopByValue(token: string) {
-    const result = await db.main.select(selectAll).from(TokenTable).where(eq(TokenTable.value, token));
-    return result?.[0];
+  public async findTopByValue(token: string): Promise<TokenDTO | undefined> {
+    const result = await db.main.select(selectAll).from(TokenTable).where(eq(TokenTable.value, token)).limit(1);
+    return result[0];
   }
 
-  public async findTopByValueAndStatus(token: string, status: string) {
+  public async findTopByValueAndStatus(token: string, status: string): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
       .from(TokenTable)
-      .where(and(eq(TokenTable.value, token), eq(TokenTable.status, status)));
-    return result?.[0];
+      .where(and(eq(TokenTable.value, token), eq(TokenTable.status, status)))
+      .limit(1);
+    return result[0];
   }
 
-  public async countByValue(token: string) {
+  public async countByValue(token: string): Promise<number> {
     const result = await db.main.select({ value: count() }).from(TokenTable).where(eq(TokenTable.value, token));
-    return result?.[0]?.value || 0;
+    return result[0]?.value || 0;
   }
 
-  public async existByValue(username: string) {
+  public async existByValue(username: string): Promise<boolean> {
     const result = await this.countByValue(username);
     return result > 0;
   }
 
-  public async save(data: TokenSave) {
+  public async save(data: TokenSave): Promise<TokenDTO | undefined> {
     const result = await db.main.insert(TokenTable).values(data).returning(selectAll);
-    return result[0]!;
+    return result[0];
   }
 
-  public async saveAll(data: TokenSave[]) {
-    return db.main.insert(TokenTable).values(data);
+  public async saveAll(data: TokenSave[]): Promise<void> {
+    await db.main.insert(TokenTable).values(data);
   }
 
-  public updateValueByTokenId = async (value: string, id: number) => {
-    await db.main.update(TokenTable).set({ value }).where(eq(TokenTable.id, id));
-  };
+  public async updateValueByTokenId(value: string, id: number): Promise<TokenDTO | undefined> {
+    const result = await db.main.update(TokenTable).set({ value }).where(eq(TokenTable.id, id)).returning(selectAll);
+    return result[0];
+  }
 
-  public updateStatusByTokenIdAndForeignId = async (status: string, tokenId: number, foreignId: number) => {
+  public async updateStatusByTokenIdAndForeignId(status: string, tokenId: number, foreignId: number): Promise<void> {
     await db.main
       .update(TokenTable)
       .set({ status })
       .where(and(eq(TokenTable.id, tokenId), eq(TokenTable.foreignId, foreignId)));
-  };
+  }
 
-  public updateStatusByForeignId = async (status: string, foreignId: number) => {
+  public async updateStatusByForeignId(status: string, foreignId: number): Promise<void> {
     await db.main.update(TokenTable).set({ status }).where(eq(TokenTable.foreignId, foreignId));
-  };
+  }
 }
 
 export const tokenRepository = new TokenRepository();

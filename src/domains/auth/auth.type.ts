@@ -1,7 +1,6 @@
 import { JWT_TYPE, TOKEN_TYPE } from "~/domains/auth/auth.constant";
 import { UserDTO } from "~/domains/user/user.type";
 import { JwtTokenClaims } from "~/lib/jwt/jwt.type";
-import { Nullish } from "~/types/common.type";
 
 export type LoginRequestDTO = {
   username: string;
@@ -25,9 +24,9 @@ export type ResetPasswordRequestDTO = {
 };
 
 export type AuthJwtTokenPayload = {
-  sid?: string | number | Nullish; // user id
-  for?: JwtTokenType | Nullish; // token purpose
-  pms?: (string | number)[] | Nullish; // permissions
+  sid?: string | number | null; // user id
+  for?: JwtTokenType | null; // token purpose
+  pms?: (string | number)[] | null; // permissions
 } & JwtTokenClaims;
 
 export type JwtTokenType = (typeof JWT_TYPE)[keyof typeof JWT_TYPE];

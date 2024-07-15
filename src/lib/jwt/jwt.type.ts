@@ -1,13 +1,11 @@
-import { Nullish } from "~/types/common.type";
-
 export type JwtTokenPayload = Record<string, unknown>;
 
 export type JwtTokenClaims = {
-  iss?: string | number | Nullish;
-  sub?: string | number | Nullish;
-  aud?: string | number | Nullish;
-  exp?: number | Nullish;
-  nbf?: number | Nullish;
-  iat?: number | Nullish;
-  jti?: string | number | Nullish;
+  iss?: string | number | null;
+  sub?: string | number | null;
+  aud?: string | number | null;
+  exp?: number | null;
+  nbf?: number | null;
+  iat?: number | null;
+  jti?: string | number | null;
 };

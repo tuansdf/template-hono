@@ -3,36 +3,36 @@ import { CreatePermissionBodyDTO, UpdatePermissionBodyDTO } from "~/domains/perm
 import { CustomException } from "~/exceptions/custom-exception";
 
 class PermissionService {
-  public findAll = async () => {
-    return permissionRepository.findAll();
-  };
+  public async findAll() {
+    return await permissionRepository.findAll();
+  }
 
-  public findOneById = async (id: number) => {
-    const result = permissionRepository.findTopById(id);
+  public async findOneById(id: number) {
+    const result = await permissionRepository.findTopById(id);
     if (!result) {
       throw new CustomException("dynamic.error.not_found:::field.permission", 404);
     }
     return result;
-  };
+  }
 
-  public create = async (requestDTO: CreatePermissionBodyDTO) => {
-    if (!requestDTO.code.startsWith("ROLE_PERM_")) {
-      requestDTO.code = "ROLE_PERM_" + requestDTO.code;
+  public async create(requestDTO: CreatePermissionBodyDTO) {
+    if (!requestDTO.code.startsWith("PERM_")) {
+      requestDTO.code = "PERM_" + requestDTO.code;
     }
     const isCodeDuplicated = await permissionRepository.existByCode(requestDTO.code);
     if (isCodeDuplicated) {
       throw new CustomException("dynamic.error.duplicated:::field.code", 409);
     }
-    return permissionRepository.save(requestDTO);
-  };
+    return await permissionRepository.save(requestDTO);
+  }
 
-  public update = async (requestDTO: UpdatePermissionBodyDTO) => {
+  public async update(requestDTO: UpdatePermissionBodyDTO) {
     const isIdValid = await permissionRepository.existById(requestDTO.id);
     if (!isIdValid) {
       throw new CustomException("dynamic.error.not_found:::field.permission", 404);
     }
-    return permissionRepository.update(requestDTO);
-  };
+    return await permissionRepository.update(requestDTO);
+  }
 }
 
 export const permissionService = new PermissionService();
