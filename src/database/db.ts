@@ -1,7 +1,7 @@
+import { sql } from "drizzle-orm";
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { ENV_DB_DATABASE_NAME, ENV_DB_HOST, ENV_DB_PASSWORD, ENV_DB_PORT, ENV_DB_USER } from "~/constants/env.constant";
-import { UserTable } from "~/entities/user.entity";
 
 class Database {
   private _main!: NodePgDatabase;
@@ -42,7 +42,7 @@ class Database {
   }
 
   public async healthCheck() {
-    await this._main.select({ id: UserTable.id }).from(UserTable).limit(1);
+    await this._main.execute(sql`select 1`);
   }
 
   public get main(): NodePgDatabase {
