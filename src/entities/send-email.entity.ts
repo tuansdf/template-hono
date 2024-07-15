@@ -10,5 +10,6 @@ export const SendEmailTable = pgTable("send_email", {
   content: text("content"),
   type: text("type"),
   retryCount: integer("retry_count"),
+  status: text("status"),
   ...commonColumns,
 });

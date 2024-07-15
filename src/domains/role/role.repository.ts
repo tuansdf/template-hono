@@ -4,28 +4,33 @@ import { RoleSave, RoleUpdate } from "~/domains/role/role.type";
 import { MapUserRoleTable } from "~/entities/map-user-role.entity";
 import { RoleTable } from "~/entities/role.entity";
 
-const commonSelect = {
+const selectAll = {
   id: RoleTable.id,
   code: RoleTable.code,
   name: RoleTable.name,
   description: RoleTable.description,
-};
+  status: RoleTable.status,
+  createdBy: RoleTable.createdBy,
+  updatedBy: RoleTable.updatedBy,
+  createdAt: RoleTable.createdAt,
+  updatedAt: RoleTable.updatedAt,
+} as const;
 
 class RoleRepository {
   public async findAll() {
-    return db.main.select(commonSelect).from(RoleTable);
+    return db.main.select(selectAll).from(RoleTable);
   }
 
   public async findAllByUserId(userId: number) {
     return db.main
-      .select(commonSelect)
+      .select(selectAll)
       .from(RoleTable)
       .innerJoin(MapUserRoleTable, eq(MapUserRoleTable.roleId, RoleTable.id))
       .where(eq(MapUserRoleTable.userId, userId));
   }
 
   public async findTopById(id: number) {
-    const result = await db.main.select(commonSelect).from(RoleTable).where(eq(RoleTable.id, id)).limit(1);
+    const result = await db.main.select(selectAll).from(RoleTable).where(eq(RoleTable.id, id)).limit(1);
     return result?.[0];
   }
 
@@ -50,7 +55,7 @@ class RoleRepository {
   }
 
   public async save(role: RoleSave) {
-    const saved = await db.main.insert(RoleTable).values(role).returning(commonSelect);
+    const saved = await db.main.insert(RoleTable).values(role).returning(selectAll);
     return saved[0]!;
   }
 

@@ -5,7 +5,7 @@ import { MapRolePermissionTable } from "~/entities/map-role-permission.entity";
 import { MapUserRoleTable } from "~/entities/map-user-role.entity";
 import { PermissionTable } from "~/entities/permission.entity";
 
-const commonSelect = {
+const selectAll = {
   id: PermissionTable.id,
   code: PermissionTable.code,
   name: PermissionTable.code,
@@ -15,21 +15,21 @@ const commonSelect = {
   updatedBy: PermissionTable.updatedBy,
   createdAt: PermissionTable.createdAt,
   updatedAt: PermissionTable.updatedAt,
-};
+} as const;
 
 class PermissionRepository {
   public async findAll() {
-    return db.main.select(commonSelect).from(PermissionTable);
+    return db.main.select(selectAll).from(PermissionTable);
   }
 
   public async findTopById(id: number) {
-    const result = await db.main.select(commonSelect).from(PermissionTable).where(eq(PermissionTable.id, id)).limit(1);
+    const result = await db.main.select(selectAll).from(PermissionTable).where(eq(PermissionTable.id, id)).limit(1);
     return result?.[0];
   }
 
   public async findAllByRoleId(roleId: number) {
     return db.main
-      .select(commonSelect)
+      .select(selectAll)
       .from(PermissionTable)
       .innerJoin(MapRolePermissionTable, eq(MapRolePermissionTable.permissionId, PermissionTable.id))
       .where(eq(MapRolePermissionTable.roleId, roleId));
@@ -37,7 +37,7 @@ class PermissionRepository {
 
   public async findAllByUserId(userId: number) {
     return db.main
-      .select(commonSelect)
+      .select(selectAll)
       .from(PermissionTable)
       .innerJoin(MapRolePermissionTable, eq(MapRolePermissionTable.permissionId, PermissionTable.id))
       .innerJoin(MapUserRoleTable, eq(MapUserRoleTable.roleId, MapRolePermissionTable.roleId))

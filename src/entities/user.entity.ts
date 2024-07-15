@@ -7,5 +7,6 @@ export const UserTable = pgTable("_user", {
   username: text("username").notNull().unique(),
   password: text("password"),
   name: text("name"),
+  status: text("status"),
   ...commonColumns,
 });

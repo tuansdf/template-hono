@@ -12,5 +12,6 @@ export const SendNotificationTable = pgTable("send_notification", {
   topic: text("topic"),
   navigateTo: text("navigate_to"),
   retryCount: integer("retry_count"),
+  status: text("status"),
   ...commonColumns,
 });

@@ -1,4 +1,5 @@
 import { bigserial, pgTable, text } from "drizzle-orm/pg-core";
+import { STATUS } from "~/constants/status.constant";
 import { commonColumns } from "~/entities/common.entity";
 
 export const PermissionTable = pgTable("_permission", {
@@ -6,5 +7,6 @@ export const PermissionTable = pgTable("_permission", {
   code: text("code").unique().notNull(),
   name: text("name"),
   description: text("description"),
+  status: text("status").default(STATUS.ACTIVE),
   ...commonColumns,
 });

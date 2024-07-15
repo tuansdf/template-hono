@@ -1,4 +1,5 @@
 import { bigint, bigserial, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { STATUS } from "~/constants/status.constant";
 import { commonColumns } from "~/entities/common.entity";
 
 export const TokenTable = pgTable("token", {
@@ -10,5 +11,6 @@ export const TokenTable = pgTable("token", {
     withTimezone: true,
     mode: "string",
   }),
+  status: text("status").default(STATUS.ACTIVE),
   ...commonColumns,
 });

@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "bun run src/server.ts",
-    "build": "rimraf dist && bun build src/server.ts --outdir=dist --target=bun --minify-identifiers --sourcemap=linked && cpy \"resources/**/*\" dist/resources --parents; cpy .env dist",
+    "dev": "bun run --hot src/server.ts",
+    "build": "rimraf dist && bun build src/server.ts --outdir=dist --target=bun --sourcemap=linked && cpy resources dist && cpy .env dist",
     "start": "bun run dist/server.js",
     "gen-migration": "drizzle-kit generate",
     "do-migration": "drizzle-kit up"

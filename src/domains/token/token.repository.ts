@@ -3,19 +3,32 @@ import { db } from "~/database/db";
 import { TokenSave } from "~/domains/token/token.type";
 import { TokenTable } from "~/entities/token.entity";
 
+const selectAll = {
+  id: TokenTable.id,
+  foreignId: TokenTable.foreignId,
+  value: TokenTable.value,
+  type: TokenTable.type,
+  expiresAt: TokenTable.expiresAt,
+  status: TokenTable.status,
+  createdBy: TokenTable.createdBy,
+  updatedBy: TokenTable.updatedBy,
+  createdAt: TokenTable.createdAt,
+  updatedAt: TokenTable.updatedAt,
+} as const;
+
 class TokenRepository {
   public async findAll() {
-    return db.main.select().from(TokenTable);
+    return db.main.select(selectAll).from(TokenTable);
   }
 
   public async findTopById(id: number) {
-    const result = await db.main.select().from(TokenTable).where(eq(TokenTable.id, id));
+    const result = await db.main.select(selectAll).from(TokenTable).where(eq(TokenTable.id, id));
     return result?.[0];
   }
 
   public async findTopByValueAndForeignId(value: string, foreignId: number) {
     const result = await db.main
-      .select()
+      .select(selectAll)
       .from(TokenTable)
       .where(and(eq(TokenTable.value, value), eq(TokenTable.foreignId, foreignId)));
     return result?.[0];
@@ -23,7 +36,7 @@ class TokenRepository {
 
   public async findTopByValueAndForeignIdAndStatus(value: string, foreignId: number, status: string) {
     const result = await db.main
-      .select()
+      .select(selectAll)
       .from(TokenTable)
       .where(and(eq(TokenTable.value, value), eq(TokenTable.foreignId, foreignId), eq(TokenTable.status, status)));
     return result?.[0];
@@ -31,20 +44,20 @@ class TokenRepository {
 
   public async findTopByIdAndForeignId(id: number, foreignId: number) {
     const result = await db.main
-      .select()
+      .select(selectAll)
       .from(TokenTable)
       .where(and(eq(TokenTable.id, id), eq(TokenTable.foreignId, foreignId)));
     return result?.[0];
   }
 
   public async findTopByValue(token: string) {
-    const result = await db.main.select().from(TokenTable).where(eq(TokenTable.value, token));
+    const result = await db.main.select(selectAll).from(TokenTable).where(eq(TokenTable.value, token));
     return result?.[0];
   }
 
   public async findTopByValueAndStatus(token: string, status: string) {
     const result = await db.main
-      .select()
+      .select(selectAll)
       .from(TokenTable)
       .where(and(eq(TokenTable.value, token), eq(TokenTable.status, status)));
     return result?.[0];
@@ -61,7 +74,7 @@ class TokenRepository {
   }
 
   public async save(data: TokenSave) {
-    const result = await db.main.insert(TokenTable).values(data).returning();
+    const result = await db.main.insert(TokenTable).values(data).returning(selectAll);
     return result[0]!;
   }
 
