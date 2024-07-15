@@ -7,13 +7,13 @@ export const loggerM = (): MiddlewareHandler => async (c, next) => {
     try {
       switch (c.req.header("content-type")) {
         case "application/json":
-          extra += " - application/json: " + JSON.stringify(await c.req.json());
+          extra += " application/json:" + JSON.stringify(await c.req.json());
           break;
         case "multipart/form-data":
-          extra += " - multipart/form-data: " + JSON.stringify(await c.req.parseBody());
+          extra += " multipart/form-data:" + JSON.stringify(await c.req.parseBody());
           break;
         case "application/x-www-form-urlencoded":
-          extra += " - application/x-www-form-urlencoded: " + JSON.stringify(await c.req.formData());
+          extra += " application/x-www-form-urlencoded:" + JSON.stringify(await c.req.formData());
           break;
       }
     } catch (ignore) {}
