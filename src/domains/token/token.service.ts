@@ -1,7 +1,7 @@
 import { STATUS } from "~/constants/status.constant";
 import { tokenRepository } from "~/domains/token/token.repository";
 import { TokenSave, TokenValueWithId } from "~/domains/token/token.type";
-import { Base64Utils } from "~/lib/base64/base64.util";
+import { base64Utils } from "~/lib/base64/base64.util";
 import { logger } from "~/lib/logger/logger";
 
 class TokenService {
@@ -15,13 +15,13 @@ class TokenService {
       v: token.value,
       i: token.id,
     };
-    token.value = Base64Utils.encode(JSON.stringify(valueObj));
+    token.value = base64Utils.encode(JSON.stringify(valueObj));
     return token;
   };
 
   public findByValueId = async (tokenValue: string) => {
     try {
-      const decoded = Base64Utils.decode(tokenValue);
+      const decoded = base64Utils.decode(tokenValue);
       const valueWithId = JSON.parse(decoded) as TokenValueWithId;
       const token = await tokenRepository.findTopById(Number(valueWithId.i));
       if (!token || token.value !== valueWithId.v) {

@@ -3,12 +3,12 @@ import { logger } from "~/lib/logger/logger";
 
 const SALT_SIZE = 10;
 
-export class HashUtils {
-  static async hash(toBeHashed: string): Promise<string> {
+class HashUtils {
+  public async hash(toBeHashed: string): Promise<string> {
     return await bcryptjs.hash(toBeHashed, SALT_SIZE);
   }
 
-  static async verify(hashed: string, toBeVerified: string): Promise<boolean> {
+  public async verify(hashed: string, toBeVerified: string): Promise<boolean> {
     try {
       return await bcryptjs.compare(toBeVerified, hashed);
     } catch (e) {
@@ -17,3 +17,5 @@ export class HashUtils {
     }
   }
 }
+
+export const hashUtils = new HashUtils();

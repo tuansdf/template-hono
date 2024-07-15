@@ -29,7 +29,7 @@ import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
 import { TFn } from "~/i18n/i18n.type";
 import { dated } from "~/lib/date/date";
-import { HashUtils } from "~/lib/hash/hash.util";
+import { hashUtils } from "~/lib/hash/hash.util";
 import { logger } from "~/lib/logger/logger";
 
 class AuthService {
@@ -38,7 +38,7 @@ class AuthService {
     if (!user) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
-    const isPasswordMatch = await HashUtils.verify(String(user.password), requestDTO.password);
+    const isPasswordMatch = await hashUtils.verify(String(user.password), requestDTO.password);
     if (!isPasswordMatch) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
@@ -64,7 +64,7 @@ class AuthService {
       logger.error("Register with registered email");
       return;
     }
-    requestDTO.password = await HashUtils.hash(requestDTO.password);
+    requestDTO.password = await hashUtils.hash(requestDTO.password);
     const saved = await userRepository.save({ ...requestDTO, status: STATUS.PENDING });
     const token = await this.createActivateAccountToken(saved);
     await this.sendActivateAccountEmail(saved, token.value, t);
@@ -120,7 +120,7 @@ class AuthService {
     if (!user) {
       throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
-    const hashedPassword = await HashUtils.hash(requestDTO.password);
+    const hashedPassword = await hashUtils.hash(requestDTO.password);
     await db.main.update(TokenTable).set({ status: STATUS.INACTIVE }).where(eq(TokenTable.id, token.id));
     await db.main.update(UserTable).set({ password: hashedPassword }).where(eq(UserTable.id, user.id));
   };
