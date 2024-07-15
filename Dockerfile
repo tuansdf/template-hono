@@ -5,8 +5,6 @@ RUN apk add --no-cache python3
 COPY package.json bun.lockb ./
 RUN bun install --frozen-lockfile
 COPY . .
-RUN bun run db:generate
-RUN bun run db:migrate
 RUN bun run build
 
 FROM oven/bun:1-alpine AS deploy
