@@ -3,7 +3,7 @@ import { SendEmailSave } from "~/domains/send-email/send-email.type";
 
 class SendEmailService {
   public send = async (item: SendEmailSave) => {
-    // TODO: actual send email
+    // TODO: actually send email
     await sendEmailRepository.save(item);
   };
 }
