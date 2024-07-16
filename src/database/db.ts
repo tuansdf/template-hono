@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import { drizzle, NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { ENV_DB_DATABASE_NAME, ENV_DB_HOST, ENV_DB_PASSWORD, ENV_DB_PORT, ENV_DB_USER } from "~/constants/env.constant";
+import { logger } from "~/lib/logger/logger";
 
 class Database {
   private _main!: NodePgDatabase;
@@ -18,7 +19,13 @@ class Database {
       database: ENV_DB_DATABASE_NAME,
     });
     this._conn = pool;
-    this._main = drizzle(pool, { logger: true });
+    this._main = drizzle(pool, {
+      logger: {
+        logQuery(query: string, params: unknown[]) {
+          logger.info(query + " -- params: " + params.join(", "));
+        },
+      },
+    });
     if (doHealthCheck) await this.healthCheck();
   }
 
