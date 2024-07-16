@@ -45,6 +45,10 @@ class UserService {
     }
     return query.execute();
   }
+
+  public async checkExist(username: string) {
+    return userRepository.existByUsername(username);
+  }
 }
 
 export const userService = new UserService();

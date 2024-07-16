@@ -1,4 +1,4 @@
-import { count, eq } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import { db } from "~/database/db";
 import { PermissionDTO, PermissionSave, PermissionSaveDTO } from "~/domains/permission/permission.type";
 import { MapRolePermissionTable } from "~/entities/map-role-permission.entity";
@@ -44,24 +44,32 @@ class PermissionRepository {
       .where(eq(MapUserRoleTable.userId, userId));
   }
 
-  public async countByCode(code: string): Promise<number> {
-    const result = await db.main.select({ value: count() }).from(PermissionTable).where(eq(PermissionTable.code, code));
-    return result[0]?.value || 0;
-  }
-
   public async countById(id: number): Promise<number> {
     const result = await db.main.select({ value: count() }).from(PermissionTable).where(eq(PermissionTable.id, id));
     return result[0]?.value || 0;
   }
 
   public async existById(id: number): Promise<boolean> {
-    const result = await this.countById(id);
-    return result > 0;
+    const result = await db.main
+      .select({ value: sql`1` })
+      .from(PermissionTable)
+      .where(eq(PermissionTable.id, id))
+      .limit(1);
+    return !!result[0]?.value;
+  }
+
+  public async countByCode(code: string): Promise<number> {
+    const result = await db.main.select({ value: count() }).from(PermissionTable).where(eq(PermissionTable.code, code));
+    return result[0]?.value || 0;
   }
 
   public async existByCode(code: string): Promise<boolean> {
-    const result = await this.countByCode(code);
-    return result > 0;
+    const result = await db.main
+      .select({ value: sql`1` })
+      .from(PermissionTable)
+      .where(eq(PermissionTable.code, code))
+      .limit(1);
+    return !!result[0]?.value;
   }
 
   public async save(permission: PermissionSave): Promise<PermissionDTO | undefined> {
@@ -74,7 +82,7 @@ class PermissionRepository {
       .update(PermissionTable)
       .set({ name: request.name, description: request.description })
       .where(eq(PermissionTable.id, Number(request.id)))
-      .returning();
+      .returning(selectAll);
     return result[0];
   }
 }

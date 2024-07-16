@@ -39,4 +39,10 @@ export const userRouter = routerUtils.init((app) => {
     const result = await userService.search(requestDTO);
     return routerUtils.response(c, 200, { data: result });
   });
+
+  app.get("/exist", authenticate(), async (c) => {
+    const username = c.req.query("username") || "";
+    const result = await userService.checkExist(username);
+    return routerUtils.response(c, 200, { data: { value: result } });
+  });
 });

@@ -1,4 +1,4 @@
-import { and, count, eq } from "drizzle-orm";
+import { and, count, eq, sql } from "drizzle-orm";
 import { db } from "~/database/db";
 import { TokenDTO, TokenSave } from "~/domains/token/token.type";
 import { TokenTable } from "~/entities/token.entity";
@@ -76,9 +76,13 @@ class TokenRepository {
     return result[0]?.value || 0;
   }
 
-  public async existByValue(username: string): Promise<boolean> {
-    const result = await this.countByValue(username);
-    return result > 0;
+  public async existByValue(token: string): Promise<boolean> {
+    const result = await db.main
+      .select({ value: sql`1` })
+      .from(TokenTable)
+      .where(eq(TokenTable.value, token))
+      .limit(1);
+    return !!result[0]?.value;
   }
 
   public async save(data: TokenSave): Promise<TokenDTO | undefined> {

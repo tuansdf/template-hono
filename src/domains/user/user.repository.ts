@@ -1,4 +1,4 @@
-import { count, eq, or } from "drizzle-orm";
+import { count, eq, or, sql } from "drizzle-orm";
 import { db } from "~/database/db";
 import { UserDTO, UserSave } from "~/domains/user/user.type";
 import { UserTable } from "~/entities/user.entity";
@@ -85,13 +85,21 @@ class UserRepository {
   }
 
   public async existByUsernameOrEmail(username: string): Promise<boolean> {
-    const result = await this.countByUsernameOrEmail(username);
-    return result > 0;
+    const result = await db.main
+      .select({ value: sql`1` })
+      .from(UserTable)
+      .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
+      .limit(1);
+    return !!result[0]?.value;
   }
 
   public async existByUsername(username: string): Promise<boolean> {
-    const result = await this.countByUsername(username);
-    return result > 0;
+    const result = await db.main
+      .select({ value: sql`1` })
+      .from(UserTable)
+      .where(eq(UserTable.username, username))
+      .limit(1);
+    return !!result[0]?.value;
   }
 
   public async countByEmail(email: string): Promise<number> {
@@ -100,8 +108,12 @@ class UserRepository {
   }
 
   public async existByEmail(email: string): Promise<boolean> {
-    const result = await this.countByEmail(email);
-    return result > 0;
+    const result = await db.main
+      .select({ value: sql`1` })
+      .from(UserTable)
+      .where(eq(UserTable.email, email))
+      .limit(1);
+    return !!result[0]?.value;
   }
 
   public async save(user: UserSave): Promise<UserDTO | undefined> {

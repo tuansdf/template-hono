@@ -1,4 +1,4 @@
-import { count, eq } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
 import { db } from "~/database/db";
 import { RoleDTO, RoleSave, RoleSaveDTO } from "~/domains/role/role.type";
 import { MapUserRoleTable } from "~/entities/map-user-role.entity";
@@ -34,24 +34,32 @@ class RoleRepository {
     return result[0];
   }
 
-  public async countByCode(code: string): Promise<number> {
-    const result = await db.main.select({ value: count() }).from(RoleTable).where(eq(RoleTable.code, code));
-    return result[0]?.value || 0;
-  }
-
   public async countById(id: number): Promise<number> {
     const result = await db.main.select({ value: count() }).from(RoleTable).where(eq(RoleTable.id, id));
     return result[0]?.value || 0;
   }
 
   public async existById(id: number): Promise<boolean> {
-    const result = await this.countById(id);
-    return result > 0;
+    const result = await db.main
+      .select({ value: sql`1` })
+      .from(RoleTable)
+      .where(eq(RoleTable.id, id))
+      .limit(1);
+    return !!result[0]?.value;
+  }
+
+  public async countByCode(code: string): Promise<number> {
+    const result = await db.main.select({ value: count() }).from(RoleTable).where(eq(RoleTable.code, code));
+    return result[0]?.value || 0;
   }
 
   public async existByCode(code: string): Promise<boolean> {
-    const result = await this.countByCode(code);
-    return result > 0;
+    const result = await db.main
+      .select({ value: sql`1` })
+      .from(RoleTable)
+      .where(eq(RoleTable.code, code))
+      .limit(1);
+    return !!result[0]?.value;
   }
 
   public async save(role: RoleSave): Promise<RoleDTO | undefined> {

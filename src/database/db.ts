@@ -18,7 +18,7 @@ class Database {
       database: ENV_DB_DATABASE_NAME,
     });
     this._conn = pool;
-    this._main = drizzle(pool);
+    this._main = drizzle(pool, { logger: true });
     if (doHealthCheck) await this.healthCheck();
   }
 
