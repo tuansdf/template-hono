@@ -1,48 +1,25 @@
 import { MiddlewareHandler } from "hono";
-import { JWT_TYPE, TOKEN_TYPE } from "~/domains/auth/auth.constant";
-import { JwtTokenType, TokenType } from "~/domains/auth/auth.type";
-import { authUtils } from "~/domains/auth/auth.util";
+import { JwtTokenType } from "~/domains/auth/auth.type";
 import { permissionUtils } from "~/domains/permission/permission.util";
-import { TokenValueWithId } from "~/domains/token/token.type";
+import { jwtService } from "~/domains/token/jwt.service";
+import { JWT_TYPE } from "~/domains/token/token.constant";
 import { CustomException } from "~/exceptions/custom-exception";
-import { base64 } from "~/lib/base64/base64.util";
 
-export const authenticate = (
-  type: JwtTokenType = JWT_TYPE.ACCESS,
-  tokenType: TokenType = TOKEN_TYPE.JWT,
-): MiddlewareHandler => {
+export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHandler => {
   return async (c, next) => {
     const authHeader = c.req.header("Authorization");
-    if (!authHeader) {
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
 
-    if (!authHeader.startsWith("Bearer ")) {
-      throw new CustomException("auth.error.unauthenticated", 401);
-    }
-
-    let bearerToken = authHeader.split(" ")[1];
-    const originalBearerToken = bearerToken;
-    if (!bearerToken) {
-      throw new CustomException("auth.error.unauthenticated", 401);
-    }
-    try {
-      if (tokenType === TOKEN_TYPE.JWT_WITH_ID) {
-        const decoded = base64.decode(bearerToken);
-        const obj: TokenValueWithId = JSON.parse(decoded);
-        bearerToken = obj.v;
-      }
-    } catch (e) {
-      throw new CustomException("auth.error.unauthenticated", 401);
-    }
+    const bearerToken = authHeader.split(" ")[1]?.trim();
     if (!bearerToken) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
 
-    const payload = await authUtils.verifyToken(bearerToken, type);
+    const payload = await jwtService.verifyToken(bearerToken, type);
     c.set("authPayload", payload);
     c.set("authToken", bearerToken);
-    c.set("originalAuthToken", originalBearerToken);
 
     await next();
   };

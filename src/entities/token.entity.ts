@@ -9,7 +9,7 @@ export const TokenTable = pgTable("token", {
   type: text("type"),
   expiresAt: timestamp("expires_at", {
     withTimezone: true,
-    mode: "string",
+    mode: "date",
   }),
   status: text("status").default(STATUS.ACTIVE),
   ...commonColumns,

@@ -6,11 +6,11 @@ export const commonColumns = {
   updatedBy: text("updated_by"),
   createdAt: timestamp("created_at", {
     withTimezone: true,
-    mode: "string",
+    mode: "date",
   }).defaultNow(),
   updatedAt: timestamp("updated_at", {
     withTimezone: true,
-    mode: "string",
+    mode: "date",
   })
     .defaultNow()
     .$onUpdateFn(() => sql`now()`),

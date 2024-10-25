@@ -1,4 +1,3 @@
-import { JWT_TYPE, TOKEN_TYPE } from "~/domains/auth/auth.constant";
 import { authenticate } from "~/domains/auth/auth.middleware";
 import {
   activateAccountBodySchema,
@@ -8,6 +7,7 @@ import {
   resetPasswordRequestSchema,
 } from "~/domains/auth/auth.schema";
 import { authService } from "~/domains/auth/auth.service";
+import { JWT_TYPE } from "~/domains/token/token.constant";
 import { tokenService } from "~/domains/token/token.service";
 import { validator } from "~/middlewares/validator.middleware";
 import { routerUtils } from "~/utils/router.util";
@@ -26,10 +26,9 @@ export const authRouter = routerUtils.init((app) => {
     return routerUtils.response(c, 200, { message: t("auth.message.activate_account_email_sent") });
   });
 
-  app.post("/token/refresh", authenticate(JWT_TYPE.REFRESH, TOKEN_TYPE.JWT_WITH_ID), async (c) => {
+  app.post("/token/refresh", authenticate(JWT_TYPE.REFRESH), async (c) => {
     const authPayload = c.get("authPayload");
-    const authToken = c.get("originalAuthToken");
-    const result = await authService.refreshToken(Number(authPayload?.sid), String(authToken));
+    const result = await authService.refreshToken(Number(authPayload?.sid), Number(authPayload?.tid));
     return routerUtils.response(c, 200, { data: result });
   });
 

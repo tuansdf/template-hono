@@ -13,7 +13,8 @@ class Jwt {
     return await new SignJWT(payload).setProtectedHeader(signHeader).sign(secret);
   }
   public async verify(toBeVerified: string): Promise<JWTPayload> {
-    return jwtVerify(toBeVerified, secret, verifyOptions);
+    const verified = await jwtVerify(toBeVerified, secret, verifyOptions);
+    return verified.payload;
   }
 }
 

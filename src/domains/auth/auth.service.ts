@@ -1,29 +1,25 @@
 import { eq } from "drizzle-orm";
-import { ENV } from "~/constants/env.constant";
 import { STATUS } from "~/constants/status.constant";
-import { TYPE } from "~/constants/type.constant";
 import { db } from "~/database/db";
-import { JWT_TYPE } from "~/domains/auth/auth.constant";
+import { JWT_TYPE } from "~/domains/token/token.constant";
 import {
   ForgotPasswordRequestDTO,
   LoginRequestDTO,
   RegisterRequestDTO,
   ResetPasswordRequestDTO,
 } from "~/domains/auth/auth.type";
-import { authUtils } from "~/domains/auth/auth.util";
+import { jwtService } from "~/domains/token/jwt.service";
 import { permissionRepository } from "~/domains/permission/permission.repository";
+import { permissionUtils } from "~/domains/permission/permission.util";
 import { sendEmailService } from "~/domains/send-email/send-email.service";
-import { SendEmailSave } from "~/domains/send-email/send-email.type";
 import { tokenService } from "~/domains/token/token.service";
-import { TokenSave } from "~/domains/token/token.type";
 import { userRepository } from "~/domains/user/user.repository";
 import { UserDTO } from "~/domains/user/user.type";
 import { TokenTable } from "~/entities/token.entity";
 import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
 import { TFn } from "~/i18n/i18n.type";
-import { dated } from "~/lib/date/date";
-import { hasher } from "~/lib/hash/hash.util";
+import { hasher } from "~/lib/hash/hasher";
 import { logger } from "~/lib/logger/logger";
 
 class AuthService {
@@ -40,11 +36,15 @@ class AuthService {
       throw new CustomException("user.error.not_activated", 401);
     }
     const permissions = await permissionRepository.findAllByUserId(Number(user.id));
-    const { password, ...result } = user;
-    const tokenPayload: UserDTO = { ...result, permissions };
-    const accessToken = await authUtils.createToken({ user: tokenPayload, type: JWT_TYPE.ACCESS });
-    const refreshToken = await this.createRefreshToken(user);
-    return { ...result, accessToken, refreshToken: refreshToken.value };
+    delete user.password;
+    const accessToken = await jwtService.createToken(
+      await jwtService.createAccessTokenPayload(
+        Number(user.id),
+        permissionUtils.codesToIndexes(permissions?.map((x) => x.code!) || []),
+      ),
+    );
+    const refreshToken = await tokenService.createRefreshToken({ userId: user.id! });
+    return { ...user, accessToken, refreshToken: refreshToken.value };
   }
 
   public async register(requestDTO: RegisterRequestDTO, t: TFn) {
@@ -55,7 +55,7 @@ class AuthService {
     const existUserWithEmail = await userRepository.existByEmail(requestDTO.email);
     if (existUserWithEmail) {
       // https://cheatsheetseries.owasp.org/cheatsheets/Authentication_Cheat_Sheet.html#account-creation
-      logger.error("Register with registered email");
+      logger.error("Register with existing email");
       return;
     }
     requestDTO.password = await hasher.hash(requestDTO.password);
@@ -63,16 +63,18 @@ class AuthService {
     if (!saved) {
       throw new CustomException();
     }
-    const token = await this.createActivateAccountToken(saved);
-    await this.sendActivateAccountEmail(saved, token.value || "", t);
+    const token = await tokenService.createActivateAccountToken({ userUsername: saved.username!, userId: saved.id! });
+    await sendEmailService.sendActivateAccountEmail({
+      userEmail: saved.email!,
+      userUsername: saved.username!,
+      token: token.value!,
+      t,
+    });
   }
 
-  public async refreshToken(userId: number, tokenValue: string) {
-    const token = await tokenService.findByValueId(tokenValue);
+  public async refreshToken(userId: number, tokenId: number) {
+    const token = await tokenService.verifyById(tokenId);
     if (!token) {
-      throw new CustomException("auth.error.unauthenticated", 401);
-    }
-    if (token.status !== STATUS.ACTIVE || token.foreignId !== userId) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
     const user = await userRepository.findTopById(userId);
@@ -83,9 +85,10 @@ class AuthService {
       throw new CustomException("user.error.not_activated", 401);
     }
     const permissions = await permissionRepository.findAllByUserId(Number(user.id));
-    const { password, ...result } = user;
-    const tokenPayload: UserDTO = { ...result, permissions };
-    const accessToken = await authUtils.createToken({ user: tokenPayload, type: JWT_TYPE.ACCESS });
+    const accessToken = await jwtService.createAccessTokenPayload(
+      Number(user.id),
+      permissionUtils.codesToIndexes(permissions?.map((x) => x.code!) || []),
+    );
     return {
       accessToken,
     };
@@ -98,8 +101,13 @@ class AuthService {
       logger.error("Request password recovery with not registered email");
       return;
     }
-    const token = await this.createResetPasswordToken(user);
-    await this.sendResetPasswordEmail(user, token.value || "", t);
+    const token = await tokenService.createResetPasswordToken({ userId: user.id!, userUsername: user.username! });
+    sendEmailService.sendResetPasswordEmail({
+      userEmail: user.email!,
+      userUsername: user.username!,
+      token: token.value!,
+      t,
+    });
   }
 
   public async resetPassword(requestDTO: ResetPasswordRequestDTO) {
@@ -109,8 +117,8 @@ class AuthService {
       throw new CustomException("auth.error.token_used_or_invalid", 401);
     }
     try {
-      await authUtils.verifyToken(token.value || "", JWT_TYPE.RESET_PASSWORD);
-    } catch (e) {
+      await jwtService.verifyToken(token.value || "", JWT_TYPE.RESET_PASSWORD);
+    } catch {
       throw new CustomException("auth.error.token_used_or_invalid");
     }
     const user = await userRepository.findTopById(token.foreignId);
@@ -134,8 +142,8 @@ class AuthService {
       throw new CustomException("auth.error.token_used_or_invalid", 401);
     }
     try {
-      await authUtils.verifyToken(token.value || "", JWT_TYPE.ACTIVATE_ACCOUNT);
-    } catch (e) {
+      await jwtService.verifyToken(token.value || "", JWT_TYPE.ACTIVATE_ACCOUNT);
+    } catch {
       throw new CustomException("auth.error.token_used_or_invalid");
     }
     const user = await userRepository.findTopById(token.foreignId);
@@ -153,73 +161,6 @@ class AuthService {
       .update(UserTable)
       .set({ status: STATUS.ACTIVE })
       .where(eq(UserTable.id, Number(user.id)));
-  }
-
-  private async sendResetPasswordEmail(user: UserDTO, token: string, t: TFn) {
-    const item: SendEmailSave = {
-      fromEmail: "PLACEHOLDER",
-      toEmail: user.email,
-      type: TYPE.RESET_PASSWORD,
-      subject: t("auth.message.reset_password_email_subject"),
-      content: t("auth.message.reset_password_email_content", {
-        1: user.username,
-        2: ENV.EMAIL_RESET_PASSWORD_BASE_URL + token,
-      }),
-    };
-    await sendEmailService.send(item);
-  }
-
-  private async sendActivateAccountEmail(user: UserDTO, token: string, t: TFn) {
-    const item: SendEmailSave = {
-      fromEmail: "PLACEHOLDER",
-      toEmail: user.email,
-      type: TYPE.ACTIVATE_ACCOUNT,
-      subject: t("auth.message.activate_account_email_subject"),
-      content: t("auth.message.activate_account_email_content", {
-        1: user.username,
-        2: ENV.EMAIL_ACTIVATE_ACCOUNT_BASE_URL + token,
-      }),
-    };
-    await sendEmailService.send(item);
-  }
-
-  private async createActivateAccountToken(user: UserDTO) {
-    const tokenValue = await authUtils.createToken({ type: JWT_TYPE.ACTIVATE_ACCOUNT, username: user.username || "" });
-    const expiresAt = dated().add(ENV.TOKEN_ACTIVATE_ACCOUNT_LIFETIME, "minute").toISOString();
-    const item: TokenSave = {
-      foreignId: user.id,
-      value: tokenValue,
-      type: TYPE.ACTIVATE_ACCOUNT,
-      expiresAt,
-      status: STATUS.ACTIVE,
-    };
-    return tokenService.saveValueWithId(item);
-  }
-
-  private async createResetPasswordToken(user: UserDTO) {
-    const tokenValue = await authUtils.createToken({ type: JWT_TYPE.RESET_PASSWORD, username: user.username || "" });
-    const expiresAt = dated().add(ENV.TOKEN_RESET_PASSWORD_LIFETIME, "minute").toISOString();
-    const item: TokenSave = {
-      foreignId: user.id,
-      value: tokenValue,
-      type: TYPE.RESET_PASSWORD,
-      expiresAt,
-      status: STATUS.ACTIVE,
-    };
-    return tokenService.saveValueWithId(item);
-  }
-
-  private async createRefreshToken(user: UserDTO) {
-    const tokenValue = await authUtils.createToken({ type: JWT_TYPE.REFRESH, user });
-    const expiresAt = dated().add(ENV.JWT_REFRESH_LIFETIME, "minute").toISOString();
-    const item: TokenSave = {
-      foreignId: user.id,
-      value: tokenValue,
-      type: TYPE.REFRESH_TOKEN,
-      expiresAt,
-      status: STATUS.ACTIVE,
-    };
-    return tokenService.saveValueWithId(item);
   }
 }
 
