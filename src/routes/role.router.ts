@@ -1,9 +1,8 @@
 import { Hono } from "hono";
-import { authenticate, authorize } from "~/middlewares/auth.middleware";
 import { PERM_SUPER_ADMIN } from "~/domains/permission/permission.constant";
 import { createRoleBodySchema, updateRoleBodySchema } from "~/domains/role/role.schema";
 import { roleService } from "~/domains/role/role.service";
-import { validator } from "~/middlewares/validator.middleware";
+import { authenticate, authorize } from "~/middlewares/auth.middleware";
 
 export const roleRouter = new Hono();
 
@@ -21,14 +20,14 @@ roleRouter.get("/", async (c) => {
   return c.json({ data: result }, 200);
 });
 
-roleRouter.post("/", validator("json", createRoleBodySchema), async (c) => {
-  const body = c.req.valid("json");
+roleRouter.post("/", async (c) => {
+  const body = createRoleBodySchema.parse(c.req.json());
   await roleService.create(body);
   return c.json({}, 200);
 });
 
-roleRouter.patch("/", validator("json", updateRoleBodySchema), async (c) => {
-  const body = c.req.valid("json");
+roleRouter.patch("/", async (c) => {
+  const body = updateRoleBodySchema.parse(c.req.json());
   await roleService.update(body);
   return c.json({}, 200);
 });

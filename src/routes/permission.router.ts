@@ -1,9 +1,8 @@
 import { Hono } from "hono";
-import { authenticate, authorize } from "~/middlewares/auth.middleware";
 import { PERM_SUPER_ADMIN } from "~/domains/permission/permission.constant";
 import { createPermissionBodySchema, updatePermissionBodySchema } from "~/domains/permission/permission.schema";
 import { permissionService } from "~/domains/permission/permission.service";
-import { validator } from "~/middlewares/validator.middleware";
+import { authenticate, authorize } from "~/middlewares/auth.middleware";
 
 export const permissionRouter = new Hono();
 
@@ -21,14 +20,14 @@ permissionRouter.get("/", async (c) => {
   return c.json({ data: result }, 200);
 });
 
-permissionRouter.post("/", validator("json", createPermissionBodySchema), async (c) => {
-  const body = c.req.valid("json");
+permissionRouter.post("/", async (c) => {
+  const body = createPermissionBodySchema.parse(c.req.json());
   await permissionService.create(body);
   return c.json({}, 200);
 });
 
-permissionRouter.patch("/", validator("json", updatePermissionBodySchema), async (c) => {
-  const body = c.req.valid("json");
+permissionRouter.patch("/", async (c) => {
+  const body = updatePermissionBodySchema.parse(c.req.json());
   await permissionService.update(body);
   return c.json({}, 200);
 });
