@@ -39,7 +39,7 @@ const ResetPasswordPage: FC<{ formUrl: string; token: string; t: TFn }> = ({ for
         <form hx-post={formUrl} hx-target="#error-message" hx-swap="outerHTML">
           <h1>{title}</h1>
           <fieldset style={{ marginBottom: 0 }}>
-            <label for="password">{t("field.password_c")}</label>
+            <label for="password">{t("field.password")}</label>
             <input
               id="password"
               name="password"
@@ -51,7 +51,7 @@ const ResetPasswordPage: FC<{ formUrl: string; token: string; t: TFn }> = ({ for
               maxlength={64}
               required
             />
-            <label for="passwordConfirm">{t("field.password_confirm_c")}</label>
+            <label for="passwordConfirm">{t("field.password_confirm")}</label>
             <input
               id="passwordConfirm"
               name="passwordConfirm"

@@ -1,21 +1,18 @@
 {
   "field": {
-    "error_c": "Lỗi",
-    "email": "địa chỉ email",
-    "username": "tên đăng nhập",
-    "password": "mật khẩu",
-    "password_confirm": "mật khẩu xác nhận",
-    "password_c": "Mật khẩu",
-    "password_confirm_c": "Mật khẩu xác nhận",
-    "code": "mã hiệu",
-    "name": "tên",
-    "description": "nội dung",
-    "user": "người dùng",
-    "id": "mã định danh",
-    "search_query": "từ tìm kiếm",
-    "permission": "quyền",
-    "role": "vai trò",
-    "token": "mã xác thực"
+    "email": "Địa chỉ email",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "password_confirm": "Mật khẩu xác nhận",
+    "code": "Mã hiệu",
+    "name": "Tên",
+    "description": "Nội dung",
+    "user": "Người dùng",
+    "id": "Mã định danh",
+    "search_query": "Từ tìm kiếm",
+    "permission": "Quyền",
+    "role": "Vai trò",
+    "token": "Mã xác thực"
   },
   "form": {
     "error": {
@@ -54,12 +51,12 @@
     "message": {
       "activate_account_email_sent": "Hướng dẫn kích hoạt tài khoản đã được gửi tới địa chỉ email của bạn",
       "activate_account_email_subject": "Kích hoạt tài khoản",
-      "activate_account_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để kích hoạt tài khoản của bạn: {{2}}<br/><br/>Trân trọng cảm ơn",
+      "activate_account_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng truy cập đường dẫn sau để kích hoạt tài khoản của bạn:<br/><a href='{{2}}' target='_blank'>{{2}}</a><br/><br/>Trân trọng cảm ơn",
       "activate_account_success": "Tài khoản của bạn đã được kích hoạt",
       "activate_account_fail": "Kích hoạt tài khoản không thành công",
       "reset_password_email_sent": "Hướng dẫn cài đặt lại mật khẩu đã được gửi tới địa chỉ email của bạn",
       "reset_password_email_subject": "Cài đặt lại mật khẩu",
-      "reset_password_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng bấm vào đường dẫn sau để cài đặt lại mật khẩu của bạn: {{2}}<br/><br/>Trân trọng cảm ơn",
+      "reset_password_email_content": "Kính gửi {{1}},<br/><br/>Vui lòng truy cập đường dẫn sau để cài đặt lại mật khẩu của bạn:<br/><a href='{{2}}' target='_blank'>{{2}}</a><br/><br/>Trân trọng cảm ơn",
       "reset_password_success": "Thiết lập mật khẩu thành công"
     }
   },

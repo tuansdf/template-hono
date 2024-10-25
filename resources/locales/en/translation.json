@@ -1,20 +1,17 @@
 {
   "field": {
-    "error_c": "Error",
-    "email": "email",
-    "username": "username",
-    "password": "password",
-    "password_confirm": "confirm password",
-    "password_c": "Password",
-    "password_confirm_c": "Confirm password",
-    "code": "code",
-    "name": "name",
-    "description": "description",
-    "user": "user",
-    "id": "id",
-    "search_query": "search query",
-    "permission": "permission",
-    "role": "role",
+    "email": "Email",
+    "username": "Username",
+    "password": "Password",
+    "password_confirm": "Confirm password",
+    "code": "Code",
+    "name": "Name",
+    "description": "Description",
+    "user": "User",
+    "id": "ID",
+    "search_query": "Search query",
+    "permission": "Permission",
+    "role": "Role",
     "token": "token"
   },
   "form": {
@@ -54,12 +51,12 @@
     "message": {
       "activate_account_email_sent": "A link to activate your account has been emailed to the address provided",
       "activate_account_email_subject": "Activate your account",
-      "activate_account_email_content": "Dear {{1}},<br/><br/>Please click the following link to activate your account: {{2}}<br/><br/>Best regards.",
+      "activate_account_email_content": "Dear {{1}},<br/><br/>Please click the following link to activate your account:<br/><a href='{{2}}' target='_blank'>{{2}}</a><br/><br/>Best regards.",
       "activate_account_success": "Your account has been activated.",
       "activate_account_fail": "Activation failed.",
       "reset_password_email_sent": "If that email address is in our database, we will send you an email to reset your password",
       "reset_password_email_subject": "Reset your password",
-      "reset_password_email_content": "Dear {{1}},<br/><br/>Please click the following link to reset your password:<br/>{{2}}<br/><br/>Best regards.",
+      "reset_password_email_content": "Dear {{1}},<br/><br/>Please click the following link to reset your password:<br/><a href='{{2}}' target='_blank'>{{2}}</a><br/><br/>Best regards.",
       "reset_password_success": "Password reset successfully"
     }
   },
