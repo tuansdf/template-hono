@@ -1,19 +1,20 @@
-import { decode, sign, verify } from "hono/jwt";
+import { decodeJwt, JWTPayload, jwtVerify, SignJWT } from "jose";
 import { ENV_JWT_SECRET } from "~/constants/env.constant";
-import { JwtTokenPayload } from "~/lib/jwt/jwt.type";
 
-class JwtUtils {
+const secret = new TextEncoder().encode(ENV_JWT_SECRET);
+const signHeader = { alg: "HS256" };
+const verifyOptions = { algorithms: ["HS256"] };
+
+class Jwt {
   public async decode(toBeDecoded: string) {
-    return decode(toBeDecoded);
+    return decodeJwt(toBeDecoded);
   }
-
-  public async sign(payload: JwtTokenPayload): Promise<string> {
-    return sign(payload, ENV_JWT_SECRET, "HS256");
+  public async sign(payload: JWTPayload): Promise<string> {
+    return await new SignJWT(payload).setProtectedHeader(signHeader).sign(secret);
   }
-
-  public async verify(toBeVerified: string): Promise<JwtTokenPayload> {
-    return verify(toBeVerified, ENV_JWT_SECRET, "HS256");
+  public async verify(toBeVerified: string): Promise<JWTPayload> {
+    return jwtVerify(toBeVerified, secret, verifyOptions);
   }
 }
 
-export const jwtUtils = new JwtUtils();
+export const jwt = new Jwt();

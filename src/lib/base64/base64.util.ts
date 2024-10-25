@@ -1,4 +1,4 @@
-class Base64Utils {
+class Base64 {
   public encode = (input: string): string => {
     return Buffer.from(input).toString("base64url");
   };
@@ -7,4 +7,4 @@ class Base64Utils {
   };
 }
 
-export const base64Utils = new Base64Utils();
+export const base64 = new Base64();

@@ -5,7 +5,7 @@ import { authUtils } from "~/domains/auth/auth.util";
 import { permissionUtils } from "~/domains/permission/permission.util";
 import { TokenValueWithId } from "~/domains/token/token.type";
 import { CustomException } from "~/exceptions/custom-exception";
-import { base64Utils } from "~/lib/base64/base64.util";
+import { base64 } from "~/lib/base64/base64.util";
 
 export const authenticate = (
   type: JwtTokenType = JWT_TYPE.ACCESS,
@@ -28,7 +28,7 @@ export const authenticate = (
     }
     try {
       if (tokenType === TOKEN_TYPE.JWT_WITH_ID) {
-        const decoded = base64Utils.decode(bearerToken);
+        const decoded = base64.decode(bearerToken);
         const obj: TokenValueWithId = JSON.parse(decoded);
         bearerToken = obj.v;
       }

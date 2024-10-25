@@ -3,7 +3,7 @@ import { AuthJwtTokenPayload, CreateTokenRequest, JwtTokenType } from "~/domains
 import { permissionUtils } from "~/domains/permission/permission.util";
 import { CustomException } from "~/exceptions/custom-exception";
 import { dated } from "~/lib/date/date";
-import { jwtUtils } from "~/lib/jwt/jwt.util";
+import { jwt } from "~/lib/jwt/jwt.util";
 
 class AuthUtils {
   public createTokenPayload(request: CreateTokenRequest): AuthJwtTokenPayload {
@@ -36,12 +36,12 @@ class AuthUtils {
 
   public async createToken(request: CreateTokenRequest): Promise<string> {
     const payload = this.createTokenPayload(request);
-    return jwtUtils.sign(payload);
+    return jwt.sign(payload);
   }
 
   public async verifyToken(token: string, type: JwtTokenType = JWT_TYPE.ACCESS): Promise<AuthJwtTokenPayload> {
     try {
-      const payload: AuthJwtTokenPayload = await jwtUtils.verify(token);
+      const payload: AuthJwtTokenPayload = await jwt.verify(token);
       if (payload.for !== type) {
         throw new CustomException("auth.error.unauthenticated", 401);
       }

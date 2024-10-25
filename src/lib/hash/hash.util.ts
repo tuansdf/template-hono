@@ -3,7 +3,7 @@ import { logger } from "~/lib/logger/logger";
 
 const SALT_SIZE = 10;
 
-class HashUtils {
+class Hasher {
   public async hash(toBeHashed: string): Promise<string> {
     return await bcryptjs.hash(toBeHashed, SALT_SIZE);
   }
@@ -18,4 +18,4 @@ class HashUtils {
   }
 }
 
-export const hashUtils = new HashUtils();
+export const hasher = new Hasher();

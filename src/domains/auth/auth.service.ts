@@ -29,7 +29,7 @@ import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
 import { TFn } from "~/i18n/i18n.type";
 import { dated } from "~/lib/date/date";
-import { hashUtils } from "~/lib/hash/hash.util";
+import { hasher } from "~/lib/hash/hash.util";
 import { logger } from "~/lib/logger/logger";
 
 class AuthService {
@@ -38,7 +38,7 @@ class AuthService {
     if (!user) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
-    const isPasswordMatch = await hashUtils.verify(String(user.password), requestDTO.password);
+    const isPasswordMatch = await hasher.verify(String(user.password), requestDTO.password);
     if (!isPasswordMatch) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
@@ -64,7 +64,7 @@ class AuthService {
       logger.error("Register with registered email");
       return;
     }
-    requestDTO.password = await hashUtils.hash(requestDTO.password);
+    requestDTO.password = await hasher.hash(requestDTO.password);
     const saved = await userRepository.save({ ...requestDTO, status: STATUS.PENDING });
     if (!saved) {
       throw new CustomException();
@@ -123,7 +123,7 @@ class AuthService {
     if (!user) {
       throw new CustomException("dynamic.error.not_found:::field.user", 404);
     }
-    const hashedPassword = await hashUtils.hash(requestDTO.password);
+    const hashedPassword = await hasher.hash(requestDTO.password);
     await db.main
       .update(TokenTable)
       .set({ status: STATUS.INACTIVE })
