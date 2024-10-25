@@ -26,9 +26,9 @@ config:
       - http.response_time.p95: 75
 scenarios:
   - flow:
-    - post:
-        url: "/auth/register"
-        json:
-          email: "{{ $randEmail() }}"
-          username: "{{ $randUserName() }}"
-          password: "{{ $randPassword() }}"
+      - post:
+          url: "/auth/register"
+          json:
+            email: "{{ $randEmail() }}"
+            username: "{{ $randUserName() }}"
+            password: "{{ $randPassword() }}"

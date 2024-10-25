@@ -128,3 +128,15 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+.dist/
+.idea/
+.vscode/
+
+.env.*
+!.env.example
+temp
+temp.*
+*.temp.*
+drizzle
+*-lock.*
