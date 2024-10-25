@@ -1,14 +1,14 @@
-import { authRouter } from "~/domains/auth/auth.router";
-import { healthRouter } from "~/domains/health/health.router";
-import { permissionRouter } from "~/domains/permission/permission.router";
-import { roleRouter } from "~/domains/role/role.router";
-import { userRouter } from "~/domains/user/user.router";
-import { routerUtils } from "~/utils/router.util";
+import { Hono } from "hono";
+import { authRouter } from "~/routes/auth.router";
+import { healthRouter } from "~/routes/health.router";
+import { permissionRouter } from "~/routes/permission.router";
+import { roleRouter } from "~/routes/role.router";
+import { userRouter } from "~/routes/user.router";
 
-export const apiRouter = routerUtils.init((app) => {
-  app.route("/health", healthRouter);
-  app.route("/auth", authRouter);
-  app.route("/users", userRouter);
-  app.route("/roles", roleRouter);
-  app.route("/permissions", permissionRouter);
-});
+export const apiRouter = new Hono();
+
+apiRouter.route("/health", healthRouter);
+apiRouter.route("/auth", authRouter);
+apiRouter.route("/users", userRouter);
+apiRouter.route("/roles", roleRouter);
+apiRouter.route("/permissions", permissionRouter);

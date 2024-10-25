@@ -16,7 +16,9 @@ export const loggerM = (): MiddlewareHandler => async (c, next) => {
           extra += " application/x-www-form-urlencoded:" + JSON.stringify(await c.req.formData());
           break;
       }
-    } catch (ignore) {}
+    } catch {
+      /* empty */
+    }
   }
   const url = new URL(c.req.url);
   const pathname = url.pathname;

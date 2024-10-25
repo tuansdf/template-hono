@@ -7,8 +7,7 @@ import { CommonResponse } from "~/types/common.type";
 import { StatusCode } from "~/types/status-code.type";
 
 class ExceptionUtils {
-  public getCommonResponse = (err: Error, t: TFn, prefix: boolean = true): CommonResponse => {
-    let errorPrefix = prefix ? t("field.error_c") + ": " : "";
+  public getCommonResponse = (err: Error, t: TFn): CommonResponse => {
     let errorMessage = "";
     let status: StatusCode = 500;
     if (err instanceof CustomException) {
@@ -23,11 +22,11 @@ class ExceptionUtils {
       status = 400;
       errorMessage = i18nUtils.getMessageAndParams(t, err.errors[0]?.message || "generic.error.other");
     }
-    return { message: errorPrefix + (errorMessage || t("generic.error.other")), status };
+    return { message: errorMessage || t("generic.error.other"), status };
   };
 
-  public getMessage = (err: Error, t: TFn, prefix: boolean = true): string => {
-    return this.getCommonResponse(err, t, prefix).message!;
+  public getMessage = (err: Error, t: TFn): string => {
+    return this.getCommonResponse(err, t).message!;
   };
 }
 
