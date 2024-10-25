@@ -3,6 +3,7 @@ import { JwtTokenType } from "~/domains/auth/auth.type";
 import { permissionUtils } from "~/domains/permission/permission.util";
 import { jwtService } from "~/domains/token/jwt.service";
 import { JWT_TYPE } from "~/domains/token/token.constant";
+import { tokenService } from "~/domains/token/token.service";
 import { CustomException } from "~/exceptions/custom-exception";
 
 export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHandler => {
@@ -18,6 +19,10 @@ export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHa
     }
 
     const payload = await jwtService.verifyToken(bearerToken, type);
+    if (payload.tid && (await tokenService.verifyById(Number(payload.tid)))) {
+      throw new CustomException("auth.error.unauthenticated", 401);
+    }
+
     c.set("authPayload", payload);
     c.set("authToken", bearerToken);
 
