@@ -1,11 +1,5 @@
 import { eq } from "drizzle-orm";
-import {
-  ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL,
-  ENV_EMAIL_RESET_PASSWORD_BASE_URL,
-  ENV_JWT_REFRESH_LIFETIME,
-  ENV_TOKEN_ACTIVATE_ACCOUNT_LIFETIME,
-  ENV_TOKEN_RESET_PASSWORD_LIFETIME,
-} from "~/constants/env.constant";
+import { ENV } from "~/constants/env.constant";
 import { STATUS } from "~/constants/status.constant";
 import { TYPE } from "~/constants/type.constant";
 import { db } from "~/database/db";
@@ -169,7 +163,7 @@ class AuthService {
       subject: t("auth.message.reset_password_email_subject"),
       content: t("auth.message.reset_password_email_content", {
         1: user.username,
-        2: ENV_EMAIL_RESET_PASSWORD_BASE_URL + token,
+        2: ENV.EMAIL_RESET_PASSWORD_BASE_URL + token,
       }),
     };
     await sendEmailService.send(item);
@@ -183,7 +177,7 @@ class AuthService {
       subject: t("auth.message.activate_account_email_subject"),
       content: t("auth.message.activate_account_email_content", {
         1: user.username,
-        2: ENV_EMAIL_ACTIVATE_ACCOUNT_BASE_URL + token,
+        2: ENV.EMAIL_ACTIVATE_ACCOUNT_BASE_URL + token,
       }),
     };
     await sendEmailService.send(item);
@@ -191,7 +185,7 @@ class AuthService {
 
   private async createActivateAccountToken(user: UserDTO) {
     const tokenValue = await authUtils.createToken({ type: JWT_TYPE.ACTIVATE_ACCOUNT, username: user.username || "" });
-    const expiresAt = dated().add(ENV_TOKEN_ACTIVATE_ACCOUNT_LIFETIME, "minute").toISOString();
+    const expiresAt = dated().add(ENV.TOKEN_ACTIVATE_ACCOUNT_LIFETIME, "minute").toISOString();
     const item: TokenSave = {
       foreignId: user.id,
       value: tokenValue,
@@ -204,7 +198,7 @@ class AuthService {
 
   private async createResetPasswordToken(user: UserDTO) {
     const tokenValue = await authUtils.createToken({ type: JWT_TYPE.RESET_PASSWORD, username: user.username || "" });
-    const expiresAt = dated().add(ENV_TOKEN_RESET_PASSWORD_LIFETIME, "minute").toISOString();
+    const expiresAt = dated().add(ENV.TOKEN_RESET_PASSWORD_LIFETIME, "minute").toISOString();
     const item: TokenSave = {
       foreignId: user.id,
       value: tokenValue,
@@ -217,7 +211,7 @@ class AuthService {
 
   private async createRefreshToken(user: UserDTO) {
     const tokenValue = await authUtils.createToken({ type: JWT_TYPE.REFRESH, user });
-    const expiresAt = dated().add(ENV_JWT_REFRESH_LIFETIME, "minute").toISOString();
+    const expiresAt = dated().add(ENV.JWT_REFRESH_LIFETIME, "minute").toISOString();
     const item: TokenSave = {
       foreignId: user.id,
       value: tokenValue,

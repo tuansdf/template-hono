@@ -1,7 +1,7 @@
 import { decodeJwt, JWTPayload, jwtVerify, SignJWT } from "jose";
-import { ENV_JWT_SECRET } from "~/constants/env.constant";
+import { ENV } from "~/constants/env.constant";
 
-const secret = new TextEncoder().encode(ENV_JWT_SECRET);
+const secret = new TextEncoder().encode(ENV.JWT_SECRET);
 const signHeader = { alg: "HS256" };
 const verifyOptions = { algorithms: ["HS256"] };
 

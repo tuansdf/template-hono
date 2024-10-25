@@ -1,6 +1,6 @@
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
-import { ENV_APP_PORT } from "~/constants/env.constant";
+import { ENV } from "~/constants/env.constant";
 import { db } from "~/database/db";
 import { errorHandler } from "~/exceptions/error-handler.middleware";
 import { i18n } from "~/i18n/i18n.util";
@@ -28,7 +28,7 @@ const initServices = async () => {
 };
 await initServices();
 
-const port = ENV_APP_PORT || 5000;
+const port = ENV.PORT || 5000;
 console.log(`Server is running on port ${port}`);
 
 // NODEJS

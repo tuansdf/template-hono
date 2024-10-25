@@ -46,6 +46,16 @@ class TokenService {
   public async revokeTokenByUserId(userId: number) {
     await tokenRepository.updateStatusByForeignId(STATUS.INACTIVE, userId);
   }
+  
+  public async verifyById(id: number) {
+    try {
+      const token = await tokenRepository.findTopById(id)
+      if (!token) return false
+      return token.
+    } catch  {
+      return false
+    }
+  }
 }
 
 export const tokenService = new TokenService();
