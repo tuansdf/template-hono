@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { authenticate } from "~/domains/auth/auth.middleware";
+import { authenticate } from "~/middlewares/auth.middleware";
 import {
   activateAccountBodySchema,
   forgotPasswordRequestSchema,

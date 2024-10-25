@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { authenticate, authorize } from "~/domains/auth/auth.middleware";
+import { authenticate, authorize } from "~/middlewares/auth.middleware";
 import { PERM_SUPER_ADMIN } from "~/domains/permission/permission.constant";
 import { createRoleBodySchema, updateRoleBodySchema } from "~/domains/role/role.schema";
 import { roleService } from "~/domains/role/role.service";
