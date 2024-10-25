@@ -1,9 +1,9 @@
 import { MiddlewareHandler } from "hono";
-import { JwtTokenType } from "~/domains/auth/auth.type";
 import { permissionUtils } from "~/domains/permission/permission.util";
 import { jwtService } from "~/domains/token/jwt.service";
 import { JWT_TYPE } from "~/domains/token/token.constant";
 import { tokenService } from "~/domains/token/token.service";
+import { JwtTokenType } from "~/domains/token/token.type";
 import { CustomException } from "~/exceptions/custom-exception";
 
 export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHandler => {

@@ -2,8 +2,8 @@ import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { ENV } from "~/constants/env.constant";
 import { db } from "~/database/db";
-import { errorHandler } from "~/middlewares/error-handler.middleware";
 import { i18n } from "~/i18n/i18n.util";
+import { errorHandler } from "~/middlewares/error-handler.middleware";
 import { loggerM } from "~/middlewares/logger.middleware";
 import { notFound } from "~/middlewares/not-found.middleware";
 import { mainRouter } from "~/routes/main.router";
@@ -24,7 +24,7 @@ const app = routerUtils.init((app) => {
 
 const initServices = async () => {
   await i18n.init();
-  // await db.initAndRetry();
+  await db.initAndRetry();
 };
 await initServices();
 
