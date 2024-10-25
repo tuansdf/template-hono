@@ -1,3 +1,4 @@
+import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { ENV } from "~/constants/env.constant";
@@ -7,20 +8,19 @@ import { errorHandler } from "~/middlewares/error-handler.middleware";
 import { loggerM } from "~/middlewares/logger.middleware";
 import { notFound } from "~/middlewares/not-found.middleware";
 import { mainRouter } from "~/routes/main.router";
-import { routerUtils } from "~/utils/router.util";
 import "dotenv/config";
 import "~/constants/env.constant";
 
-const app = routerUtils.init((app) => {
-  app.use(loggerM());
-  app.use(cors());
-  app.use(secureHeaders());
+const app = new Hono();
 
-  app.route("/", mainRouter);
+app.use(loggerM());
+app.use(cors());
+app.use(secureHeaders());
 
-  app.notFound(notFound());
-  app.onError(errorHandler());
-});
+app.route("/", mainRouter);
+
+app.notFound(notFound());
+app.onError(errorHandler());
 
 const initServices = async () => {
   await i18n.init();
