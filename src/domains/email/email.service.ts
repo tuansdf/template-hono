@@ -1,13 +1,13 @@
 import { ENV } from "~/constants/env.constant";
 import { TYPE } from "~/constants/type.constant";
-import { sendEmailRepository } from "~/domains/send-email/send-email.repository";
-import { SendEmailSave } from "~/domains/send-email/send-email.type";
+import { emailRepository } from "~/domains/email/email.repository";
+import { EmailSave } from "~/domains/email/email.type";
 import { TFn } from "~/i18n/i18n.type";
 
-class SendEmailService {
-  public async send(item: SendEmailSave) {
+class EmailService {
+  public async send(item: EmailSave) {
     // TODO: actually send email
-    await sendEmailRepository.save(item);
+    await emailRepository.save(item);
   }
 
   public async sendResetPasswordEmail({
@@ -21,7 +21,7 @@ class SendEmailService {
     token: string;
     t: TFn;
   }) {
-    const item: SendEmailSave = {
+    const item: EmailSave = {
       fromEmail: "PLACEHOLDER",
       toEmail: userEmail,
       type: TYPE.RESET_PASSWORD,
@@ -45,7 +45,7 @@ class SendEmailService {
     token: string;
     t: TFn;
   }) {
-    const item: SendEmailSave = {
+    const item: EmailSave = {
       fromEmail: "PLACEHOLDER",
       toEmail: userEmail,
       type: TYPE.ACTIVATE_ACCOUNT,
@@ -59,4 +59,4 @@ class SendEmailService {
   }
 }
 
-export const sendEmailService = new SendEmailService();
+export const emailService = new EmailService();

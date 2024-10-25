@@ -1,7 +1,7 @@
 import { count, eq, sql } from "drizzle-orm";
 import { db } from "~/database/db";
 import { RoleDTO, RoleSave, RoleSaveDTO } from "~/domains/role/role.type";
-import { MapUserRoleTable } from "~/entities/map-user-role.entity";
+import { UserRoleTable } from "~/entities/user-role.entity";
 import { RoleTable } from "~/entities/role.entity";
 
 const selectAll = {
@@ -25,8 +25,8 @@ class RoleRepository {
     return db.main
       .select(selectAll)
       .from(RoleTable)
-      .innerJoin(MapUserRoleTable, eq(MapUserRoleTable.roleId, RoleTable.id))
-      .where(eq(MapUserRoleTable.userId, userId));
+      .innerJoin(UserRoleTable, eq(UserRoleTable.roleId, RoleTable.id))
+      .where(eq(UserRoleTable.userId, userId));
   }
 
   public async findTopById(id: number): Promise<RoleDTO | undefined> {

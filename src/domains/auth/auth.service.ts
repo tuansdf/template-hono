@@ -11,7 +11,7 @@ import {
 import { jwtService } from "~/domains/token/jwt.service";
 import { permissionRepository } from "~/domains/permission/permission.repository";
 import { permissionUtils } from "~/domains/permission/permission.util";
-import { sendEmailService } from "~/domains/send-email/send-email.service";
+import { emailService } from "~/domains/email/email.service";
 import { tokenService } from "~/domains/token/token.service";
 import { userRepository } from "~/domains/user/user.repository";
 import { UserDTO } from "~/domains/user/user.type";
@@ -64,7 +64,7 @@ class AuthService {
       throw new CustomException();
     }
     const token = await tokenService.createActivateAccountToken({ userUsername: saved.username!, userId: saved.id! });
-    await sendEmailService.sendActivateAccountEmail({
+    await emailService.sendActivateAccountEmail({
       userEmail: saved.email!,
       userUsername: saved.username!,
       token: token.value!,
@@ -102,7 +102,7 @@ class AuthService {
       return;
     }
     const token = await tokenService.createResetPasswordToken({ userId: user.id!, userUsername: user.username! });
-    sendEmailService.sendResetPasswordEmail({
+    emailService.sendResetPasswordEmail({
       userEmail: user.email!,
       userUsername: user.username!,
       token: token.value!,

@@ -1,8 +1,8 @@
 import { count, eq, sql } from "drizzle-orm";
 import { db } from "~/database/db";
 import { PermissionDTO, PermissionSave, PermissionSaveDTO } from "~/domains/permission/permission.type";
-import { MapRolePermissionTable } from "~/entities/map-role-permission.entity";
-import { MapUserRoleTable } from "~/entities/map-user-role.entity";
+import { RolePermissionTable } from "~/entities/role-permission.entity";
+import { UserRoleTable } from "~/entities/user-role.entity";
 import { PermissionTable } from "~/entities/permission.entity";
 
 const selectAll = {
@@ -31,17 +31,17 @@ class PermissionRepository {
     return db.main
       .select(selectAll)
       .from(PermissionTable)
-      .innerJoin(MapRolePermissionTable, eq(MapRolePermissionTable.permissionId, PermissionTable.id))
-      .where(eq(MapRolePermissionTable.roleId, roleId));
+      .innerJoin(RolePermissionTable, eq(RolePermissionTable.permissionId, PermissionTable.id))
+      .where(eq(RolePermissionTable.roleId, roleId));
   }
 
   public async findAllByUserId(userId: number): Promise<PermissionDTO[]> {
     return db.main
       .select(selectAll)
       .from(PermissionTable)
-      .innerJoin(MapRolePermissionTable, eq(MapRolePermissionTable.permissionId, PermissionTable.id))
-      .innerJoin(MapUserRoleTable, eq(MapUserRoleTable.roleId, MapRolePermissionTable.roleId))
-      .where(eq(MapUserRoleTable.userId, userId));
+      .innerJoin(RolePermissionTable, eq(RolePermissionTable.permissionId, PermissionTable.id))
+      .innerJoin(UserRoleTable, eq(UserRoleTable.roleId, RolePermissionTable.roleId))
+      .where(eq(UserRoleTable.userId, userId));
   }
 
   public async countById(id: number): Promise<number> {

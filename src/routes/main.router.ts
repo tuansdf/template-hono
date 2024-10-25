@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { detectLanguage } from "~/i18n/i18n.middleware";
+import { detectLanguage } from "~/middlewares/i18n.middleware";
 import { apiRouter } from "~/routes/api.router";
 import { viewRouter } from "~/routes/view.router";
 
