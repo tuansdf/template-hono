@@ -3,15 +3,15 @@ import { UserSearchRequestDTO } from "~/domains/user/user.type";
 
 export const getUserDetailByUsernameQuerySchema = z.object({
   q: z.string({
-    required_error: "form.error.missing:::field.username",
-    invalid_type_error: "dynamic.error.not_found:::field.username",
+    required_error: "form.error.missing;field.username",
+    invalid_type_error: "dynamic.error.not_found;field.username",
   }),
 });
 
 export const getUserDetailByEmailQuerySchema = z.object({
   q: z.string({
-    required_error: "form.error.missing:::field.email",
-    invalid_type_error: "dynamic.error.not_found:::field.email",
+    required_error: "form.error.missing;field.email",
+    invalid_type_error: "dynamic.error.not_found;field.email",
   }),
 });
 
@@ -23,7 +23,7 @@ export const searchUserQuerySchema: z.ZodType<UserSearchRequestDTO> = z.object({
 
 export const getUserDetailByIdParamSchema = z.object({
   id: z.coerce.number({
-    required_error: "form.error.missing:::field.id",
-    invalid_type_error: "dynamic.error.not_found:::field.id",
+    required_error: "form.error.missing;field.id",
+    invalid_type_error: "dynamic.error.not_found;field.id",
   }),
 });

@@ -10,7 +10,7 @@ class RoleService {
   public async findOneById(id: number) {
     const result = await roleRepository.findTopById(id);
     if (!result) {
-      throw new CustomException("dynamic.error.not_found:::field.role", 404);
+      throw new CustomException("dynamic.error.not_found;field.role", 404);
     }
     return result;
   }
@@ -21,7 +21,7 @@ class RoleService {
     }
     const isCodeDuplicated = await roleRepository.existByCode(requestDTO.code);
     if (isCodeDuplicated) {
-      throw new CustomException("dynamic.error.duplicated:::field.code", 409);
+      throw new CustomException("dynamic.error.duplicated;field.code", 409);
     }
     return await roleRepository.save(requestDTO);
   }
@@ -29,7 +29,7 @@ class RoleService {
   public async update(requestDTO: UpdateRoleBodyDTO) {
     const isIdValid = await roleRepository.existById(requestDTO.id);
     if (!isIdValid) {
-      throw new CustomException("dynamic.error.not_found:::field.role", 404);
+      throw new CustomException("dynamic.error.not_found;field.role", 404);
     }
     return await roleRepository.update(requestDTO);
   }

@@ -17,7 +17,7 @@ class TokenService {
     delete item.id;
     const token = await this.save(item);
     if (!token) {
-      throw new CustomException("dynamic.error.not_found:::field.token");
+      throw new CustomException("dynamic.error.not_found;field.token");
     }
     const valueObj: TokenValueWithId = {
       v: token.value,

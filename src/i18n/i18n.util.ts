@@ -3,7 +3,7 @@ import Backend from "i18next-fs-backend";
 import { defaultLang, validLangs } from "~/i18n/i18n.constant";
 import { TFn, ValidLang } from "~/i18n/i18n.type";
 
-const KEY_SEPARATED_BY = ":::";
+const KEY_SEPARATED_BY = ";";
 
 class I18nUtils {
   public getLang(lang?: string): ValidLang {
@@ -21,12 +21,9 @@ class I18nUtils {
   public getMessageAndParams(t: TFn, input: string): string {
     const split = input.split(KEY_SEPARATED_BY);
     const mainKey = split[0] || "";
-    const length = split.length;
-    const params: Record<string, string> = {};
-    if (length > 1) {
-      for (let i = 1; i < length; i++) {
-        params[String(i)] = t(split[i]!);
-      }
+    const params: Record<number, string> = {};
+    for (let i = 1; i < split.length; i++) {
+      params[i] = t(split[i]!);
     }
     return t(mainKey, params);
   }

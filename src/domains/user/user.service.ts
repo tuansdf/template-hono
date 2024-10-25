@@ -10,7 +10,7 @@ class UserService {
   public async findOneById(userId: number) {
     const user = await userRepository.findTopById(userId);
     if (!user) {
-      throw new CustomException("dynamic.error.not_found:::field.user", 404);
+      throw new CustomException("dynamic.error.not_found;field.user", 404);
     }
     return user;
   }
@@ -18,7 +18,7 @@ class UserService {
   public async findOneByUsername(username: string) {
     const user = await userRepository.findTopByUsername(username);
     if (!user) {
-      throw new CustomException("dynamic.error.not_found:::field.user", 404);
+      throw new CustomException("dynamic.error.not_found;field.user", 404);
     }
     return user;
   }
@@ -26,7 +26,7 @@ class UserService {
   public async findOneByEmail(email: string) {
     const user = await userRepository.findTopByEmail(email);
     if (!user) {
-      throw new CustomException("dynamic.error.not_found:::field.user", 404);
+      throw new CustomException("dynamic.error.not_found;field.user", 404);
     }
     return user;
   }

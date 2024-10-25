@@ -29,7 +29,7 @@ export const resetPasswordRequestSchema: z.ZodType<ResetPasswordRequestDTO> = z
     passwordConfirm: passwordSchema,
   })
   .refine((data) => data.password === data.passwordConfirm, {
-    message: "form.error.not_match:::field.password_confirm",
+    message: "form.error.not_match;field.password_confirm",
     path: ["passwordConfirm"],
   });
 

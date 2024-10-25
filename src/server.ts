@@ -24,7 +24,7 @@ const app = routerUtils.init((app) => {
 
 const initServices = async () => {
   await i18n.init();
-  await db.initAndRetry();
+  // await db.initAndRetry();
 };
 await initServices();
 

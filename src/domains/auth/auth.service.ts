@@ -50,7 +50,7 @@ class AuthService {
   public async register(requestDTO: RegisterRequestDTO, t: TFn) {
     const existUserWithUsername = await userRepository.existByUsername(requestDTO.username);
     if (existUserWithUsername) {
-      throw new CustomException("dynamic.error.not_available:::field.username", 409);
+      throw new CustomException("dynamic.error.not_available;field.username", 409);
     }
     const existUserWithEmail = await userRepository.existByEmail(requestDTO.email);
     if (existUserWithEmail) {
@@ -123,7 +123,7 @@ class AuthService {
     }
     const user = await userRepository.findTopById(token.foreignId);
     if (!user) {
-      throw new CustomException("dynamic.error.not_found:::field.user", 404);
+      throw new CustomException("dynamic.error.not_found;field.user", 404);
     }
     const hashedPassword = await hasher.hash(requestDTO.password);
     await db.main
@@ -148,7 +148,7 @@ class AuthService {
     }
     const user = await userRepository.findTopById(token.foreignId);
     if (!user) {
-      throw new CustomException("dynamic.error.not_found:::field.user", 404);
+      throw new CustomException("dynamic.error.not_found;field.user", 404);
     }
     if (user.status === STATUS.ACTIVE) {
       throw new CustomException("auth.error.already_activated", 400);
