@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db } from "~/database/db";
+import { db } from "~/db/db";
 import { NotificationDTO, NotificationSave } from "~/domains/notification/notification.type";
 import { NotificationTable } from "~/entities/notification.entity";
 

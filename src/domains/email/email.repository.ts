@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db } from "~/database/db";
+import { db } from "~/db/db";
 import { EmailDTO, EmailSave } from "~/domains/email/email.type";
 import { EmailTable } from "~/entities/email.entity";
 

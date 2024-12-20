@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { STATUS } from "~/constants/status.constant";
-import { db } from "~/database/db";
+import { db } from "~/db/db";
 import { JWT_TYPE } from "~/domains/token/token.constant";
 import {
   ForgotPasswordRequestDTO,

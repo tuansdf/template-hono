@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { db } from "~/database/db";
+import { db } from "~/db/db";
 
 export const healthRouter = new Hono();
 

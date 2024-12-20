@@ -1,5 +1,5 @@
 import { and, count, eq, sql } from "drizzle-orm";
-import { db } from "~/database/db";
+import { db } from "~/db/db";
 import { TokenDTO, TokenSave } from "~/domains/token/token.type";
 import { TokenTable } from "~/entities/token.entity";
 

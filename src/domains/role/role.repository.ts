@@ -1,5 +1,5 @@
 import { count, eq, sql } from "drizzle-orm";
-import { db } from "~/database/db";
+import { db } from "~/db/db";
 import { RoleDTO, RoleSave, RoleSaveDTO } from "~/domains/role/role.type";
 import { UserRoleTable } from "~/entities/user-role.entity";
 import { RoleTable } from "~/entities/role.entity";

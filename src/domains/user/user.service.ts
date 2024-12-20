@@ -1,6 +1,6 @@
 import { ilike, or } from "drizzle-orm";
 import { STATUS } from "~/constants/status.constant";
-import { db } from "~/database/db";
+import { db } from "~/db/db";
 import { userRepository, userSelector } from "~/domains/user/user.repository";
 import { UserSearchRequestDTO } from "~/domains/user/user.type";
 import { UserTable } from "~/entities/user.entity";

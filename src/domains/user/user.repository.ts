@@ -1,5 +1,5 @@
 import { count, eq, or, sql } from "drizzle-orm";
-import { db } from "~/database/db";
+import { db } from "~/db/db";
 import { UserDTO, UserSave } from "~/domains/user/user.type";
 import { UserTable } from "~/entities/user.entity";
 
