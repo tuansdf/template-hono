@@ -5,10 +5,10 @@ import { permissionRouter } from "~/routes/permission.router";
 import { roleRouter } from "~/routes/role.router";
 import { userRouter } from "~/routes/user.router";
 
-export const apiRouter = new Hono();
+export const routes = new Hono();
 
-apiRouter.route("/health", healthRouter);
-apiRouter.route("/auth", authRouter);
-apiRouter.route("/users", userRouter);
-apiRouter.route("/roles", roleRouter);
-apiRouter.route("/permissions", permissionRouter);
+routes.route("/health", healthRouter);
+routes.route("/auth", authRouter);
+routes.route("/users", userRouter);
+routes.route("/roles", roleRouter);
+routes.route("/permissions", permissionRouter);

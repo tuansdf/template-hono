@@ -12,22 +12,22 @@ permissionRouter.use(authorize([PERM_SUPER_ADMIN]));
 permissionRouter.get("/detail/:id", async (c) => {
   const id = Number(c.req.param("id"));
   const result = await permissionService.findOneById(id);
-  return c.json({ data: result }, 200);
+  return Response.json({ data: result });
 });
 
 permissionRouter.get("/", async (c) => {
   const result = await permissionService.findAll();
-  return c.json({ data: result }, 200);
+  return Response.json({ data: result });
 });
 
 permissionRouter.post("/", async (c) => {
   const body = createPermissionBodySchema.parse(c.req.json());
   await permissionService.create(body);
-  return c.json({}, 200);
+  return Response.json({});
 });
 
 permissionRouter.patch("/", async (c) => {
   const body = updatePermissionBodySchema.parse(c.req.json());
   await permissionService.update(body);
-  return c.json({}, 200);
+  return Response.json(null);
 });

@@ -1,10 +1,9 @@
-import { bigint, bigserial, integer, pgTable, text } from "drizzle-orm/pg-core";
+import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { commonColumns } from "~/entities/common.entity";
 
 export const NotificationTable = pgTable("notification", {
-  id: bigserial("id", { mode: "number" }).primaryKey(),
-  fromUserId: bigint("from_user_id", { mode: "number" }),
-  toUserId: bigint("from_user_id", { mode: "number" }),
+  fromUserId: uuid("from_user_id"),
+  toUserId: uuid("from_user_id"),
   title: text("title"),
   content: text("content"),
   data: text("data"),

@@ -7,7 +7,7 @@ import { errorHandler } from "~/middlewares/error-handler.middleware";
 import { detectLanguage } from "~/middlewares/i18n.middleware";
 import { loggerM } from "~/middlewares/logger.middleware";
 import { notFound } from "~/middlewares/not-found.middleware";
-import { apiRouter } from "~/routes/api.router";
+import { routes } from "~/routes/routes";
 import "~/db/db";
 
 const app = new Hono();
@@ -17,7 +17,7 @@ app.use(cors());
 app.use(secureHeaders());
 app.use(detectLanguage());
 
-app.route("/api", apiRouter);
+app.route("/api", routes);
 
 app.notFound(notFound());
 app.onError(errorHandler());

@@ -1,10 +1,9 @@
-import { bigserial, pgTable, text } from "drizzle-orm/pg-core";
+import { pgTable, text } from "drizzle-orm/pg-core";
 import { commonColumns } from "~/entities/common.entity";
 
 export const UserTable = pgTable("_user", {
-  id: bigserial("id", { mode: "number" }).primaryKey(),
-  email: text("email").notNull().unique(),
-  username: text("username").notNull().unique(),
+  username: text("username").unique(),
+  email: text("email"),
   password: text("password"),
   name: text("name"),
   status: text("status"),

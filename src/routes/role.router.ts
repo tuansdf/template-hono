@@ -12,22 +12,22 @@ roleRouter.use(authorize([PERM_SUPER_ADMIN]));
 roleRouter.get("/detail/:id", async (c) => {
   const id = Number(c.req.param("id"));
   const result = await roleService.findOneById(id);
-  return c.json({ data: result }, 200);
+  return Response.json({ data: result });
 });
 
 roleRouter.get("/", async (c) => {
   const result = await roleService.findAll();
-  return c.json({ data: result }, 200);
+  return Response.json({ data: result });
 });
 
 roleRouter.post("/", async (c) => {
   const body = createRoleBodySchema.parse(c.req.json());
   await roleService.create(body);
-  return c.json({}, 200);
+  return Response.json(null);
 });
 
 roleRouter.patch("/", async (c) => {
   const body = updateRoleBodySchema.parse(c.req.json());
   await roleService.update(body);
-  return c.json({}, 200);
+  return Response.json(null);
 });

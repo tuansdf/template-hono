@@ -1,9 +1,12 @@
-import { sql } from "drizzle-orm";
-import { text, timestamp } from "drizzle-orm/pg-core";
+import { timestamp, uuid } from "drizzle-orm/pg-core";
+import { uuid as generateUUID } from "~/lib/uuid/uuid";
 
 export const commonColumns = {
-  createdBy: text("created_by"),
-  updatedBy: text("updated_by"),
+  id: uuid("id")
+    .primaryKey()
+    .$defaultFn(() => generateUUID()),
+  createdBy: uuid("created_by"),
+  updatedBy: uuid("updated_by"),
   createdAt: timestamp("created_at", {
     withTimezone: true,
     mode: "date",
@@ -13,5 +16,5 @@ export const commonColumns = {
     mode: "date",
   })
     .defaultNow()
-    .$onUpdateFn(() => sql`now()`),
+    .$onUpdateFn(() => new Date()),
 };
