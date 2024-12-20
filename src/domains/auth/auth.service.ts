@@ -19,8 +19,8 @@ import { TokenTable } from "~/entities/token.entity";
 import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
 import { TFn } from "~/i18n/i18n.type";
-import { hasher } from "~/lib/hasher/hasher";
-import { logger } from "~/lib/logger/logger";
+import { hasher } from "~/lib/hasher";
+import { logger } from "~/lib/logger";
 
 class AuthService {
   public async login(requestDTO: LoginRequestDTO): Promise<UserDTO> {

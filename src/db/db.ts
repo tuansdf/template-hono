@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as process from "node:process";
 import { ENV } from "~/constants/env.constant";
-import { logger } from "~/lib/logger/logger";
+import { logger } from "~/lib/logger";
 
 class Database {
   private readonly _main;

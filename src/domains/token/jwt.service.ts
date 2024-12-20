@@ -3,8 +3,8 @@ import { ENV } from "~/constants/env.constant";
 import { JWT_TYPE } from "~/domains/token/token.constant";
 import { AuthJwtTokenPayload, JwtTokenType } from "~/domains/token/token.type";
 import { CustomException } from "~/exceptions/custom-exception";
-import { dated } from "~/lib/date/date";
-import { jwt } from "~/lib/jwt/jwt";
+import { dated } from "~/lib/date";
+import { jwt } from "~/lib/jwt";
 
 class JwtService {
   public async createAccessTokenPayload(userId: number, userPerms: number[]): Promise<AuthJwtTokenPayload> {

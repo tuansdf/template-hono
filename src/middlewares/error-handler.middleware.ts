@@ -1,6 +1,6 @@
 import { ErrorHandler } from "hono";
 import { exceptionUtils } from "~/exceptions/exception.util";
-import { logger } from "~/lib/logger/logger";
+import { logger } from "~/lib/logger";
 
 export const errorHandler = (): ErrorHandler => (error, c) => {
   const t = c.get("t");

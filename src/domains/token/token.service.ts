@@ -4,9 +4,9 @@ import { jwtService } from "~/domains/token/jwt.service";
 import { tokenRepository } from "~/domains/token/token.repository";
 import { TokenSave, TokenValueWithId } from "~/domains/token/token.type";
 import { CustomException } from "~/exceptions/custom-exception";
-import { base64 } from "~/lib/base64/base64";
-import { dated } from "~/lib/date/date";
-import { logger } from "~/lib/logger/logger";
+import { base64 } from "~/lib/base64";
+import { dated } from "~/lib/date";
+import { logger } from "~/lib/logger";
 
 class TokenService {
   public async save(item: TokenSave) {

@@ -1,5 +1,5 @@
 import { timestamp, uuid } from "drizzle-orm/pg-core";
-import { uuid as generateUUID } from "~/lib/uuid/uuid";
+import { uuid as generateUUID } from "~/lib/uuid";
 
 export const commonColumns = {
   id: uuid("id")
