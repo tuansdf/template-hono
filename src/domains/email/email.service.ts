@@ -2,7 +2,7 @@ import { ENV } from "~/constants/env.constant";
 import { TYPE } from "~/constants/type.constant";
 import { emailRepository } from "~/domains/email/email.repository";
 import { EmailSave } from "~/domains/email/email.type";
-import { TFn } from "~/i18n/i18n.type";
+import { TFn } from "~/lib/i18n";
 
 class EmailService {
   public async send(item: EmailSave) {

@@ -12,7 +12,7 @@ export type CreatePermissionBodyDTO = {
 };
 
 export type UpdatePermissionBodyDTO = {
-  id: number;
+  id: string;
   name?: string | null;
   description?: string | null;
 };

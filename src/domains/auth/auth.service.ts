@@ -1,25 +1,25 @@
 import { eq } from "drizzle-orm";
 import { STATUS } from "~/constants/status.constant";
 import { db } from "~/db/db";
-import { JWT_TYPE } from "~/domains/token/token.constant";
 import {
   ForgotPasswordRequestDTO,
   LoginRequestDTO,
   RegisterRequestDTO,
   ResetPasswordRequestDTO,
 } from "~/domains/auth/auth.type";
-import { jwtService } from "~/domains/token/jwt.service";
+import { emailService } from "~/domains/email/email.service";
 import { permissionRepository } from "~/domains/permission/permission.repository";
 import { permissionUtils } from "~/domains/permission/permission.util";
-import { emailService } from "~/domains/email/email.service";
+import { jwtService } from "~/domains/token/jwt.service";
+import { JWT_TYPE } from "~/domains/token/token.constant";
 import { tokenService } from "~/domains/token/token.service";
 import { userRepository } from "~/domains/user/user.repository";
 import { UserDTO } from "~/domains/user/user.type";
 import { TokenTable } from "~/entities/token.entity";
 import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
-import { TFn } from "~/i18n/i18n.type";
 import { hasher } from "~/lib/hasher";
+import { TFn } from "~/lib/i18n";
 import { logger } from "~/lib/logger";
 
 class AuthService {
@@ -35,16 +35,16 @@ class AuthService {
     if (user.status !== STATUS.ACTIVE) {
       throw new CustomException("user.error.not_activated", 401);
     }
-    const permissions = await permissionRepository.findAllByUserId(Number(user.id));
+    const permissions = await permissionRepository.findAllByUserId(user.id || "");
     delete user.password;
     const accessToken = await jwtService.createToken(
       await jwtService.createAccessTokenPayload(
-        Number(user.id),
+        user.id || "",
         permissionUtils.codesToIndexes(permissions?.map((x) => x.code!) || []),
       ),
     );
     const refreshToken = await tokenService.createRefreshToken({ userId: user.id! });
-    return { ...user, accessToken, refreshToken: refreshToken.value };
+    return { ...user, accessToken, refreshToken: refreshToken?.value };
   }
 
   public async register(requestDTO: RegisterRequestDTO, t: TFn) {
@@ -67,12 +67,12 @@ class AuthService {
     await emailService.sendActivateAccountEmail({
       userEmail: saved.email!,
       userUsername: saved.username!,
-      token: token.value!,
+      token: token?.value!,
       t,
     });
   }
 
-  public async refreshToken(userId: number, tokenId: number) {
+  public async refreshToken(userId: string, tokenId: string) {
     const token = await tokenService.verifyById(tokenId);
     if (!token) {
       throw new CustomException("auth.error.unauthenticated", 401);
@@ -84,9 +84,9 @@ class AuthService {
     if (user.status !== STATUS.ACTIVE) {
       throw new CustomException("user.error.not_activated", 401);
     }
-    const permissions = await permissionRepository.findAllByUserId(Number(user.id));
+    const permissions = await permissionRepository.findAllByUserId(user.id || "");
     const accessToken = await jwtService.createAccessTokenPayload(
-      Number(user.id),
+      user.id || "",
       permissionUtils.codesToIndexes(permissions?.map((x) => x.code!) || []),
     );
     return {
@@ -102,17 +102,17 @@ class AuthService {
       return;
     }
     const token = await tokenService.createResetPasswordToken({ userId: user.id!, userUsername: user.username! });
-    emailService.sendResetPasswordEmail({
+    await emailService.sendResetPasswordEmail({
       userEmail: user.email!,
       userUsername: user.username!,
-      token: token.value!,
+      token: token?.value!,
       t,
     });
   }
 
   public async resetPassword(requestDTO: ResetPasswordRequestDTO) {
     const tokenValue = requestDTO.t;
-    const token = await tokenService.findByValueId(tokenValue);
+    const token = await tokenService.findOneById(tokenValue);
     if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
       throw new CustomException("auth.error.token_used_or_invalid", 401);
     }
@@ -129,15 +129,15 @@ class AuthService {
     await db.main
       .update(TokenTable)
       .set({ status: STATUS.INACTIVE })
-      .where(eq(TokenTable.id, Number(token.id)));
+      .where(eq(TokenTable.id, token.id || ""));
     await db.main
       .update(UserTable)
       .set({ password: hashedPassword })
-      .where(eq(UserTable.id, Number(user.id)));
+      .where(eq(UserTable.id, user.id || ""));
   }
 
   public async activateAccount(tokenValue: string) {
-    const token = await tokenService.findByValueId(tokenValue);
+    const token = await tokenService.findOneById(tokenValue);
     if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
       throw new CustomException("auth.error.token_used_or_invalid", 401);
     }
@@ -156,11 +156,11 @@ class AuthService {
     await db.main
       .update(TokenTable)
       .set({ status: STATUS.INACTIVE })
-      .where(eq(TokenTable.id, Number(token.id)));
+      .where(eq(TokenTable.id, token.id || ""));
     await db.main
       .update(UserTable)
       .set({ status: STATUS.ACTIVE })
-      .where(eq(UserTable.id, Number(user.id)));
+      .where(eq(UserTable.id, user.id || ""));
   }
 }
 

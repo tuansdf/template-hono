@@ -7,7 +7,7 @@ import { dated } from "~/lib/date";
 import { jwt } from "~/lib/jwt";
 
 class JwtService {
-  public async createAccessTokenPayload(userId: number, userPerms: number[]): Promise<AuthJwtTokenPayload> {
+  public async createAccessTokenPayload(userId: string, userPerms: number[]): Promise<AuthJwtTokenPayload> {
     const now = dated();
     const currentUnix = now.unix();
     const expiresUnix = now.add(ENV.JWT_ACCESS_LIFETIME, "minute").unix();
@@ -22,7 +22,7 @@ class JwtService {
     return result;
   }
 
-  public async createRefreshTokenPayload(userId: number): Promise<AuthJwtTokenPayload> {
+  public async createRefreshTokenPayload(userId: string, tokenId: string): Promise<AuthJwtTokenPayload> {
     const now = dated();
     const currentUnix = now.unix();
     const expiresUnix = now.add(ENV.JWT_REFRESH_LIFETIME, "minute").unix();
@@ -36,7 +36,7 @@ class JwtService {
     return result;
   }
 
-  public async createActivateAccountTokenPayload(username: string): Promise<AuthJwtTokenPayload> {
+  public async createActivateAccountTokenPayload(username: string, tokenId: string): Promise<AuthJwtTokenPayload> {
     const now = dated();
     const currentUnix = now.unix();
     const expiresUnix = now.add(ENV.TOKEN_ACTIVATE_ACCOUNT_LIFETIME, "minute").unix();
@@ -50,7 +50,7 @@ class JwtService {
     return result;
   }
 
-  public async createResetPasswordTokenPayload(username: string): Promise<AuthJwtTokenPayload> {
+  public async createResetPasswordTokenPayload(username: string, tokenId: string): Promise<AuthJwtTokenPayload> {
     const now = dated();
     const currentUnix = now.unix();
     const expiresUnix = now.add(ENV.TOKEN_RESET_PASSWORD_LIFETIME, "minute").unix();

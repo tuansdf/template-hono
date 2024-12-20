@@ -7,7 +7,7 @@ class PermissionService {
     return await permissionRepository.findAll();
   }
 
-  public async findOneById(id: number) {
+  public async findOneById(id: string) {
     const result = await permissionRepository.findTopById(id);
     if (!result) {
       throw new CustomException("dynamic.error.not_found;field.permission", 404);

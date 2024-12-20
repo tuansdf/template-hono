@@ -7,7 +7,7 @@ import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
 
 class UserService {
-  public async findOneById(userId: number) {
+  public async findOneById(userId: string) {
     const user = await userRepository.findTopById(userId);
     if (!user) {
       throw new CustomException("dynamic.error.not_found;field.user", 404);

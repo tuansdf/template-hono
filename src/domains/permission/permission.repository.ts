@@ -1,9 +1,9 @@
 import { count, eq, sql } from "drizzle-orm";
 import { db } from "~/db/db";
 import { PermissionDTO, PermissionSave, PermissionSaveDTO } from "~/domains/permission/permission.type";
+import { PermissionTable } from "~/entities/permission.entity";
 import { RolePermissionTable } from "~/entities/role-permission.entity";
 import { UserRoleTable } from "~/entities/user-role.entity";
-import { PermissionTable } from "~/entities/permission.entity";
 
 const selectAll = {
   id: PermissionTable.id,
@@ -22,12 +22,12 @@ class PermissionRepository {
     return db.main.select(selectAll).from(PermissionTable);
   }
 
-  public async findTopById(id: number): Promise<PermissionDTO | undefined> {
+  public async findTopById(id: string): Promise<PermissionDTO | undefined> {
     const result = await db.main.select(selectAll).from(PermissionTable).where(eq(PermissionTable.id, id)).limit(1);
     return result[0];
   }
 
-  public async findAllByRoleId(roleId: number): Promise<PermissionDTO[]> {
+  public async findAllByRoleId(roleId: string): Promise<PermissionDTO[]> {
     return db.main
       .select(selectAll)
       .from(PermissionTable)
@@ -35,7 +35,7 @@ class PermissionRepository {
       .where(eq(RolePermissionTable.roleId, roleId));
   }
 
-  public async findAllByUserId(userId: number): Promise<PermissionDTO[]> {
+  public async findAllByUserId(userId: string): Promise<PermissionDTO[]> {
     return db.main
       .select(selectAll)
       .from(PermissionTable)
@@ -44,12 +44,12 @@ class PermissionRepository {
       .where(eq(UserRoleTable.userId, userId));
   }
 
-  public async countById(id: number): Promise<number> {
+  public async countById(id: string): Promise<number> {
     const result = await db.main.select({ value: count() }).from(PermissionTable).where(eq(PermissionTable.id, id));
     return result[0]?.value || 0;
   }
 
-  public async existById(id: number): Promise<boolean> {
+  public async existById(id: string): Promise<boolean> {
     const result = await db.main
       .select({ value: sql`1` })
       .from(PermissionTable)
@@ -81,7 +81,7 @@ class PermissionRepository {
     const result = await db.main
       .update(PermissionTable)
       .set({ name: request.name, description: request.description })
-      .where(eq(PermissionTable.id, Number(request.id)))
+      .where(eq(PermissionTable.id, request.id || ""))
       .returning(selectAll);
     return result[0];
   }

@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { secureHeaders } from "hono/secure-headers";
 import { ENV } from "~/constants/env.constant";
-import { i18n } from "~/i18n/i18n.util";
+import { i18n } from "~/lib/i18n";
 import { errorHandler } from "~/middlewares/error-handler.middleware";
 import { detectLanguage } from "~/middlewares/i18n.middleware";
 import { loggerM } from "~/middlewares/logger.middleware";

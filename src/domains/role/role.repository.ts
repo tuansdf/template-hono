@@ -1,8 +1,8 @@
 import { count, eq, sql } from "drizzle-orm";
 import { db } from "~/db/db";
 import { RoleDTO, RoleSave, RoleSaveDTO } from "~/domains/role/role.type";
-import { UserRoleTable } from "~/entities/user-role.entity";
 import { RoleTable } from "~/entities/role.entity";
+import { UserRoleTable } from "~/entities/user-role.entity";
 
 const selectAll = {
   id: RoleTable.id,
@@ -21,7 +21,7 @@ class RoleRepository {
     return db.main.select(selectAll).from(RoleTable);
   }
 
-  public async findAllByUserId(userId: number): Promise<RoleDTO[]> {
+  public async findAllByUserId(userId: string): Promise<RoleDTO[]> {
     return db.main
       .select(selectAll)
       .from(RoleTable)
@@ -29,17 +29,17 @@ class RoleRepository {
       .where(eq(UserRoleTable.userId, userId));
   }
 
-  public async findTopById(id: number): Promise<RoleDTO | undefined> {
+  public async findTopById(id: string): Promise<RoleDTO | undefined> {
     const result = await db.main.select(selectAll).from(RoleTable).where(eq(RoleTable.id, id)).limit(1);
     return result[0];
   }
 
-  public async countById(id: number): Promise<number> {
+  public async countById(id: string): Promise<number> {
     const result = await db.main.select({ value: count() }).from(RoleTable).where(eq(RoleTable.id, id));
     return result[0]?.value || 0;
   }
 
-  public async existById(id: number): Promise<boolean> {
+  public async existById(id: string): Promise<boolean> {
     const result = await db.main
       .select({ value: sql`1` })
       .from(RoleTable)
@@ -71,7 +71,7 @@ class RoleRepository {
     const result = await db.main
       .update(RoleTable)
       .set({ name: request.name, description: request.description })
-      .where(eq(RoleTable.id, Number(request.id)))
+      .where(eq(RoleTable.id, request.id || ""))
       .returning(selectAll);
     return result[0];
   }

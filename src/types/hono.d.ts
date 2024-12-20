@@ -1,5 +1,5 @@
-import { AuthJwtTokenPayload } from "~/domains/auth/auth.type";
-import { TFn, ValidLang } from "~/i18n/i18n.type";
+import { AuthJwtTokenPayload } from "~/domains/token/token.type";
+import { TFn, ValidLang } from "~/lib/i18n";
 
 declare module "hono" {
   interface ContextVariableMap {

@@ -2,37 +2,20 @@ import { STATUS } from "~/constants/status.constant";
 import { TYPE } from "~/constants/type.constant";
 import { jwtService } from "~/domains/token/jwt.service";
 import { tokenRepository } from "~/domains/token/token.repository";
-import { TokenSave, TokenValueWithId } from "~/domains/token/token.type";
-import { CustomException } from "~/exceptions/custom-exception";
-import { base64 } from "~/lib/base64";
+import { TokenSave } from "~/domains/token/token.type";
 import { dated } from "~/lib/date";
 import { logger } from "~/lib/logger";
+import { uuid } from "~/lib/uuid";
 
 class TokenService {
   public async save(item: TokenSave) {
     return tokenRepository.save(item);
   }
 
-  public async saveValueWithId(item: TokenSave) {
-    delete item.id;
-    const token = await this.save(item);
-    if (!token) {
-      throw new CustomException("dynamic.error.not_found;field.token");
-    }
-    const valueObj: TokenValueWithId = {
-      v: token.value,
-      i: token.id,
-    };
-    token.value = base64.encode(JSON.stringify(valueObj));
-    return token;
-  }
-
-  public async findByValueId(tokenValue: string) {
+  public async findOneById(tokenId: string) {
     try {
-      const decoded = base64.decode(tokenValue);
-      const valueWithId = JSON.parse(decoded) as TokenValueWithId;
-      const token = await tokenRepository.findTopById(Number(valueWithId.i));
-      if (!token || token.value !== valueWithId.v) {
+      const token = await tokenRepository.findTopById(tokenId);
+      if (!token) {
         throw new Error();
       }
       return token;
@@ -42,15 +25,15 @@ class TokenService {
     }
   }
 
-  public async revokeTokenById(tokenId: number, userId: number) {
+  public async revokeTokenById(tokenId: string, userId: string) {
     await tokenRepository.updateStatusByTokenIdAndForeignId(STATUS.INACTIVE, tokenId, userId);
   }
 
-  public async revokeTokenByUserId(userId: number) {
-    await tokenRepository.updateStatusByForeignId(STATUS.INACTIVE, userId);
+  public async revokeTokenByForeignId(foreignId: string) {
+    await tokenRepository.updateStatusByForeignId(STATUS.INACTIVE, foreignId);
   }
 
-  public async verifyById(id: number): Promise<boolean> {
+  public async verifyById(id: string): Promise<boolean> {
     try {
       const token = await tokenRepository.findTopById(id);
       if (!token || !token.value || !token.expiresAt || !token.status) return false;
@@ -64,43 +47,49 @@ class TokenService {
     }
   }
 
-  public async createActivateAccountToken({ userId, userUsername }: { userId: number; userUsername: string }) {
-    const tokenPayload = await jwtService.createActivateAccountTokenPayload(userUsername);
+  public async createActivateAccountToken({ userId, userUsername }: { userId: string; userUsername: string }) {
+    const id = uuid();
+    const tokenPayload = await jwtService.createActivateAccountTokenPayload(userUsername, id);
     const tokenValue = await jwtService.createToken(tokenPayload);
     const item: TokenSave = {
+      id,
       foreignId: userId,
       value: tokenValue,
       type: TYPE.ACTIVATE_ACCOUNT,
       expiresAt: new Date(tokenPayload.exp! * 1000),
       status: STATUS.ACTIVE,
     };
-    return tokenService.saveValueWithId(item);
+    return this.save(item);
   }
 
-  public async createResetPasswordToken({ userId, userUsername }: { userId: number; userUsername: string }) {
-    const tokenPayload = await jwtService.createResetPasswordTokenPayload(userUsername);
+  public async createResetPasswordToken({ userId, userUsername }: { userId: string; userUsername: string }) {
+    const id = uuid();
+    const tokenPayload = await jwtService.createResetPasswordTokenPayload(userUsername, id);
     const tokenValue = await jwtService.createToken(tokenPayload);
     const item: TokenSave = {
+      id,
       foreignId: userId,
       value: tokenValue,
       type: TYPE.RESET_PASSWORD,
       expiresAt: new Date(tokenPayload.exp! * 1000),
       status: STATUS.ACTIVE,
     };
-    return tokenService.saveValueWithId(item);
+    return this.save(item);
   }
 
-  public async createRefreshToken({ userId }: { userId: number }) {
-    const tokenPayload = await jwtService.createRefreshTokenPayload(userId);
+  public async createRefreshToken({ userId }: { userId: string }) {
+    const id = uuid();
+    const tokenPayload = await jwtService.createRefreshTokenPayload(userId, id);
     const tokenValue = await jwtService.createToken(tokenPayload);
     const item: TokenSave = {
+      id,
       foreignId: userId,
       value: tokenValue,
       type: TYPE.REFRESH_TOKEN,
       expiresAt: new Date(tokenPayload.exp! * 1000),
       status: STATUS.ACTIVE,
     };
-    return tokenService.saveValueWithId(item);
+    return this.save(item);
   }
 }
 

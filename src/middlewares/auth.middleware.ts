@@ -6,8 +6,9 @@ import { tokenService } from "~/domains/token/token.service";
 import { JwtTokenType } from "~/domains/token/token.type";
 import { CustomException } from "~/exceptions/custom-exception";
 
-export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHandler => {
-  return async (c, next) => {
+export const authenticate =
+  (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHandler =>
+  async (c, next) => {
     const authHeader = c.req.header("Authorization");
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       throw new CustomException("auth.error.unauthenticated", 401);
@@ -19,7 +20,7 @@ export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHa
     }
 
     const payload = await jwtService.verifyToken(bearerToken, type);
-    if (payload.tid && (await tokenService.verifyById(Number(payload.tid)))) {
+    if (payload.tid && (await tokenService.verifyById(payload.tid))) {
       throw new CustomException("auth.error.unauthenticated", 401);
     }
 
@@ -28,10 +29,10 @@ export const authenticate = (type: JwtTokenType = JWT_TYPE.ACCESS): MiddlewareHa
 
     await next();
   };
-};
 
-export const authorize = (perms: string[]): MiddlewareHandler => {
-  return async (c, next) => {
+export const authorize =
+  (perms: string[]): MiddlewareHandler =>
+  async (c, next) => {
     if (perms.length === 0) await next();
 
     const authPayload = c.get("authPayload");
@@ -54,4 +55,3 @@ export const authorize = (perms: string[]): MiddlewareHandler => {
 
     await next();
   };
-};

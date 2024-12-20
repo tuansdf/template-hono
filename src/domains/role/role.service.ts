@@ -7,7 +7,7 @@ class RoleService {
     return await roleRepository.findAll();
   }
 
-  public async findOneById(id: number) {
+  public async findOneById(id: string) {
     const result = await roleRepository.findTopById(id);
     if (!result) {
       throw new CustomException("dynamic.error.not_found;field.role", 404);

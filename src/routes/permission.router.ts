@@ -10,7 +10,7 @@ permissionRouter.use(authenticate());
 permissionRouter.use(authorize([PERM_SUPER_ADMIN]));
 
 permissionRouter.get("/detail/:id", async (c) => {
-  const id = Number(c.req.param("id"));
+  const id = c.req.param("id");
   const result = await permissionService.findOneById(id);
   return Response.json({ data: result });
 });

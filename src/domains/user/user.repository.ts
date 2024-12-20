@@ -34,7 +34,7 @@ class UserRepository {
     return db.main.select(userSelector.all).from(UserTable).where(eq(UserTable.status, status));
   }
 
-  public async findTopById(id: number): Promise<UserDTO | undefined> {
+  public async findTopById(id: string): Promise<UserDTO | undefined> {
     const result = await db.main.select(userSelector.all).from(UserTable).where(eq(UserTable.id, id)).limit(1);
     return result[0];
   }

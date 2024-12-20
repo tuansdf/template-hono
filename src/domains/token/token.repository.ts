@@ -21,12 +21,12 @@ class TokenRepository {
     return db.main.select(selectAll).from(TokenTable);
   }
 
-  public async findTopById(id: number): Promise<TokenDTO | undefined> {
+  public async findTopById(id: string): Promise<TokenDTO | undefined> {
     const result = await db.main.select(selectAll).from(TokenTable).where(eq(TokenTable.id, id)).limit(1);
     return result[0];
   }
 
-  public async findTopByValueAndForeignId(value: string, foreignId: number): Promise<TokenDTO | undefined> {
+  public async findTopByValueAndForeignId(value: string, foreignId: string): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
       .from(TokenTable)
@@ -37,7 +37,7 @@ class TokenRepository {
 
   public async findTopByValueAndForeignIdAndStatus(
     value: string,
-    foreignId: number,
+    foreignId: string,
     status: string,
   ): Promise<TokenDTO | undefined> {
     const result = await db.main
@@ -48,7 +48,7 @@ class TokenRepository {
     return result[0];
   }
 
-  public async findTopByIdAndForeignId(id: number, foreignId: number): Promise<TokenDTO | undefined> {
+  public async findTopByIdAndForeignId(id: string, foreignId: string): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
       .from(TokenTable)
@@ -94,19 +94,19 @@ class TokenRepository {
     await db.main.insert(TokenTable).values(data);
   }
 
-  public async updateValueByTokenId(value: string, id: number): Promise<TokenDTO | undefined> {
+  public async updateValueByTokenId(value: string, id: string): Promise<TokenDTO | undefined> {
     const result = await db.main.update(TokenTable).set({ value }).where(eq(TokenTable.id, id)).returning(selectAll);
     return result[0];
   }
 
-  public async updateStatusByTokenIdAndForeignId(status: string, tokenId: number, foreignId: number): Promise<void> {
+  public async updateStatusByTokenIdAndForeignId(status: string, tokenId: string, foreignId: string): Promise<void> {
     await db.main
       .update(TokenTable)
       .set({ status })
       .where(and(eq(TokenTable.id, tokenId), eq(TokenTable.foreignId, foreignId)));
   }
 
-  public async updateStatusByForeignId(status: string, foreignId: number): Promise<void> {
+  public async updateStatusByForeignId(status: string, foreignId: string): Promise<void> {
     await db.main.update(TokenTable).set({ status }).where(eq(TokenTable.foreignId, foreignId));
   }
 }

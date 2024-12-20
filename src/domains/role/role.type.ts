@@ -12,7 +12,7 @@ export type CreateRoleBodyDTO = {
 };
 
 export type UpdateRoleBodyDTO = {
-  id: number;
+  id: string;
   name?: string | null;
   description?: string | null;
 };

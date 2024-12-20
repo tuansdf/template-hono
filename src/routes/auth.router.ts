@@ -28,21 +28,21 @@ authRouter.post("/register", async (c) => {
 
 authRouter.post("/token/refresh", authenticate(JWT_TYPE.REFRESH), async (c) => {
   const authPayload = c.get("authPayload");
-  const result = await authService.refreshToken(Number(authPayload?.sid), Number(authPayload?.tid));
+  const result = await authService.refreshToken(authPayload?.sid || "", authPayload?.tid || "");
   return Response.json({ data: result });
 });
 
 authRouter.post("/token/revoke/all", authenticate(JWT_TYPE.ACCESS), async (c) => {
   const authPayload = c.get("authPayload");
-  const userId = Number(authPayload?.sid);
-  await tokenService.revokeTokenByUserId(userId);
+  const userId = authPayload?.sid || "";
+  await tokenService.revokeTokenByForeignId(userId);
   return Response.json(null);
 });
 
 authRouter.post("/token/revoke/:tokenId", authenticate(JWT_TYPE.ACCESS), async (c) => {
-  const tokenId = Number(c.req.param("tokenId"));
+  const tokenId = c.req.param("tokenId") || "";
   const authPayload = c.get("authPayload");
-  const userId = Number(authPayload?.sid);
+  const userId = authPayload?.sid || "";
   await tokenService.revokeTokenById(tokenId, userId);
   return Response.json(null);
 });

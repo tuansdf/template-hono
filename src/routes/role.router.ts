@@ -10,7 +10,7 @@ roleRouter.use(authenticate());
 roleRouter.use(authorize([PERM_SUPER_ADMIN]));
 
 roleRouter.get("/detail/:id", async (c) => {
-  const id = Number(c.req.param("id"));
+  const id = c.req.param("id");
   const result = await roleService.findOneById(id);
   return Response.json({ data: result });
 });

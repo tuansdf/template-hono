@@ -2,7 +2,7 @@ import { z } from "zod";
 import { CreateRoleBodyDTO, UpdateRoleBodyDTO } from "~/domains/role/role.type";
 
 const idSchema = z.coerce
-  .number({ required_error: "form.error.missing;field.id", invalid_type_error: "form.error.invalid;field.id" })
+  .string({ required_error: "form.error.missing;field.id", invalid_type_error: "form.error.invalid;field.id" })
   .min(1, "form.error.invalid;field.id");
 const codeSchema = z
   .string({

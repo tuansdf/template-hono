@@ -6,7 +6,7 @@ import { authenticate } from "~/middlewares/auth.middleware";
 export const userRouter = new Hono();
 
 userRouter.get("/detail/:id", authenticate(), async (c) => {
-  const id = Number(c.req.param("id"));
+  const id = c.req.param("id");
   const result = await userService.findOneById(id);
   return Response.json({ data: result });
 });

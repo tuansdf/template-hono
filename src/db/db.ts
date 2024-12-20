@@ -7,7 +7,7 @@ import { logger } from "~/lib/logger";
 class Database {
   private readonly _main;
 
-  constructor() {
+  public constructor() {
     try {
       logger.info("Connecting to databases");
       this._main = drizzle(ENV.DB_URL);
