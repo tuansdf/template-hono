@@ -2,6 +2,7 @@ import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { commonColumns } from "~/entities/common.entity";
 
 export const NotificationTable = pgTable("notification", {
+  ...commonColumns,
   fromUserId: uuid("from_user_id"),
   toUserId: uuid("from_user_id"),
   title: text("title"),
@@ -12,5 +13,4 @@ export const NotificationTable = pgTable("notification", {
   navigateTo: text("navigate_to"),
   retryCount: integer("retry_count"),
   status: text("status"),
-  ...commonColumns,
 });
