@@ -21,13 +21,13 @@ roleRouter.get("/", async () => {
 });
 
 roleRouter.post("/", async (c) => {
-  const body = createRoleBodySchema.parse(c.req.json());
+  const body = createRoleBodySchema.parse(await c.req.json());
   await roleService.create(body);
   return Response.json(null);
 });
 
 roleRouter.patch("/", async (c) => {
-  const body = updateRoleBodySchema.parse(c.req.json());
+  const body = updateRoleBodySchema.parse(await c.req.json());
   await roleService.update(body);
   return Response.json(null);
 });

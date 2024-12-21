@@ -5,14 +5,14 @@ import { authenticate } from "~/middlewares/auth.middleware";
 
 export const userRouter = new Hono();
 
-userRouter.get("/detail/:id", authenticate(), async (c) => {
-  const id = c.req.param("id");
-  const result = await userService.findOneById(id);
+userRouter.get("/", authenticate(), async (c) => {
+  const result = await userService.findAll();
   return Response.json({ data: result });
 });
 
-userRouter.get("/", authenticate(), async (c) => {
-  const result = await userService.findAll();
+userRouter.get("/:id", authenticate(), async (c) => {
+  const id = c.req.param("id");
+  const result = await userService.findOneById(id);
   return Response.json({ data: result });
 });
 

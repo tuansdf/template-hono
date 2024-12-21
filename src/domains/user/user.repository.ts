@@ -1,4 +1,4 @@
-import { count, eq, or, sql } from "drizzle-orm";
+import { and, count, eq, or, sql } from "drizzle-orm";
 import { db } from "~/db/db";
 import { UserDTO, UserSave } from "~/domains/user/user.type";
 import { UserTable } from "~/entities/user.entity";
@@ -68,6 +68,15 @@ class UserRepository {
 
   public async findTopByEmail(email: string): Promise<UserDTO | undefined> {
     const result = await db.main.select(userSelector.all).from(UserTable).where(eq(UserTable.email, email)).limit(1);
+    return result[0];
+  }
+
+  public async findTopByEmailAndStatus(email: string, status: string): Promise<UserDTO | undefined> {
+    const result = await db.main
+      .select(userSelector.all)
+      .from(UserTable)
+      .where(and(eq(UserTable.email, email), eq(UserTable.status, status)))
+      .limit(1);
     return result[0];
   }
 

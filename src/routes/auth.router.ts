@@ -4,6 +4,7 @@ import {
   forgotPasswordRequestSchema,
   loginRequestSchema,
   registerRequestSchema,
+  resendActivateAccountBodySchema,
   resetPasswordRequestSchema,
 } from "~/domains/auth/auth.schema";
 import { authService } from "~/domains/auth/auth.service";
@@ -14,14 +15,14 @@ import { authenticate } from "~/middlewares/auth.middleware";
 export const authRouter = new Hono();
 
 authRouter.post("/login", async (c) => {
-  const body = loginRequestSchema.parse(c.req.json());
+  const body = loginRequestSchema.parse(await c.req.json());
   const result = await authService.login(body);
   return Response.json({ data: result });
 });
 
 authRouter.post("/register", async (c) => {
   const t = c.get("t");
-  const body = registerRequestSchema.parse(c.req.json());
+  const body = registerRequestSchema.parse(await c.req.json());
   await authService.register(body, t);
   return Response.json({ message: t("auth.message.activate_account_email_sent") });
 });
@@ -49,21 +50,28 @@ authRouter.post("/token/revoke/:tokenId", authenticate(JWT_TYPE.ACCESS), async (
 
 authRouter.post("/password/forgot", async (c) => {
   const t = c.get("t");
-  const body = forgotPasswordRequestSchema.parse(c.req.json());
+  const body = forgotPasswordRequestSchema.parse(await c.req.json());
   await authService.forgotPassword(body, t);
   return Response.json({ message: t("auth.message.reset_password_email_sent") });
 });
 
 authRouter.post("/password/reset", async (c) => {
   const t = c.get("t");
-  const body = resetPasswordRequestSchema.parse(c.req.json());
+  const body = resetPasswordRequestSchema.parse(await c.req.json());
   await authService.resetPassword(body);
   return Response.json({ message: t("auth.message.reset_password_success") });
 });
 
 authRouter.post("/account/activate", async (c) => {
   const t = c.get("t");
-  const body = activateAccountBodySchema.parse(c.req.json());
+  const body = activateAccountBodySchema.parse(await c.req.json());
   await authService.activateAccount(body.t);
   return Response.json({ message: t("auth.message.activate_account_success") });
+});
+
+authRouter.post("/account/activate/resend", async (c) => {
+  const t = c.get("t");
+  const body = resendActivateAccountBodySchema.parse(await c.req.json());
+  await authService.resendActivateAccount(body.email, t);
+  return Response.json({ message: t("auth.message.activate_account_email_sent") });
 });

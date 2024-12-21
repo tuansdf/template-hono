@@ -21,13 +21,13 @@ permissionRouter.get("/", async (c) => {
 });
 
 permissionRouter.post("/", async (c) => {
-  const body = createPermissionBodySchema.parse(c.req.json());
+  const body = createPermissionBodySchema.parse(await c.req.json());
   await permissionService.create(body);
   return Response.json({});
 });
 
 permissionRouter.patch("/", async (c) => {
-  const body = updatePermissionBodySchema.parse(c.req.json());
+  const body = updatePermissionBodySchema.parse(await c.req.json());
   await permissionService.update(body);
   return Response.json(null);
 });

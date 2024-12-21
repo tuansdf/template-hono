@@ -10,6 +10,7 @@ const schema = z.object({
   TOKEN_ACTIVATE_ACCOUNT_LIFETIME: z.coerce.number().min(1),
   EMAIL_ACTIVATE_ACCOUNT_BASE_URL: z.string().min(1),
   EMAIL_RESET_PASSWORD_BASE_URL: z.string().min(1),
+  RESEND_EMAIL_THROTTLED: z.coerce.number().min(1),
   ENV: z.string().min(1),
 });
 

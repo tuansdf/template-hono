@@ -32,6 +32,7 @@ class JwtService {
       iat: currentUnix,
       nbf: currentUnix,
       exp: expiresUnix,
+      tid: tokenId,
     };
     return result;
   }
@@ -46,6 +47,7 @@ class JwtService {
       iat: currentUnix,
       nbf: currentUnix,
       exp: expiresUnix,
+      tid: tokenId,
     };
     return result;
   }
@@ -60,6 +62,7 @@ class JwtService {
       iat: currentUnix,
       nbf: currentUnix,
       exp: expiresUnix,
+      tid: tokenId,
     };
     return result;
   }

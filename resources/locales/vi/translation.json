@@ -41,6 +41,11 @@
       "not_activated": "Người dùng chưa trong trạng thái hoạt động"
     }
   },
+  "email": {
+    "error": {
+      "throttled": "Vui lòng đợi một vài phút để gửi thư khác"
+    }
+  },
   "auth": {
     "error": {
       "unauthenticated": "Thông tin đăng nhập không chính xác",

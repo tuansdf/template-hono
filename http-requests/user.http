@@ -1,0 +1,17 @@
+### Get all users
+
+GET {{base_url}}/api/users
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### Search users
+
+GET {{base_url}}/api/users
+Accept: application/json
+Authorization: Bearer {{access_token}}
+
+### Get detail by id
+
+GET {{base_url}}/api/users/1
+Accept: application/json
+Authorization: Bearer {{access_token}}

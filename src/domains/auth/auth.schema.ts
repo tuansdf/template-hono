@@ -36,3 +36,7 @@ export const resetPasswordRequestSchema: z.ZodType<ResetPasswordRequestDTO> = z
 export const activateAccountBodySchema = z.object({
   t: tokenSchema,
 });
+
+export const resendActivateAccountBodySchema = z.object({
+  email: emailSchema,
+});

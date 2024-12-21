@@ -1,5 +1,7 @@
 import { eq } from "drizzle-orm";
+import { ENV } from "~/constants/env.constant";
 import { STATUS } from "~/constants/status.constant";
+import { TYPE } from "~/constants/type.constant";
 import { db } from "~/db/db";
 import {
   ForgotPasswordRequestDTO,
@@ -12,12 +14,15 @@ import { permissionRepository } from "~/domains/permission/permission.repository
 import { permissionUtils } from "~/domains/permission/permission.util";
 import { jwtService } from "~/domains/token/jwt.service";
 import { JWT_TYPE } from "~/domains/token/token.constant";
+import { tokenRepository } from "~/domains/token/token.repository";
 import { tokenService } from "~/domains/token/token.service";
+import { AuthJwtTokenPayload } from "~/domains/token/token.type";
 import { userRepository } from "~/domains/user/user.repository";
 import { UserDTO } from "~/domains/user/user.type";
 import { TokenTable } from "~/entities/token.entity";
 import { UserTable } from "~/entities/user.entity";
 import { CustomException } from "~/exceptions/custom-exception";
+import { dated } from "~/lib/date";
 import { hasher } from "~/lib/hasher";
 import { TFn } from "~/lib/i18n";
 import { logger } from "~/lib/logger";
@@ -136,15 +141,38 @@ class AuthService {
       .where(eq(UserTable.id, user.id || ""));
   }
 
-  public async activateAccount(tokenValue: string) {
-    const token = await tokenService.findOneById(tokenValue);
-    if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
-      throw new CustomException("auth.error.token_used_or_invalid", 401);
+  public async resendActivateAccount(email: string, t: TFn) {
+    const user = await userRepository.findTopByEmailAndStatus(email, STATUS.PENDING);
+    if (!user) return;
+    const oldToken = await tokenRepository.findOneByForeignIdAndTypeAndStatusAndCreatedAtAfter(
+      user.id!,
+      TYPE.ACTIVATE_ACCOUNT,
+      STATUS.ACTIVE,
+      dated().subtract(ENV.RESEND_EMAIL_THROTTLED, "minute").toDate(),
+    );
+    if (oldToken) {
+      throw new CustomException("email.error.throttled", 400);
     }
+    await tokenRepository.deactivateAllByForeignIdAndTypeAndStatus(user.id!, TYPE.ACTIVATE_ACCOUNT, STATUS.ACTIVE);
+    const token = await tokenService.createActivateAccountToken({ userUsername: user.username!, userId: user.id! });
+    await emailService.sendActivateAccountEmail({
+      userEmail: user.email!,
+      userUsername: user.username!,
+      token: token?.value!,
+      t,
+    });
+  }
+
+  public async activateAccount(tokenValue: string) {
+    let jwtPayload: AuthJwtTokenPayload | undefined;
     try {
-      await jwtService.verifyToken(token.value || "", JWT_TYPE.ACTIVATE_ACCOUNT);
+      jwtPayload = await jwtService.verifyToken(tokenValue, JWT_TYPE.ACTIVATE_ACCOUNT);
     } catch {
       throw new CustomException("auth.error.token_used_or_invalid");
+    }
+    const token = await tokenService.findOneById(jwtPayload.tid!);
+    if (!token || !token.foreignId || token.status !== STATUS.ACTIVE) {
+      throw new CustomException("auth.error.token_used_or_invalid", 401);
     }
     const user = await userRepository.findTopById(token.foreignId);
     if (!user) {

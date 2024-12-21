@@ -41,6 +41,11 @@
       "not_activated": "User is not activated"
     }
   },
+  "email": {
+    "error": {
+      "throttle": "Please wait a few minutes before sending another email"
+    }
+  },
   "auth": {
     "error": {
       "unauthenticated": "Invalid credentials",

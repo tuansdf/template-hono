@@ -1,4 +1,5 @@
-import { and, count, eq, sql } from "drizzle-orm";
+import { and, count, eq, gte, sql } from "drizzle-orm";
+import { STATUS } from "~/constants/status.constant";
 import { db } from "~/db/db";
 import { TokenDTO, TokenSave } from "~/domains/token/token.type";
 import { TokenTable } from "~/entities/token.entity";
@@ -69,6 +70,34 @@ class TokenRepository {
       .where(and(eq(TokenTable.value, token), eq(TokenTable.status, status)))
       .limit(1);
     return result[0];
+  }
+
+  public async findOneByForeignIdAndTypeAndStatusAndCreatedAtAfter(
+    foreignId: string,
+    type: string,
+    status: string,
+    createdAt: Date,
+  ) {
+    const result = await db.main
+      .select(selectAll)
+      .from(TokenTable)
+      .where(
+        and(
+          eq(TokenTable.foreignId, foreignId),
+          eq(TokenTable.type, type),
+          eq(TokenTable.status, status),
+          gte(TokenTable.createdAt, createdAt),
+        ),
+      )
+      .limit(1);
+    return result[0];
+  }
+
+  public async deactivateAllByForeignIdAndTypeAndStatus(foreignId: string, type: string, status: string) {
+    await db.main
+      .update(TokenTable)
+      .set({ status: STATUS.INACTIVE })
+      .where(and(eq(TokenTable.foreignId, foreignId), eq(TokenTable.type, type), eq(TokenTable.status, status)));
   }
 
   public async countByValue(token: string): Promise<number> {

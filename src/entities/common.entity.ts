@@ -9,10 +9,12 @@ export const commonColumns = {
   updatedBy: uuid("updated_by"),
   createdAt: timestamp("created_at", {
     withTimezone: true,
+    precision: 3,
     mode: "date",
   }).defaultNow(),
   updatedAt: timestamp("updated_at", {
     withTimezone: true,
+    precision: 3,
     mode: "date",
   })
     .defaultNow()
