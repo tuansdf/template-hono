@@ -15,7 +15,7 @@ roleRouter.get("/detail/:id", async (c) => {
   return Response.json({ data: result });
 });
 
-roleRouter.get("/", async (c) => {
+roleRouter.get("/", async () => {
   const result = await roleService.findAll();
   return Response.json({ data: result });
 });

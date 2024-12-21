@@ -22,10 +22,7 @@ app.route("/api", routes);
 app.notFound(notFound());
 app.onError(errorHandler());
 
-const initServices = async () => {
-  await i18n.init();
-};
-await initServices();
+await i18n.init();
 
 const port = ENV.PORT || 5000;
 console.log(`Server is running on port ${port}`);
