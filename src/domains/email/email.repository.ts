@@ -1,31 +1,31 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import { EmailDTO, EmailSave } from "@/domains/email/email.type";
-import { emails } from "@/db/schemas/email.schema";
+import { emailTable } from "@/db/schemas/email.schema";
 
 const selectAll = {
-  id: emails.id,
-  fromEmail: emails.fromEmail,
-  toEmail: emails.toEmail,
-  ccEmail: emails.ccEmail,
-  subject: emails.subject,
-  content: emails.content,
-  type: emails.type,
-  retryCount: emails.retryCount,
-  status: emails.status,
-  createdBy: emails.createdBy,
-  updatedBy: emails.updatedBy,
-  createdAt: emails.createdAt,
-  updatedAt: emails.updatedAt,
+  id: emailTable.id,
+  fromEmail: emailTable.fromEmail,
+  toEmail: emailTable.toEmail,
+  ccEmail: emailTable.ccEmail,
+  subject: emailTable.subject,
+  content: emailTable.content,
+  type: emailTable.type,
+  retryCount: emailTable.retryCount,
+  status: emailTable.status,
+  createdBy: emailTable.createdBy,
+  updatedBy: emailTable.updatedBy,
+  createdAt: emailTable.createdAt,
+  updatedAt: emailTable.updatedAt,
 } as const;
 
 class EmailRepository {
   public async findAllByStatus(status: string): Promise<EmailDTO[]> {
-    return db.main.select(selectAll).from(emails).where(eq(emails.status, status));
+    return db.main.select(selectAll).from(emailTable).where(eq(emailTable.status, status));
   }
 
   public async save(item: EmailSave): Promise<EmailDTO | undefined> {
-    const result = await db.main.insert(emails).values(item).returning(selectAll);
+    const result = await db.main.insert(emailTable).values(item).returning(selectAll);
     return result[0];
   }
 }

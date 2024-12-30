@@ -1,8 +1,8 @@
-import { roles } from "@/db/schemas/role.schema";
+import { roleTable } from "@/db/schemas/role.schema";
 
-export type Role = typeof roles.$inferSelect;
+export type Role = typeof roleTable.$inferSelect;
 export type RoleDTO = Partial<Role>;
-export type RoleSave = typeof roles.$inferInsert;
+export type RoleSave = typeof roleTable.$inferInsert;
 export type RoleSaveDTO = Partial<RoleSave>;
 
 export type CreateRoleBodyDTO = {

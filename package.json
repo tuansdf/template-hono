@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "bun run --hot src/server.ts",
-    "build": "rimraf dist && bun build src/server.ts --outdir=dist --target=bun --sourcemap=linked && cpy resources dist && cpy .env dist",
+    "build": "tsc && rimraf dist && bun build src/server.ts --outdir=dist --target=bun --sourcemap=linked && cpy resources dist && cpy .env dist",
     "start": "bun run dist/server.js",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate"

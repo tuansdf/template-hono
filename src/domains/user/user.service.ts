@@ -3,7 +3,7 @@ import { STATUS } from "@/constants/status.constant";
 import { db } from "@/db/db";
 import { userRepository, userSelector } from "@/domains/user/user.repository";
 import { UserSearchRequestDTO } from "@/domains/user/user.type";
-import { users } from "@/db/schemas/user.schema";
+import { userTable } from "@/db/schemas/user.schema";
 import { CustomException } from "@/exceptions/custom-exception";
 
 class UserService {
@@ -36,9 +36,9 @@ class UserService {
   }
 
   public async search(requestDTO: UserSearchRequestDTO) {
-    const query = db.main.select(userSelector.search).from(users);
+    const query = db.main.select(userSelector.search).from(userTable);
     if (requestDTO.q) {
-      query.where(or(ilike(users.email, `%${requestDTO.q}%`), ilike(users.username, `%${requestDTO.q}%`)));
+      query.where(or(ilike(userTable.email, `%${requestDTO.q}%`), ilike(userTable.username, `%${requestDTO.q}%`)));
     }
     if (requestDTO.pageSize && requestDTO.pageNumber) {
       query.limit(requestDTO.pageSize).offset((requestDTO.pageNumber - 1) * requestDTO.pageSize);
