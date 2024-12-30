@@ -1,6 +1,6 @@
-import { emailTable } from "@/db/schemas/email.schema";
+import { emails } from "@/db/schemas/email.schema";
 
-export type Email = typeof emailTable.$inferSelect;
+export type Email = typeof emails.$inferSelect;
 export type EmailDTO = Partial<Email>;
-export type EmailSave = typeof emailTable.$inferInsert;
+export type EmailSave = typeof emails.$inferInsert;
 export type EmailSaveDTO = Partial<EmailSave>;

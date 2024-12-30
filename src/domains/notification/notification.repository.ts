@@ -1,33 +1,33 @@
 import { eq } from "drizzle-orm";
 import { db } from "@/db/db";
 import { NotificationDTO, NotificationSave } from "@/domains/notification/notification.type";
-import { notificationTable } from "@/db/schemas/notification.schema";
+import { notifications } from "@/db/schemas/notification.schema";
 
 const selectAll = {
-  id: notificationTable.id,
-  fromUserId: notificationTable.fromUserId,
-  toUserId: notificationTable.toUserId,
-  title: notificationTable.title,
-  content: notificationTable.content,
-  data: notificationTable.data,
-  type: notificationTable.type,
-  topic: notificationTable.topic,
-  navigateTo: notificationTable.navigateTo,
-  retryCount: notificationTable.retryCount,
-  status: notificationTable.status,
-  createdBy: notificationTable.createdBy,
-  updatedBy: notificationTable.updatedBy,
-  createdAt: notificationTable.createdAt,
-  updatedAt: notificationTable.updatedAt,
+  id: notifications.id,
+  fromUserId: notifications.fromUserId,
+  toUserId: notifications.toUserId,
+  title: notifications.title,
+  content: notifications.content,
+  data: notifications.data,
+  type: notifications.type,
+  topic: notifications.topic,
+  navigateTo: notifications.navigateTo,
+  retryCount: notifications.retryCount,
+  status: notifications.status,
+  createdBy: notifications.createdBy,
+  updatedBy: notifications.updatedBy,
+  createdAt: notifications.createdAt,
+  updatedAt: notifications.updatedAt,
 } as const;
 
 class NotificationRepository {
   public async findAllByStatus(status: string): Promise<NotificationDTO[]> {
-    return db.main.select(selectAll).from(notificationTable).where(eq(notificationTable.status, status));
+    return db.main.select(selectAll).from(notifications).where(eq(notifications.status, status));
   }
 
   public async save(item: NotificationSave): Promise<NotificationDTO | undefined> {
-    const result = await db.main.insert(notificationTable).values(item).returning(selectAll);
+    const result = await db.main.insert(notifications).values(item).returning(selectAll);
     return result[0];
   }
 }

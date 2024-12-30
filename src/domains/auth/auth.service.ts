@@ -19,8 +19,8 @@ import { tokenService } from "@/domains/token/token.service";
 import { AuthJwtTokenPayload } from "@/domains/token/token.type";
 import { userRepository } from "@/domains/user/user.repository";
 import { UserDTO } from "@/domains/user/user.type";
-import { tokenTable } from "@/db/schemas/token.schema";
-import { userTable } from "@/db/schemas/user.schema";
+import { tokens } from "@/db/schemas/token.schema";
+import { users } from "@/db/schemas/user.schema";
 import { CustomException } from "@/exceptions/custom-exception";
 import { dated } from "@/lib/date";
 import { hasher } from "@/lib/hasher";
@@ -132,13 +132,13 @@ class AuthService {
     }
     const hashedPassword = await hasher.hash(requestDTO.password);
     await db.main
-      .update(tokenTable)
+      .update(tokens)
       .set({ status: STATUS.INACTIVE })
-      .where(eq(tokenTable.id, token.id || ""));
+      .where(eq(tokens.id, token.id || ""));
     await db.main
-      .update(userTable)
+      .update(users)
       .set({ password: hashedPassword })
-      .where(eq(userTable.id, user.id || ""));
+      .where(eq(users.id, user.id || ""));
   }
 
   public async resendActivateAccount(email: string, t: TFn) {
@@ -182,13 +182,13 @@ class AuthService {
       throw new CustomException("auth.error.already_activated", 400);
     }
     await db.main
-      .update(tokenTable)
+      .update(tokens)
       .set({ status: STATUS.INACTIVE })
-      .where(eq(tokenTable.id, token.id || ""));
+      .where(eq(tokens.id, token.id || ""));
     await db.main
-      .update(userTable)
+      .update(users)
       .set({ status: STATUS.ACTIVE })
-      .where(eq(userTable.id, user.id || ""));
+      .where(eq(users.id, user.id || ""));
   }
 }
 

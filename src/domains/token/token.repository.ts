@@ -2,36 +2,36 @@ import { and, count, eq, gte, sql } from "drizzle-orm";
 import { STATUS } from "@/constants/status.constant";
 import { db } from "@/db/db";
 import { TokenDTO, TokenSave } from "@/domains/token/token.type";
-import { tokenTable } from "@/db/schemas/token.schema";
+import { tokens } from "@/db/schemas/token.schema";
 
 const selectAll = {
-  id: tokenTable.id,
-  foreignId: tokenTable.foreignId,
-  value: tokenTable.value,
-  type: tokenTable.type,
-  expiresAt: tokenTable.expiresAt,
-  status: tokenTable.status,
-  createdBy: tokenTable.createdBy,
-  updatedBy: tokenTable.updatedBy,
-  createdAt: tokenTable.createdAt,
-  updatedAt: tokenTable.updatedAt,
+  id: tokens.id,
+  foreignId: tokens.foreignId,
+  value: tokens.value,
+  type: tokens.type,
+  expiresAt: tokens.expiresAt,
+  status: tokens.status,
+  createdBy: tokens.createdBy,
+  updatedBy: tokens.updatedBy,
+  createdAt: tokens.createdAt,
+  updatedAt: tokens.updatedAt,
 } as const;
 
 class TokenRepository {
   public async findAll(): Promise<TokenDTO[]> {
-    return db.main.select(selectAll).from(tokenTable);
+    return db.main.select(selectAll).from(tokens);
   }
 
   public async findTopById(id: string): Promise<TokenDTO | undefined> {
-    const result = await db.main.select(selectAll).from(tokenTable).where(eq(tokenTable.id, id)).limit(1);
+    const result = await db.main.select(selectAll).from(tokens).where(eq(tokens.id, id)).limit(1);
     return result[0];
   }
 
   public async findTopByValueAndForeignId(value: string, foreignId: string): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
-      .from(tokenTable)
-      .where(and(eq(tokenTable.value, value), eq(tokenTable.foreignId, foreignId)))
+      .from(tokens)
+      .where(and(eq(tokens.value, value), eq(tokens.foreignId, foreignId)))
       .limit(1);
     return result[0];
   }
@@ -43,8 +43,8 @@ class TokenRepository {
   ): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
-      .from(tokenTable)
-      .where(and(eq(tokenTable.value, value), eq(tokenTable.foreignId, foreignId), eq(tokenTable.status, status)))
+      .from(tokens)
+      .where(and(eq(tokens.value, value), eq(tokens.foreignId, foreignId), eq(tokens.status, status)))
       .limit(1);
     return result[0];
   }
@@ -52,22 +52,22 @@ class TokenRepository {
   public async findTopByIdAndForeignId(id: string, foreignId: string): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
-      .from(tokenTable)
-      .where(and(eq(tokenTable.id, id), eq(tokenTable.foreignId, foreignId)))
+      .from(tokens)
+      .where(and(eq(tokens.id, id), eq(tokens.foreignId, foreignId)))
       .limit(1);
     return result[0];
   }
 
   public async findTopByValue(token: string): Promise<TokenDTO | undefined> {
-    const result = await db.main.select(selectAll).from(tokenTable).where(eq(tokenTable.value, token)).limit(1);
+    const result = await db.main.select(selectAll).from(tokens).where(eq(tokens.value, token)).limit(1);
     return result[0];
   }
 
   public async findTopByValueAndStatus(token: string, status: string): Promise<TokenDTO | undefined> {
     const result = await db.main
       .select(selectAll)
-      .from(tokenTable)
-      .where(and(eq(tokenTable.value, token), eq(tokenTable.status, status)))
+      .from(tokens)
+      .where(and(eq(tokens.value, token), eq(tokens.status, status)))
       .limit(1);
     return result[0];
   }
@@ -80,13 +80,13 @@ class TokenRepository {
   ) {
     const result = await db.main
       .select(selectAll)
-      .from(tokenTable)
+      .from(tokens)
       .where(
         and(
-          eq(tokenTable.foreignId, foreignId),
-          eq(tokenTable.type, type),
-          eq(tokenTable.status, status),
-          gte(tokenTable.createdAt, createdAt),
+          eq(tokens.foreignId, foreignId),
+          eq(tokens.type, type),
+          eq(tokens.status, status),
+          gte(tokens.createdAt, createdAt),
         ),
       )
       .limit(1);
@@ -95,48 +95,48 @@ class TokenRepository {
 
   public async deactivateAllByForeignIdAndTypeAndStatus(foreignId: string, type: string, status: string) {
     await db.main
-      .update(tokenTable)
+      .update(tokens)
       .set({ status: STATUS.INACTIVE })
-      .where(and(eq(tokenTable.foreignId, foreignId), eq(tokenTable.type, type), eq(tokenTable.status, status)));
+      .where(and(eq(tokens.foreignId, foreignId), eq(tokens.type, type), eq(tokens.status, status)));
   }
 
   public async countByValue(token: string): Promise<number> {
-    const result = await db.main.select({ value: count() }).from(tokenTable).where(eq(tokenTable.value, token));
+    const result = await db.main.select({ value: count() }).from(tokens).where(eq(tokens.value, token));
     return result[0]?.value || 0;
   }
 
   public async existByValue(token: string): Promise<boolean> {
     const result = await db.main
       .select({ value: sql`1` })
-      .from(tokenTable)
-      .where(eq(tokenTable.value, token))
+      .from(tokens)
+      .where(eq(tokens.value, token))
       .limit(1);
     return !!result[0]?.value;
   }
 
   public async save(data: TokenSave): Promise<TokenDTO | undefined> {
-    const result = await db.main.insert(tokenTable).values(data).returning(selectAll);
+    const result = await db.main.insert(tokens).values(data).returning(selectAll);
     return result[0];
   }
 
   public async saveAll(data: TokenSave[]): Promise<void> {
-    await db.main.insert(tokenTable).values(data);
+    await db.main.insert(tokens).values(data);
   }
 
   public async updateValueByTokenId(value: string, id: string): Promise<TokenDTO | undefined> {
-    const result = await db.main.update(tokenTable).set({ value }).where(eq(tokenTable.id, id)).returning(selectAll);
+    const result = await db.main.update(tokens).set({ value }).where(eq(tokens.id, id)).returning(selectAll);
     return result[0];
   }
 
   public async updateStatusByTokenIdAndForeignId(status: string, tokenId: string, foreignId: string): Promise<void> {
     await db.main
-      .update(tokenTable)
+      .update(tokens)
       .set({ status })
-      .where(and(eq(tokenTable.id, tokenId), eq(tokenTable.foreignId, foreignId)));
+      .where(and(eq(tokens.id, tokenId), eq(tokens.foreignId, foreignId)));
   }
 
   public async updateStatusByForeignId(status: string, foreignId: string): Promise<void> {
-    await db.main.update(tokenTable).set({ status }).where(eq(tokenTable.foreignId, foreignId));
+    await db.main.update(tokens).set({ status }).where(eq(tokens.foreignId, foreignId));
   }
 }
 

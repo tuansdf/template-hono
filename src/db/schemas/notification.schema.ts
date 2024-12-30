@@ -1,7 +1,7 @@
 import { integer, pgTable, text, uuid } from "drizzle-orm/pg-core";
 import { commonColumns } from "@/db/schemas/common.schema";
 
-export const notificationTable = pgTable("notification", {
+export const notifications = pgTable("notification", {
   ...commonColumns,
   fromUserId: uuid("from_user_id"),
   toUserId: uuid("from_user_id"),
