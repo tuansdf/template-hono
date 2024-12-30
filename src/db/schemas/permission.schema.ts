@@ -1,7 +1,7 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { commonColumns } from "~/entities/common.entity";
+import { commonColumns } from "@/db/schemas/common.schema";
 
-export const PermissionTable = pgTable("_permission", {
+export const permissionTable = pgTable("_permission", {
   ...commonColumns,
   code: text("code").unique(),
   name: text("name"),

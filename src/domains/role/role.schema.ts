@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CreateRoleBodyDTO, UpdateRoleBodyDTO } from "~/domains/role/role.type";
+import { CreateRoleBodyDTO, UpdateRoleBodyDTO } from "@/domains/role/role.type";
 
 const idSchema = z.coerce
   .string({ required_error: "form.error.missing;field.id", invalid_type_error: "form.error.invalid;field.id" })

@@ -3,7 +3,7 @@ import { defineConfig } from "drizzle-kit";
 import { ENV } from "src/constants/env.constant";
 
 export default defineConfig({
-  schema: "./src/entities/*.entity.ts",
+  schema: "./src/db/schemas/index.ts",
   out: "./drizzle",
   dialect: "postgresql",
   dbCredentials: {

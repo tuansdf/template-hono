@@ -1,5 +1,5 @@
-import { PERM_INDEX } from "~/domains/permission/permission.constant";
-import { PermissionDTO } from "~/domains/permission/permission.type";
+import { PERM_INDEX } from "@/domains/permission/permission.constant";
+import { PermissionDTO } from "@/domains/permission/permission.type";
 
 class PermissionUtils {
   public codesToIndexes(perms: string[]): number[] {

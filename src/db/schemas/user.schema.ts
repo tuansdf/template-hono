@@ -1,7 +1,7 @@
 import { pgTable, text } from "drizzle-orm/pg-core";
-import { commonColumns } from "~/entities/common.entity";
+import { commonColumns } from "@/db/schemas/common.schema";
 
-export const UserTable = pgTable("_user", {
+export const userTable = pgTable("_user", {
   ...commonColumns,
   username: text("username").unique(),
   email: text("email"),

@@ -1,8 +1,8 @@
-import { PermissionTable } from "~/entities/permission.entity";
+import { permissionTable } from "@/db/schemas/permission.schema";
 
-export type Permission = typeof PermissionTable.$inferSelect;
+export type Permission = typeof permissionTable.$inferSelect;
 export type PermissionDTO = Partial<Permission>;
-export type PermissionSave = typeof PermissionTable.$inferInsert;
+export type PermissionSave = typeof permissionTable.$inferInsert;
 export type PermissionSaveDTO = Partial<PermissionSave>;
 
 export type CreatePermissionBodyDTO = {

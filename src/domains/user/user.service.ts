@@ -1,10 +1,10 @@
 import { ilike, or } from "drizzle-orm";
-import { STATUS } from "~/constants/status.constant";
-import { db } from "~/db/db";
-import { userRepository, userSelector } from "~/domains/user/user.repository";
-import { UserSearchRequestDTO } from "~/domains/user/user.type";
-import { UserTable } from "~/entities/user.entity";
-import { CustomException } from "~/exceptions/custom-exception";
+import { STATUS } from "@/constants/status.constant";
+import { db } from "@/db/db";
+import { userRepository, userSelector } from "@/domains/user/user.repository";
+import { UserSearchRequestDTO } from "@/domains/user/user.type";
+import { userTable } from "@/db/schemas/user.schema";
+import { CustomException } from "@/exceptions/custom-exception";
 
 class UserService {
   public async findOneById(userId: string) {
@@ -36,9 +36,9 @@ class UserService {
   }
 
   public async search(requestDTO: UserSearchRequestDTO) {
-    const query = db.main.select(userSelector.search).from(UserTable);
+    const query = db.main.select(userSelector.search).from(userTable);
     if (requestDTO.q) {
-      query.where(or(ilike(UserTable.email, `%${requestDTO.q}%`), ilike(UserTable.username, `%${requestDTO.q}%`)));
+      query.where(or(ilike(userTable.email, `%${requestDTO.q}%`), ilike(userTable.username, `%${requestDTO.q}%`)));
     }
     if (requestDTO.pageSize && requestDTO.pageNumber) {
       query.limit(requestDTO.pageSize).offset((requestDTO.pageNumber - 1) * requestDTO.pageSize);

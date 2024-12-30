@@ -1,8 +1,9 @@
 import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/node-postgres";
 import * as process from "node:process";
-import { ENV } from "~/constants/env.constant";
-import { logger } from "~/lib/logger";
+import * as schema from "src/db/schemas";
+import { ENV } from "@/constants/env.constant";
+import { logger } from "@/lib/logger";
 
 class Database {
   private readonly _main;
@@ -10,7 +11,7 @@ class Database {
   public constructor() {
     try {
       logger.info("Connecting to databases");
-      this._main = drizzle(ENV.DB_URL);
+      this._main = drizzle(ENV.DB_URL, { schema });
       logger.info("Connected to databases");
     } catch (e) {
       logger.error("Error connecting to databases", e);

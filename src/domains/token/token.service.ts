@@ -1,11 +1,11 @@
-import { STATUS } from "~/constants/status.constant";
-import { TYPE } from "~/constants/type.constant";
-import { jwtService } from "~/domains/token/jwt.service";
-import { tokenRepository } from "~/domains/token/token.repository";
-import { TokenSave } from "~/domains/token/token.type";
-import { dated } from "~/lib/date";
-import { logger } from "~/lib/logger";
-import { uuid } from "~/lib/uuid";
+import { STATUS } from "@/constants/status.constant";
+import { TYPE } from "@/constants/type.constant";
+import { jwtService } from "@/domains/token/jwt.service";
+import { tokenRepository } from "@/domains/token/token.repository";
+import { TokenSave } from "@/domains/token/token.type";
+import { dated } from "@/lib/date";
+import { logger } from "@/lib/logger";
+import { uuid } from "@/lib/uuid";
 
 class TokenService {
   public async save(item: TokenSave) {

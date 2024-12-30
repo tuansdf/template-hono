@@ -4,8 +4,8 @@ import {
   LoginRequestDTO,
   RegisterRequestDTO,
   ResetPasswordRequestDTO,
-} from "~/domains/auth/auth.type";
-import { emailSchema, passwordSchema, tokenSchema, usernameSchema } from "~/schemas/common.schema";
+} from "@/domains/auth/auth.type";
+import { emailSchema, passwordSchema, tokenSchema, usernameSchema } from "@/schemas/common.schema";
 
 export const loginRequestSchema: z.ZodType<LoginRequestDTO> = z.object({
   username: usernameSchema,

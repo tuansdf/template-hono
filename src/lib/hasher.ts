@@ -1,5 +1,5 @@
 import bcryptjs from "bcryptjs";
-import { logger } from "~/lib/logger";
+import { logger } from "@/lib/logger";
 
 const SALT_SIZE = 10;
 

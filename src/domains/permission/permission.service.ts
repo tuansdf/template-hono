@@ -1,6 +1,6 @@
-import { permissionRepository } from "~/domains/permission/permission.repository";
-import { CreatePermissionBodyDTO, UpdatePermissionBodyDTO } from "~/domains/permission/permission.type";
-import { CustomException } from "~/exceptions/custom-exception";
+import { permissionRepository } from "@/domains/permission/permission.repository";
+import { CreatePermissionBodyDTO, UpdatePermissionBodyDTO } from "@/domains/permission/permission.type";
+import { CustomException } from "@/exceptions/custom-exception";
 
 class PermissionService {
   public async findAll() {

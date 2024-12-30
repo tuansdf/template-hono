@@ -1,8 +1,8 @@
 import { Hono } from "hono";
-import { PERM_SUPER_ADMIN } from "~/domains/permission/permission.constant";
-import { createPermissionBodySchema, updatePermissionBodySchema } from "~/domains/permission/permission.schema";
-import { permissionService } from "~/domains/permission/permission.service";
-import { authenticate, authorize } from "~/middlewares/auth.middleware";
+import { PERM_SUPER_ADMIN } from "@/domains/permission/permission.constant";
+import { createPermissionBodySchema, updatePermissionBodySchema } from "@/domains/permission/permission.schema";
+import { permissionService } from "@/domains/permission/permission.service";
+import { authenticate, authorize } from "@/middlewares/auth.middleware";
 
 export const permissionRouter = new Hono();
 

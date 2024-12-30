@@ -1,4 +1,3 @@
-import { Hono } from "hono";
 import {
   activateAccountBodySchema,
   forgotPasswordRequestSchema,
@@ -6,11 +5,12 @@ import {
   registerRequestSchema,
   resendActivateAccountBodySchema,
   resetPasswordRequestSchema,
-} from "~/domains/auth/auth.schema";
-import { authService } from "~/domains/auth/auth.service";
-import { JWT_TYPE } from "~/domains/token/token.constant";
-import { tokenService } from "~/domains/token/token.service";
-import { authenticate } from "~/middlewares/auth.middleware";
+} from "@/domains/auth/auth.schema";
+import { authService } from "@/domains/auth/auth.service";
+import { JWT_TYPE } from "@/domains/token/token.constant";
+import { tokenService } from "@/domains/token/token.service";
+import { authenticate } from "@/middlewares/auth.middleware";
+import { Hono } from "hono";
 
 export const authRouter = new Hono();
 

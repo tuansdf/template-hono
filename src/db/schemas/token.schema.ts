@@ -1,7 +1,7 @@
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-import { commonColumns } from "~/entities/common.entity";
+import { commonColumns } from "@/db/schemas/common.schema";
 
-export const TokenTable = pgTable("token", {
+export const tokenTable = pgTable("token", {
   ...commonColumns,
   foreignId: uuid("foreign_id"),
   value: text("value"),

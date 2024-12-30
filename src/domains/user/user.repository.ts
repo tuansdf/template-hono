@@ -1,49 +1,49 @@
 import { and, count, eq, or, sql } from "drizzle-orm";
-import { db } from "~/db/db";
-import { UserDTO, UserSave } from "~/domains/user/user.type";
-import { UserTable } from "~/entities/user.entity";
+import { db } from "@/db/db";
+import { UserDTO, UserSave } from "@/domains/user/user.type";
+import { userTable } from "@/db/schemas/user.schema";
 
 export const userSelector = {
   all: {
-    id: UserTable.id,
-    name: UserTable.name,
-    email: UserTable.email,
-    username: UserTable.username,
-    password: UserTable.password,
-    status: UserTable.status,
-    createdBy: UserTable.createdBy,
-    updatedBy: UserTable.updatedBy,
-    createdAt: UserTable.createdAt,
-    updatedAt: UserTable.updatedAt,
+    id: userTable.id,
+    name: userTable.name,
+    email: userTable.email,
+    username: userTable.username,
+    password: userTable.password,
+    status: userTable.status,
+    createdBy: userTable.createdBy,
+    updatedBy: userTable.updatedBy,
+    createdAt: userTable.createdAt,
+    updatedAt: userTable.updatedAt,
   },
   search: {
-    id: UserTable.id,
-    name: UserTable.name,
-    email: UserTable.email,
-    username: UserTable.username,
-    status: UserTable.status,
+    id: userTable.id,
+    name: userTable.name,
+    email: userTable.email,
+    username: userTable.username,
+    status: userTable.status,
   },
 } as const;
 
 class UserRepository {
   public async findAll(): Promise<UserDTO[]> {
-    return db.main.select(userSelector.all).from(UserTable);
+    return db.main.select(userSelector.all).from(userTable);
   }
 
   public async findAllByStatus(status: string): Promise<UserDTO[]> {
-    return db.main.select(userSelector.all).from(UserTable).where(eq(UserTable.status, status));
+    return db.main.select(userSelector.all).from(userTable).where(eq(userTable.status, status));
   }
 
   public async findTopById(id: string): Promise<UserDTO | undefined> {
-    const result = await db.main.select(userSelector.all).from(UserTable).where(eq(UserTable.id, id)).limit(1);
+    const result = await db.main.select(userSelector.all).from(userTable).where(eq(userTable.id, id)).limit(1);
     return result[0];
   }
 
   public async findTopByUsernameOrEmailWithPassword(username: string): Promise<UserDTO | undefined> {
     const result = await db.main
       .select(userSelector.all)
-      .from(UserTable)
-      .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
+      .from(userTable)
+      .where(or(eq(userTable.username, username), eq(userTable.email, username)))
       .limit(1);
     return result[0];
   }
@@ -51,8 +51,8 @@ class UserRepository {
   public async findTopByUsernameOrEmail(username: string): Promise<UserDTO | undefined> {
     const result = await db.main
       .select(userSelector.all)
-      .from(UserTable)
-      .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
+      .from(userTable)
+      .where(or(eq(userTable.username, username), eq(userTable.email, username)))
       .limit(1);
     return result[0];
   }
@@ -60,44 +60,44 @@ class UserRepository {
   public async findTopByUsername(username: string): Promise<UserDTO | undefined> {
     const result = await db.main
       .select(userSelector.all)
-      .from(UserTable)
-      .where(eq(UserTable.username, username))
+      .from(userTable)
+      .where(eq(userTable.username, username))
       .limit(1);
     return result[0];
   }
 
   public async findTopByEmail(email: string): Promise<UserDTO | undefined> {
-    const result = await db.main.select(userSelector.all).from(UserTable).where(eq(UserTable.email, email)).limit(1);
+    const result = await db.main.select(userSelector.all).from(userTable).where(eq(userTable.email, email)).limit(1);
     return result[0];
   }
 
   public async findTopByEmailAndStatus(email: string, status: string): Promise<UserDTO | undefined> {
     const result = await db.main
       .select(userSelector.all)
-      .from(UserTable)
-      .where(and(eq(UserTable.email, email), eq(UserTable.status, status)))
+      .from(userTable)
+      .where(and(eq(userTable.email, email), eq(userTable.status, status)))
       .limit(1);
     return result[0];
   }
 
   public async countByUsername(username: string): Promise<number> {
-    const result = await db.main.select({ value: count() }).from(UserTable).where(eq(UserTable.username, username));
+    const result = await db.main.select({ value: count() }).from(userTable).where(eq(userTable.username, username));
     return result[0]?.value || 0;
   }
 
   public async countByUsernameOrEmail(username: string): Promise<number> {
     const result = await db.main
       .select({ value: count() })
-      .from(UserTable)
-      .where(or(eq(UserTable.username, username), eq(UserTable.email, username)));
+      .from(userTable)
+      .where(or(eq(userTable.username, username), eq(userTable.email, username)));
     return result[0]?.value || 0;
   }
 
   public async existByUsernameOrEmail(username: string): Promise<boolean> {
     const result = await db.main
       .select({ value: sql`1` })
-      .from(UserTable)
-      .where(or(eq(UserTable.username, username), eq(UserTable.email, username)))
+      .from(userTable)
+      .where(or(eq(userTable.username, username), eq(userTable.email, username)))
       .limit(1);
     return !!result[0]?.value;
   }
@@ -105,33 +105,33 @@ class UserRepository {
   public async existByUsername(username: string): Promise<boolean> {
     const result = await db.main
       .select({ value: sql`1` })
-      .from(UserTable)
-      .where(eq(UserTable.username, username))
+      .from(userTable)
+      .where(eq(userTable.username, username))
       .limit(1);
     return !!result[0]?.value;
   }
 
   public async countByEmail(email: string): Promise<number> {
-    const result = await db.main.select({ value: count() }).from(UserTable).where(eq(UserTable.email, email));
+    const result = await db.main.select({ value: count() }).from(userTable).where(eq(userTable.email, email));
     return result[0]?.value || 0;
   }
 
   public async existByEmail(email: string): Promise<boolean> {
     const result = await db.main
       .select({ value: sql`1` })
-      .from(UserTable)
-      .where(eq(UserTable.email, email))
+      .from(userTable)
+      .where(eq(userTable.email, email))
       .limit(1);
     return !!result[0]?.value;
   }
 
   public async save(user: UserSave): Promise<UserDTO | undefined> {
-    const result = await db.main.insert(UserTable).values(user).returning(userSelector.all);
+    const result = await db.main.insert(userTable).values(user).returning(userSelector.all);
     return result[0];
   }
 
   public async saveAll(users: UserSave[]): Promise<void> {
-    await db.main.insert(UserTable).values(users);
+    await db.main.insert(userTable).values(users);
   }
 }
 

@@ -1,6 +1,6 @@
 import { MiddlewareHandler } from "hono";
 import { accepts } from "hono/accepts";
-import { defaultLang, i18n, validLangs } from "~/lib/i18n";
+import { defaultLang, i18n, validLangs } from "@/lib/i18n";
 
 export const detectLanguage = (): MiddlewareHandler => async (c, next) => {
   let lang = c.req.query("lng");

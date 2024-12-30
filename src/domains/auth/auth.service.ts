@@ -1,31 +1,31 @@
 import { eq } from "drizzle-orm";
-import { ENV } from "~/constants/env.constant";
-import { STATUS } from "~/constants/status.constant";
-import { TYPE } from "~/constants/type.constant";
-import { db } from "~/db/db";
+import { ENV } from "@/constants/env.constant";
+import { STATUS } from "@/constants/status.constant";
+import { TYPE } from "@/constants/type.constant";
+import { db } from "@/db/db";
 import {
   ForgotPasswordRequestDTO,
   LoginRequestDTO,
   RegisterRequestDTO,
   ResetPasswordRequestDTO,
-} from "~/domains/auth/auth.type";
-import { emailService } from "~/domains/email/email.service";
-import { permissionRepository } from "~/domains/permission/permission.repository";
-import { permissionUtils } from "~/domains/permission/permission.util";
-import { jwtService } from "~/domains/token/jwt.service";
-import { JWT_TYPE } from "~/domains/token/token.constant";
-import { tokenRepository } from "~/domains/token/token.repository";
-import { tokenService } from "~/domains/token/token.service";
-import { AuthJwtTokenPayload } from "~/domains/token/token.type";
-import { userRepository } from "~/domains/user/user.repository";
-import { UserDTO } from "~/domains/user/user.type";
-import { TokenTable } from "~/entities/token.entity";
-import { UserTable } from "~/entities/user.entity";
-import { CustomException } from "~/exceptions/custom-exception";
-import { dated } from "~/lib/date";
-import { hasher } from "~/lib/hasher";
-import { TFn } from "~/lib/i18n";
-import { logger } from "~/lib/logger";
+} from "@/domains/auth/auth.type";
+import { emailService } from "@/domains/email/email.service";
+import { permissionRepository } from "@/domains/permission/permission.repository";
+import { permissionUtils } from "@/domains/permission/permission.util";
+import { jwtService } from "@/domains/token/jwt.service";
+import { JWT_TYPE } from "@/domains/token/token.constant";
+import { tokenRepository } from "@/domains/token/token.repository";
+import { tokenService } from "@/domains/token/token.service";
+import { AuthJwtTokenPayload } from "@/domains/token/token.type";
+import { userRepository } from "@/domains/user/user.repository";
+import { UserDTO } from "@/domains/user/user.type";
+import { tokenTable } from "@/db/schemas/token.schema";
+import { userTable } from "@/db/schemas/user.schema";
+import { CustomException } from "@/exceptions/custom-exception";
+import { dated } from "@/lib/date";
+import { hasher } from "@/lib/hasher";
+import { TFn } from "@/lib/i18n";
+import { logger } from "@/lib/logger";
 
 class AuthService {
   public async login(requestDTO: LoginRequestDTO): Promise<UserDTO> {
@@ -132,13 +132,13 @@ class AuthService {
     }
     const hashedPassword = await hasher.hash(requestDTO.password);
     await db.main
-      .update(TokenTable)
+      .update(tokenTable)
       .set({ status: STATUS.INACTIVE })
-      .where(eq(TokenTable.id, token.id || ""));
+      .where(eq(tokenTable.id, token.id || ""));
     await db.main
-      .update(UserTable)
+      .update(userTable)
       .set({ password: hashedPassword })
-      .where(eq(UserTable.id, user.id || ""));
+      .where(eq(userTable.id, user.id || ""));
   }
 
   public async resendActivateAccount(email: string, t: TFn) {
@@ -182,13 +182,13 @@ class AuthService {
       throw new CustomException("auth.error.already_activated", 400);
     }
     await db.main
-      .update(TokenTable)
+      .update(tokenTable)
       .set({ status: STATUS.INACTIVE })
-      .where(eq(TokenTable.id, token.id || ""));
+      .where(eq(tokenTable.id, token.id || ""));
     await db.main
-      .update(UserTable)
+      .update(userTable)
       .set({ status: STATUS.ACTIVE })
-      .where(eq(UserTable.id, user.id || ""));
+      .where(eq(userTable.id, user.id || ""));
   }
 }
 

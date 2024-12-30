@@ -1,10 +1,10 @@
 import { JWTPayload } from "jose";
-import { JWT_TYPE } from "~/domains/token/token.constant";
-import { TokenTable } from "~/entities/token.entity";
+import { JWT_TYPE } from "@/domains/token/token.constant";
+import { tokenTable } from "@/db/schemas/token.schema";
 
-export type Token = typeof TokenTable.$inferSelect;
+export type Token = typeof tokenTable.$inferSelect;
 export type TokenDTO = Partial<Token>;
-export type TokenSave = typeof TokenTable.$inferInsert;
+export type TokenSave = typeof tokenTable.$inferInsert;
 export type TokenSaveDTO = Partial<TokenSave>;
 
 export type AuthJwtTokenPayload = {

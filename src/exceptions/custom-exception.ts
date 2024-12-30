@@ -1,5 +1,5 @@
 import { HTTPException } from "hono/http-exception";
-import { StatusCode } from "~/types/status-code.type";
+import { StatusCode } from "@/types/status-code.type";
 
 export class CustomException extends HTTPException {
   constructor(message?: string, status?: StatusCode) {

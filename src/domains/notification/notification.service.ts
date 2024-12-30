@@ -1,5 +1,5 @@
-import { notificationRepository } from "~/domains/notification/notification.repository";
-import { NotificationSave } from "~/domains/notification/notification.type";
+import { notificationRepository } from "@/domains/notification/notification.repository";
+import { NotificationSave } from "@/domains/notification/notification.type";
 
 class NotificationService {
   public async send(item: NotificationSave) {

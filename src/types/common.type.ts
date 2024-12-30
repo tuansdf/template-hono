@@ -1,4 +1,4 @@
-import { StatusCode } from "~/types/status-code.type";
+import { StatusCode } from "@/types/status-code.type";
 
 export type PartiallyNullish<TObject> = {
   [TKey in keyof TObject]?: TObject[TKey] | null | undefined;

@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import { searchUserQuerySchema } from "~/domains/user/user.schema";
-import { userService } from "~/domains/user/user.service";
-import { authenticate } from "~/middlewares/auth.middleware";
+import { searchUserQuerySchema } from "@/domains/user/user.schema";
+import { userService } from "@/domains/user/user.service";
+import { authenticate } from "@/middlewares/auth.middleware";
 
 export const userRouter = new Hono();
 

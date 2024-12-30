@@ -1,6 +1,6 @@
-import { roleRepository } from "~/domains/role/role.repository";
-import { CreateRoleBodyDTO, UpdateRoleBodyDTO } from "~/domains/role/role.type";
-import { CustomException } from "~/exceptions/custom-exception";
+import { roleRepository } from "@/domains/role/role.repository";
+import { CreateRoleBodyDTO, UpdateRoleBodyDTO } from "@/domains/role/role.type";
+import { CustomException } from "@/exceptions/custom-exception";
 
 class RoleService {
   public async findAll() {

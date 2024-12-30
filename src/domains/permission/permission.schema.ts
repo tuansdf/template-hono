@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CreatePermissionBodyDTO, UpdatePermissionBodyDTO } from "~/domains/permission/permission.type";
+import { CreatePermissionBodyDTO, UpdatePermissionBodyDTO } from "@/domains/permission/permission.type";
 
 const idSchema = z.coerce
   .string({ required_error: "form.error.missing;field.id", invalid_type_error: "form.error.invalid;field.id" })

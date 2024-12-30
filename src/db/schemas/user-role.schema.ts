@@ -1,7 +1,7 @@
 import { pgTable, text, uuid } from "drizzle-orm/pg-core";
-import { commonColumns } from "~/entities/common.entity";
+import { commonColumns } from "@/db/schemas/common.schema";
 
-export const UserRoleTable = pgTable("user_role", {
+export const userRoleTable = pgTable("user_role", {
   ...commonColumns,
   userId: uuid("user_id").notNull(),
   roleId: uuid("role_id").notNull(),

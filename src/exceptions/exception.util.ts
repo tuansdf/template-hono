@@ -1,9 +1,9 @@
 import { HTTPException } from "hono/http-exception";
 import { ZodError } from "zod";
-import { CustomException } from "~/exceptions/custom-exception";
-import { i18n, TFn } from "~/lib/i18n";
-import { CommonResponse } from "~/types/common.type";
-import { StatusCode } from "~/types/status-code.type";
+import { CustomException } from "@/exceptions/custom-exception";
+import { i18n, TFn } from "@/lib/i18n";
+import { CommonResponse } from "@/types/common.type";
+import { StatusCode } from "@/types/status-code.type";
 
 class ExceptionUtils {
   public getResponse = (error: Error, t: TFn): [StatusCode, CommonResponse] => {
